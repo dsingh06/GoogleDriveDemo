@@ -1,212 +1,220 @@
 -- Merging decision tree log ---
 provider#android.support.v4.content.FileProvider
-INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:30:9-38:20
+INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:30:9-38:20
 	android:grantUriPermissions
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:34:13-47
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:34:13-47
 	android:authorities
-		INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:32:13-60
+		INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:32:13-60
 	android:exported
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:33:13-37
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:33:13-37
 	android:name
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:31:13-67
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:31:13-67
 manifest
-ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:2:1-41:12
-INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:2:1-41:12
-INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:2:1-41:12
-INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:2:1-41:12
-MERGED from [com.android.support:design:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/41886d18db516951c450668eba5fdbfb/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:appcompat-v7:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/c94a16a793c21e1c51b56c4fa0030971/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support.constraint:constraint-layout:1.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.1.aar/c64dd3af2b5decedb715f7fcf5a35143/AndroidManifest.xml:2:1-11:12
-MERGED from [com.google.android.gms:play-services-auth:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-15.0.1.aar/210017ed01391c75097f964f3200fb34/AndroidManifest.xml:17:1-39:12
-MERGED from [com.google.android.gms:play-services-drive:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-drive-15.0.1.aar/0f3d265f27471d6746ff2b207e3b55b3/AndroidManifest.xml:17:1-24:12
-MERGED from [com.google.android.gms:play-services-auth-api-phone:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-api-phone-15.0.1.aar/86a86a707fbccacaff56f7d1734d29fd/AndroidManifest.xml:2:1-7:12
-MERGED from [com.google.android.gms:play-services-auth-base:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-base-15.0.1.aar/dd8ad177f9c1900cb6a9aa8ae81effe5/AndroidManifest.xml:2:1-7:12
-MERGED from [com.google.android.gms:play-services-base:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-base-15.0.1.aar/36c54d8c78574a4169701d963ea2ed7b/AndroidManifest.xml:17:1-29:12
-MERGED from [com.google.android.gms:play-services-tasks:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-tasks-15.0.1.aar/1d206a77a78c175cd61c43182bb2625d/AndroidManifest.xml:2:1-9:12
-MERGED from [com.google.android.gms:play-services-basement:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-basement-15.0.1.aar/5f41417bd1345dc65b608184aa367ee0/AndroidManifest.xml:17:1-28:12
-MERGED from [com.android.support:support-v4:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/a39871e2f90f3d4012687c37749ff97a/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-fragment:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/5516c1bba83cef8b5ae9ae2e78ee241f/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/4a970b41636afef1477df9e443279200/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:recyclerview-v7:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.1.1.aar/1916befbd230d1eb27923ea1fac8701b/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-core-ui:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/f714dcf675a9a82ca64dc2a7f2969503/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-core-utils:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/0cf2051fd212419f9abdfd77ab3352e0/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-vector-drawable:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.1.1.aar/133ec53cd60d0247778bff74c1069a2d/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:transition:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/transition-27.1.1.aar/a993bab777a804443a030f04a91071e7/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-media-compat:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/7e0058f657e7cbff27188ef327b64af6/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-compat:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/9f835c6eb715e6315d6e016ea59daad6/AndroidManifest.xml:17:1-22:12
-MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /Users/D/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/2c13ef887ad5cea550895df49a43a111/AndroidManifest.xml:17:1-22:12
-MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /Users/D/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/b3eb7c70d0c9747ab9805cb4763b29d2/AndroidManifest.xml:17:1-22:12
-MERGED from [android.arch.lifecycle:runtime:1.1.0] /Users/D/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/c1c2b8baca6f9b5b8769a429e704481c/AndroidManifest.xml:17:1-22:12
-MERGED from [android.arch.core:runtime:1.1.0] /Users/D/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/655a3463eeb445fc6cfdcf4fdaedcdfe/AndroidManifest.xml:17:1-22:12
-INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:2:1-41:12
-INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:2:1-41:12
-INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:2:1-41:12
+ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:2:1-41:12
+INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:2:1-41:12
+INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:2:1-41:12
+INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:2:1-41:12
+MERGED from [com.android.support:design:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\design-27.1.1.aar\b85029a3697ecaea4c69fd334de1a11b\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:appcompat-v7:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.1.1.aar\f7ed767234d9c9fb3eb4353cfe4d1b46\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support.constraint:constraint-layout:1.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.1.aar\66e1d9ad73f2ef7c1ae64c1be413d652\AndroidManifest.xml:2:1-11:12
+MERGED from [com.google.android.gms:play-services-auth:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-15.0.1.aar\697d510387c4f261b6f1871b0349626e\AndroidManifest.xml:17:1-39:12
+MERGED from [com.google.android.gms:play-services-drive:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-drive-15.0.1.aar\aaf66157f850fe026d832d4318bbc017\AndroidManifest.xml:17:1-24:12
+MERGED from [com.android.support:recyclerview-v7:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-27.1.1.aar\2a1ec19678555cbffdfd1475af3503fe\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:cardview-v7:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\cardview-v7-27.1.1.aar\f466f9619f50cc81250597247c29139e\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.volley:volley:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\volley-1.1.0.aar\dd8f42f0686bf5a9aacbe4a079365595\AndroidManifest.xml:2:1-11:12
+MERGED from [com.google.android.gms:play-services-auth-api-phone:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-api-phone-15.0.1.aar\1238b6e6eb69e8f1d24e531dcf6f2d1b\AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.android.gms:play-services-auth-base:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-base-15.0.1.aar\e72b1a8aa09b9a7d46e20170daaaf879\AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.android.gms:play-services-base:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-base-15.0.1.aar\c4ac01f62993b90004fe8fc0f5955248\AndroidManifest.xml:17:1-29:12
+MERGED from [com.google.android.gms:play-services-tasks:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-tasks-15.0.1.aar\2be792fa73a5c51ae54aff92737e1266\AndroidManifest.xml:2:1-9:12
+MERGED from [com.google.android.gms:play-services-basement:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-basement-15.0.1.aar\f9b749121cdfdb19f4e8a0961902e2c1\AndroidManifest.xml:17:1-28:12
+MERGED from [com.android.support:support-v4:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-v4-27.1.1.aar\2acc52c7ce7f6ea162216b5ac65f77bb\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-fragment:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-fragment-27.1.1.aar\067517c34c53e3f5784e8828d0611b18\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.1.1.aar\45d423b47a8ffb120cfedd528f92b155\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.1.1.aar\0bebd3c803b2ba808d63248aa81d715f\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.1.1.aar\c7140a2bc7b8918f9048e569e2253c6c\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.1.1.aar\60c2760f9a39818d4ccbc237d6d26708\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:transition:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\transition-27.1.1.aar\7af7365d76527f09c88a61517329df1b\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-media-compat:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.1.1.aar\2ceb35a466b65e102346f49f4662393a\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-compat-27.1.1.aar\98f952f59ca2d5d2bab57dda411f9f44\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.0.aar\3b9646afa61890b29c461dcec84a58db\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.0.aar\fa4e982d8984baa0afd1c9a990cfdf7d\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\6174ba0e6c01ac39143f88eb84c0966e\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.core:runtime:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\37982183a7585e94f28b9de7de9f9c6e\AndroidManifest.xml:17:1-22:12
+INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:2:1-41:12
+INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:2:1-41:12
+INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:2:1-41:12
 	package
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:4:5-37
-		INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
-		INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:4:5-37
+		INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
+		INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
 	android:versionName
-		INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:2:1-41:12
-		INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
+		INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:2:1-41:12
+		INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
 	xmlns:tools
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:3:5-51
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:3:5-51
 	android:versionCode
-		INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:2:1-41:12
-		INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
+		INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:2:1-41:12
+		INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:2:11-69
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:2:11-69
 uses-permission#android.permission.INTERNET
-ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:6:5-67
+ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:6:5-67
 	android:name
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:6:22-64
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:6:22-64
 application
-ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:8:5-39:19
-MERGED from [com.android.support.constraint:constraint-layout:1.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.1.aar/c64dd3af2b5decedb715f7fcf5a35143/AndroidManifest.xml:9:5-20
-MERGED from [com.android.support.constraint:constraint-layout:1.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.1.aar/c64dd3af2b5decedb715f7fcf5a35143/AndroidManifest.xml:9:5-20
-MERGED from [com.google.android.gms:play-services-auth:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-15.0.1.aar/210017ed01391c75097f964f3200fb34/AndroidManifest.xml:22:5-37:19
-MERGED from [com.google.android.gms:play-services-auth:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-15.0.1.aar/210017ed01391c75097f964f3200fb34/AndroidManifest.xml:22:5-37:19
-MERGED from [com.google.android.gms:play-services-drive:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-drive-15.0.1.aar/0f3d265f27471d6746ff2b207e3b55b3/AndroidManifest.xml:22:5-20
-MERGED from [com.google.android.gms:play-services-drive:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-drive-15.0.1.aar/0f3d265f27471d6746ff2b207e3b55b3/AndroidManifest.xml:22:5-20
-MERGED from [com.google.android.gms:play-services-base:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-base-15.0.1.aar/36c54d8c78574a4169701d963ea2ed7b/AndroidManifest.xml:22:5-27:19
-MERGED from [com.google.android.gms:play-services-base:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-base-15.0.1.aar/36c54d8c78574a4169701d963ea2ed7b/AndroidManifest.xml:22:5-27:19
-MERGED from [com.google.android.gms:play-services-tasks:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-tasks-15.0.1.aar/1d206a77a78c175cd61c43182bb2625d/AndroidManifest.xml:7:5-20
-MERGED from [com.google.android.gms:play-services-tasks:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-tasks-15.0.1.aar/1d206a77a78c175cd61c43182bb2625d/AndroidManifest.xml:7:5-20
-MERGED from [com.google.android.gms:play-services-basement:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-basement-15.0.1.aar/5f41417bd1345dc65b608184aa367ee0/AndroidManifest.xml:22:5-26:19
-MERGED from [com.google.android.gms:play-services-basement:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-basement-15.0.1.aar/5f41417bd1345dc65b608184aa367ee0/AndroidManifest.xml:22:5-26:19
+ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:8:5-39:19
+MERGED from [com.android.support.constraint:constraint-layout:1.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.1.aar\66e1d9ad73f2ef7c1ae64c1be413d652\AndroidManifest.xml:9:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.1.aar\66e1d9ad73f2ef7c1ae64c1be413d652\AndroidManifest.xml:9:5-20
+MERGED from [com.google.android.gms:play-services-auth:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-15.0.1.aar\697d510387c4f261b6f1871b0349626e\AndroidManifest.xml:22:5-37:19
+MERGED from [com.google.android.gms:play-services-auth:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-15.0.1.aar\697d510387c4f261b6f1871b0349626e\AndroidManifest.xml:22:5-37:19
+MERGED from [com.google.android.gms:play-services-drive:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-drive-15.0.1.aar\aaf66157f850fe026d832d4318bbc017\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-drive:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-drive-15.0.1.aar\aaf66157f850fe026d832d4318bbc017\AndroidManifest.xml:22:5-20
+MERGED from [com.android.volley:volley:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\volley-1.1.0.aar\dd8f42f0686bf5a9aacbe4a079365595\AndroidManifest.xml:9:5-20
+MERGED from [com.android.volley:volley:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\volley-1.1.0.aar\dd8f42f0686bf5a9aacbe4a079365595\AndroidManifest.xml:9:5-20
+MERGED from [com.google.android.gms:play-services-base:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-base-15.0.1.aar\c4ac01f62993b90004fe8fc0f5955248\AndroidManifest.xml:22:5-27:19
+MERGED from [com.google.android.gms:play-services-base:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-base-15.0.1.aar\c4ac01f62993b90004fe8fc0f5955248\AndroidManifest.xml:22:5-27:19
+MERGED from [com.google.android.gms:play-services-tasks:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-tasks-15.0.1.aar\2be792fa73a5c51ae54aff92737e1266\AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-tasks:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-tasks-15.0.1.aar\2be792fa73a5c51ae54aff92737e1266\AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-basement:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-basement-15.0.1.aar\f9b749121cdfdb19f4e8a0961902e2c1\AndroidManifest.xml:22:5-26:19
+MERGED from [com.google.android.gms:play-services-basement:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-basement-15.0.1.aar\f9b749121cdfdb19f4e8a0961902e2c1\AndroidManifest.xml:22:5-26:19
 	android:supportsRtl
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:13:9-35
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:13:9-35
 	android:label
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:11:9-41
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:11:9-41
 	tools:ignore
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:15:9-48
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:15:9-48
 	android:roundIcon
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:12:9-54
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:12:9-54
 	android:icon
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:10:9-43
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:10:9-43
 	android:allowBackup
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:9:9-35
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:9:9-35
 	android:theme
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:14:9-40
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:14:9-40
 activity#com.thatapp.checklists.ProfileActivity
-ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:16:9-62
+ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:16:9-62
 	android:name
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:16:19-50
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:16:19-50
 meta-data#com.google.android.gms.version
-ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:18:9-20:69
-MERGED from [com.google.android.gms:play-services-basement:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-basement-15.0.1.aar/5f41417bd1345dc65b608184aa367ee0/AndroidManifest.xml:23:9-25:69
-MERGED from [com.google.android.gms:play-services-basement:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-basement-15.0.1.aar/5f41417bd1345dc65b608184aa367ee0/AndroidManifest.xml:23:9-25:69
+ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:18:9-20:69
+MERGED from [com.google.android.gms:play-services-basement:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-basement-15.0.1.aar\f9b749121cdfdb19f4e8a0961902e2c1\AndroidManifest.xml:23:9-25:69
+MERGED from [com.google.android.gms:play-services-basement:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-basement-15.0.1.aar\f9b749121cdfdb19f4e8a0961902e2c1\AndroidManifest.xml:23:9-25:69
 	android:value
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:20:13-66
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:20:13-66
 	android:name
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:19:13-58
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:19:13-58
 activity#com.thatapp.checklists.MainActivity
-ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:22:9-28:20
+ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:22:9-28:20
 	android:name
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:22:19-47
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:22:19-47
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:23:13-27:29
+ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:23:13-27:29
 action#android.intent.action.MAIN
-ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:24:17-69
+ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:24:17-69
 	android:name
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:24:25-66
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:24:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:26:17-77
+ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:26:17-77
 	android:name
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:26:27-74
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:26:27-74
 uses-sdk
-INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
-INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
-MERGED from [com.android.support:design:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/41886d18db516951c450668eba5fdbfb/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:design:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/design-27.1.1.aar/41886d18db516951c450668eba5fdbfb/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:appcompat-v7:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/c94a16a793c21e1c51b56c4fa0030971/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:appcompat-v7:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.1.1.aar/c94a16a793c21e1c51b56c4fa0030971/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support.constraint:constraint-layout:1.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.1.aar/c64dd3af2b5decedb715f7fcf5a35143/AndroidManifest.xml:5:5-7:41
-MERGED from [com.android.support.constraint:constraint-layout:1.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.1.aar/c64dd3af2b5decedb715f7fcf5a35143/AndroidManifest.xml:5:5-7:41
-MERGED from [com.google.android.gms:play-services-auth:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-15.0.1.aar/210017ed01391c75097f964f3200fb34/AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.gms:play-services-auth:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-15.0.1.aar/210017ed01391c75097f964f3200fb34/AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.gms:play-services-drive:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-drive-15.0.1.aar/0f3d265f27471d6746ff2b207e3b55b3/AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.gms:play-services-drive:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-drive-15.0.1.aar/0f3d265f27471d6746ff2b207e3b55b3/AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.gms:play-services-auth-api-phone:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-api-phone-15.0.1.aar/86a86a707fbccacaff56f7d1734d29fd/AndroidManifest.xml:5:5-44
-MERGED from [com.google.android.gms:play-services-auth-api-phone:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-api-phone-15.0.1.aar/86a86a707fbccacaff56f7d1734d29fd/AndroidManifest.xml:5:5-44
-MERGED from [com.google.android.gms:play-services-auth-base:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-base-15.0.1.aar/dd8ad177f9c1900cb6a9aa8ae81effe5/AndroidManifest.xml:5:5-44
-MERGED from [com.google.android.gms:play-services-auth-base:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-base-15.0.1.aar/dd8ad177f9c1900cb6a9aa8ae81effe5/AndroidManifest.xml:5:5-44
-MERGED from [com.google.android.gms:play-services-base:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-base-15.0.1.aar/36c54d8c78574a4169701d963ea2ed7b/AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.gms:play-services-base:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-base-15.0.1.aar/36c54d8c78574a4169701d963ea2ed7b/AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.gms:play-services-tasks:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-tasks-15.0.1.aar/1d206a77a78c175cd61c43182bb2625d/AndroidManifest.xml:5:5-44
-MERGED from [com.google.android.gms:play-services-tasks:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-tasks-15.0.1.aar/1d206a77a78c175cd61c43182bb2625d/AndroidManifest.xml:5:5-44
-MERGED from [com.google.android.gms:play-services-basement:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-basement-15.0.1.aar/5f41417bd1345dc65b608184aa367ee0/AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.gms:play-services-basement:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-basement-15.0.1.aar/5f41417bd1345dc65b608184aa367ee0/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-v4:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/a39871e2f90f3d4012687c37749ff97a/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-v4:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/a39871e2f90f3d4012687c37749ff97a/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-fragment:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/5516c1bba83cef8b5ae9ae2e78ee241f/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-fragment:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/5516c1bba83cef8b5ae9ae2e78ee241f/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/4a970b41636afef1477df9e443279200/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:animated-vector-drawable:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-27.1.1.aar/4a970b41636afef1477df9e443279200/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:recyclerview-v7:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.1.1.aar/1916befbd230d1eb27923ea1fac8701b/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:recyclerview-v7:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-27.1.1.aar/1916befbd230d1eb27923ea1fac8701b/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-ui:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/f714dcf675a9a82ca64dc2a7f2969503/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-ui:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/f714dcf675a9a82ca64dc2a7f2969503/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-utils:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/0cf2051fd212419f9abdfd77ab3352e0/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-utils:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/0cf2051fd212419f9abdfd77ab3352e0/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-vector-drawable:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.1.1.aar/133ec53cd60d0247778bff74c1069a2d/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-vector-drawable:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-27.1.1.aar/133ec53cd60d0247778bff74c1069a2d/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:transition:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/transition-27.1.1.aar/a993bab777a804443a030f04a91071e7/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:transition:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/transition-27.1.1.aar/a993bab777a804443a030f04a91071e7/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-media-compat:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/7e0058f657e7cbff27188ef327b64af6/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-media-compat:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/7e0058f657e7cbff27188ef327b64af6/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-compat:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/9f835c6eb715e6315d6e016ea59daad6/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-compat:27.1.1] /Users/D/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/9f835c6eb715e6315d6e016ea59daad6/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /Users/D/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/2c13ef887ad5cea550895df49a43a111/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /Users/D/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/2c13ef887ad5cea550895df49a43a111/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /Users/D/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/b3eb7c70d0c9747ab9805cb4763b29d2/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /Users/D/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/b3eb7c70d0c9747ab9805cb4763b29d2/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:runtime:1.1.0] /Users/D/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/c1c2b8baca6f9b5b8769a429e704481c/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:runtime:1.1.0] /Users/D/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/c1c2b8baca6f9b5b8769a429e704481c/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.core:runtime:1.1.0] /Users/D/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/655a3463eeb445fc6cfdcf4fdaedcdfe/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.core:runtime:1.1.0] /Users/D/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/655a3463eeb445fc6cfdcf4fdaedcdfe/AndroidManifest.xml:20:5-44
-INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
-INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
+INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
+INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
+MERGED from [com.android.support:design:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\design-27.1.1.aar\b85029a3697ecaea4c69fd334de1a11b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:design:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\design-27.1.1.aar\b85029a3697ecaea4c69fd334de1a11b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.1.1.aar\f7ed767234d9c9fb3eb4353cfe4d1b46\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.1.1.aar\f7ed767234d9c9fb3eb4353cfe4d1b46\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support.constraint:constraint-layout:1.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.1.aar\66e1d9ad73f2ef7c1ae64c1be413d652\AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support.constraint:constraint-layout:1.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.1.aar\66e1d9ad73f2ef7c1ae64c1be413d652\AndroidManifest.xml:5:5-7:41
+MERGED from [com.google.android.gms:play-services-auth:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-15.0.1.aar\697d510387c4f261b6f1871b0349626e\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-auth:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-15.0.1.aar\697d510387c4f261b6f1871b0349626e\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-drive:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-drive-15.0.1.aar\aaf66157f850fe026d832d4318bbc017\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-drive:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-drive-15.0.1.aar\aaf66157f850fe026d832d4318bbc017\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-27.1.1.aar\2a1ec19678555cbffdfd1475af3503fe\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-27.1.1.aar\2a1ec19678555cbffdfd1475af3503fe\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\cardview-v7-27.1.1.aar\f466f9619f50cc81250597247c29139e\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\cardview-v7-27.1.1.aar\f466f9619f50cc81250597247c29139e\AndroidManifest.xml:20:5-44
+MERGED from [com.android.volley:volley:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\volley-1.1.0.aar\dd8f42f0686bf5a9aacbe4a079365595\AndroidManifest.xml:7:5-43
+MERGED from [com.android.volley:volley:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\volley-1.1.0.aar\dd8f42f0686bf5a9aacbe4a079365595\AndroidManifest.xml:7:5-43
+MERGED from [com.google.android.gms:play-services-auth-api-phone:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-api-phone-15.0.1.aar\1238b6e6eb69e8f1d24e531dcf6f2d1b\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-auth-api-phone:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-api-phone-15.0.1.aar\1238b6e6eb69e8f1d24e531dcf6f2d1b\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-auth-base:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-base-15.0.1.aar\e72b1a8aa09b9a7d46e20170daaaf879\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-auth-base:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-base-15.0.1.aar\e72b1a8aa09b9a7d46e20170daaaf879\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-base:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-base-15.0.1.aar\c4ac01f62993b90004fe8fc0f5955248\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-base:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-base-15.0.1.aar\c4ac01f62993b90004fe8fc0f5955248\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-tasks:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-tasks-15.0.1.aar\2be792fa73a5c51ae54aff92737e1266\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-tasks:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-tasks-15.0.1.aar\2be792fa73a5c51ae54aff92737e1266\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-basement:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-basement-15.0.1.aar\f9b749121cdfdb19f4e8a0961902e2c1\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-basement:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-basement-15.0.1.aar\f9b749121cdfdb19f4e8a0961902e2c1\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-v4-27.1.1.aar\2acc52c7ce7f6ea162216b5ac65f77bb\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-v4-27.1.1.aar\2acc52c7ce7f6ea162216b5ac65f77bb\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-fragment-27.1.1.aar\067517c34c53e3f5784e8828d0611b18\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-fragment-27.1.1.aar\067517c34c53e3f5784e8828d0611b18\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.1.1.aar\45d423b47a8ffb120cfedd528f92b155\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.1.1.aar\45d423b47a8ffb120cfedd528f92b155\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.1.1.aar\0bebd3c803b2ba808d63248aa81d715f\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.1.1.aar\0bebd3c803b2ba808d63248aa81d715f\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.1.1.aar\c7140a2bc7b8918f9048e569e2253c6c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.1.1.aar\c7140a2bc7b8918f9048e569e2253c6c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.1.1.aar\60c2760f9a39818d4ccbc237d6d26708\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.1.1.aar\60c2760f9a39818d4ccbc237d6d26708\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\transition-27.1.1.aar\7af7365d76527f09c88a61517329df1b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\transition-27.1.1.aar\7af7365d76527f09c88a61517329df1b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.1.1.aar\2ceb35a466b65e102346f49f4662393a\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.1.1.aar\2ceb35a466b65e102346f49f4662393a\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-compat-27.1.1.aar\98f952f59ca2d5d2bab57dda411f9f44\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.1.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\support-compat-27.1.1.aar\98f952f59ca2d5d2bab57dda411f9f44\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.0.aar\3b9646afa61890b29c461dcec84a58db\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.0.aar\3b9646afa61890b29c461dcec84a58db\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.0.aar\fa4e982d8984baa0afd1c9a990cfdf7d\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.0.aar\fa4e982d8984baa0afd1c9a990cfdf7d\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\6174ba0e6c01ac39143f88eb84c0966e\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\6174ba0e6c01ac39143f88eb84c0966e\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\37982183a7585e94f28b9de7de9f9c6e\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.0] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\37982183a7585e94f28b9de7de9f9c6e\AndroidManifest.xml:20:5-44
+INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
+INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
-		INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
+		INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
+		INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
-		INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
+		INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
+		INJECTED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml
 meta-data#android.support.FILE_PROVIDER_PATHS
-ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:35:13-37:58
+ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:35:13-37:58
 	android:resource
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:37:17-55
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:37:17-55
 	android:name
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:36:17-67
+		ADDED from C:\rishabh\D\GoogleDriveDemo\app\src\main\AndroidManifest.xml:36:17-67
 activity#com.google.android.gms.auth.api.signin.internal.SignInHubActivity
-ADDED from [com.google.android.gms:play-services-auth:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-15.0.1.aar/210017ed01391c75097f964f3200fb34/AndroidManifest.xml:23:9-27:75
+ADDED from [com.google.android.gms:play-services-auth:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-15.0.1.aar\697d510387c4f261b6f1871b0349626e\AndroidManifest.xml:23:9-27:75
 	android:excludeFromRecents
-		ADDED from [com.google.android.gms:play-services-auth:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-15.0.1.aar/210017ed01391c75097f964f3200fb34/AndroidManifest.xml:25:13-46
+		ADDED from [com.google.android.gms:play-services-auth:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-15.0.1.aar\697d510387c4f261b6f1871b0349626e\AndroidManifest.xml:25:13-46
 	android:exported
-		ADDED from [com.google.android.gms:play-services-auth:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-15.0.1.aar/210017ed01391c75097f964f3200fb34/AndroidManifest.xml:26:13-37
+		ADDED from [com.google.android.gms:play-services-auth:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-15.0.1.aar\697d510387c4f261b6f1871b0349626e\AndroidManifest.xml:26:13-37
 	android:theme
-		ADDED from [com.google.android.gms:play-services-auth:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-15.0.1.aar/210017ed01391c75097f964f3200fb34/AndroidManifest.xml:27:13-72
+		ADDED from [com.google.android.gms:play-services-auth:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-15.0.1.aar\697d510387c4f261b6f1871b0349626e\AndroidManifest.xml:27:13-72
 	android:name
-		ADDED from [com.google.android.gms:play-services-auth:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-15.0.1.aar/210017ed01391c75097f964f3200fb34/AndroidManifest.xml:24:13-93
+		ADDED from [com.google.android.gms:play-services-auth:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-15.0.1.aar\697d510387c4f261b6f1871b0349626e\AndroidManifest.xml:24:13-93
 service#com.google.android.gms.auth.api.signin.RevocationBoundService
-ADDED from [com.google.android.gms:play-services-auth:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-15.0.1.aar/210017ed01391c75097f964f3200fb34/AndroidManifest.xml:33:9-36:110
+ADDED from [com.google.android.gms:play-services-auth:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-15.0.1.aar\697d510387c4f261b6f1871b0349626e\AndroidManifest.xml:33:9-36:110
 	android:exported
-		ADDED from [com.google.android.gms:play-services-auth:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-15.0.1.aar/210017ed01391c75097f964f3200fb34/AndroidManifest.xml:35:13-36
+		ADDED from [com.google.android.gms:play-services-auth:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-15.0.1.aar\697d510387c4f261b6f1871b0349626e\AndroidManifest.xml:35:13-36
 	android:permission
-		ADDED from [com.google.android.gms:play-services-auth:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-15.0.1.aar/210017ed01391c75097f964f3200fb34/AndroidManifest.xml:36:13-107
+		ADDED from [com.google.android.gms:play-services-auth:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-15.0.1.aar\697d510387c4f261b6f1871b0349626e\AndroidManifest.xml:36:13-107
 	android:name
-		ADDED from [com.google.android.gms:play-services-auth:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-auth-15.0.1.aar/210017ed01391c75097f964f3200fb34/AndroidManifest.xml:34:13-89
+		ADDED from [com.google.android.gms:play-services-auth:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-auth-15.0.1.aar\697d510387c4f261b6f1871b0349626e\AndroidManifest.xml:34:13-89
 activity#com.google.android.gms.common.api.GoogleApiActivity
-ADDED from [com.google.android.gms:play-services-base:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-base-15.0.1.aar/36c54d8c78574a4169701d963ea2ed7b/AndroidManifest.xml:23:9-26:75
+ADDED from [com.google.android.gms:play-services-base:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-base-15.0.1.aar\c4ac01f62993b90004fe8fc0f5955248\AndroidManifest.xml:23:9-26:75
 	android:exported
-		ADDED from [com.google.android.gms:play-services-base:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-base-15.0.1.aar/36c54d8c78574a4169701d963ea2ed7b/AndroidManifest.xml:25:13-37
+		ADDED from [com.google.android.gms:play-services-base:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-base-15.0.1.aar\c4ac01f62993b90004fe8fc0f5955248\AndroidManifest.xml:25:13-37
 	android:theme
-		ADDED from [com.google.android.gms:play-services-base:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-base-15.0.1.aar/36c54d8c78574a4169701d963ea2ed7b/AndroidManifest.xml:26:13-72
+		ADDED from [com.google.android.gms:play-services-base:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-base-15.0.1.aar\c4ac01f62993b90004fe8fc0f5955248\AndroidManifest.xml:26:13-72
 	android:name
-		ADDED from [com.google.android.gms:play-services-base:15.0.1] /Users/D/.gradle/caches/transforms-1/files-1.1/play-services-base-15.0.1.aar/36c54d8c78574a4169701d963ea2ed7b/AndroidManifest.xml:24:13-79
+		ADDED from [com.google.android.gms:play-services-base:15.0.1] C:\Users\Rishabh Awasthi\.gradle\caches\transforms-1\files-1.1\play-services-base-15.0.1.aar\c4ac01f62993b90004fe8fc0f5955248\AndroidManifest.xml:24:13-79
