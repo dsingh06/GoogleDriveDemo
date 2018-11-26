@@ -172,9 +172,28 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
       // Get the first sheet from workbook
       val mySheet = myWorkBook.getSheetAt(0)
+      val rowIter = mySheet.rowIterator()
+
+      while (rowIter.hasNext()) {
+        val row: Row = rowIter.next();
+        val cellIterator: Iterator<Cell> = row.cellIterator();
+        while (cellIterator.hasNext()) {
+          val cell: Cell = cellIterator.next();
+
+          if (row.getRowNum() >= 0) { //To filter column headings
+            if (cell.getColumnIndex() == 0) {// To match column index
+              Log.e("column", "")
+              Log.e(TAG, "\n column Value: " + cell.toString())
+            } else {
+              Log.e("row", "")
+              Log.e(TAG, "\t\tCell Value: " + cell.toString())
+            }
+          }
+        }
+      }//
 
       /** We now need something to iterate through the cells. */
-      val rowIter = mySheet.rowIterator()
+     /* val rowIter = mySheet.rowIterator()
 
       while (rowIter.hasNext()) {
         val myRow = rowIter.next() as Row//as HSSFRow
@@ -184,7 +203,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
           Log.d(TAG, "Cell Value: " + myCell.toString())
 //          Toast.makeText(context, "cell Value: " + myCell.toString(), Toast.LENGTH_SHORT).show()
         }
-      }
+      }*/
     } catch (e: Exception) {
       e.printStackTrace()
     }
