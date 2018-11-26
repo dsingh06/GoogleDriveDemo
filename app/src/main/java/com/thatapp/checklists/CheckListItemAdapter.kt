@@ -19,17 +19,13 @@ class CheckListItemAdapter(var questionItemList:List<QuestionItem>,context:Conte
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-        val inflatedView = LayoutInflater.from(context).inflate(R.layout.question_list_item, parent, false)
+        val inflatedView = LayoutInflater.from(context).inflate(R.layout.question_list,parent)
         return UserViewHolder(inflatedView)
     }
 
 
     override fun onBindViewHolder(holder: CheckListItemAdapter.UserViewHolder, position: Int) {
         val quesItem = questionItemList[position]
-    }
-
-    override fun getItemId(position: Int): Long {
-        return super.getItemId(position)
     }
 
     inner class UserViewHolder (view: View) : RecyclerView.ViewHolder(view) {
