@@ -5,8 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/reportssettingsroot"
-    android:theme="@style/MyTheme">
+    android:id="@+id/reportssettingsroot">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -34,7 +33,6 @@
                 android:id="@+id/textView8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/Gainsboro"
                 android:paddingLeft="8dp"
                 android:text="User" />
 
@@ -228,7 +226,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@color/Gainsboro"
                     android:paddingLeft="8dp"
                     android:text="Report Settings"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -244,8 +241,7 @@
                 android:layout_gravity="left"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:orientation="vertical"
-                android:theme="@style/MyTheme">
+                android:orientation="vertical">
 
                 <Switch
                     android:padding="10dp"
