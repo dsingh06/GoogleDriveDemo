@@ -90,13 +90,11 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         getString(R.string.source_google_drive),
         GoogleDriveService.documentMimeTypes
     )
-    googleDriveService = GoogleDriveService(this, config)
-    googleDriveService.serviceListener = this
-    googleDriveService.checkLoginStatus()
+        googleDriveService = GoogleDriveService(this, config)
+        googleDriveService.serviceListener = this
+        val isUserLoggedin:Boolean = googleDriveService.checkLoginStatus()
+        if (!isUserLoggedin)googleDriveService.auth() // Automatic login screen
 
-//    login.setOnClickListener { Login button made
-      googleDriveService.auth()
-//    }
     start.setOnClickListener {
       googleDriveService.pickFiles(null)
     }
