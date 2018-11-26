@@ -53,7 +53,7 @@ class GoogleDriveService(private val activity: Activity, private val config: Goo
 //            "application/msword",
 //            "text/plain",
 //            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "application/vnd.ms-excel",
+            "application/vnd.ms-excel"
 //            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 //      "xls" =>'application/vnd.ms-excel',
 //      "xlsx" =>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
