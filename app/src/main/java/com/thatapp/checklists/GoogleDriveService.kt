@@ -49,12 +49,12 @@ class GoogleDriveService(private val activity: Activity, private val config: Goo
     val documentMimeTypes = arrayListOf(
 //        "application/pdf",
 //            "application/vnd.google-apps.file",
-            "application/vnd.google-apps.spreadsheet",
-            "application/msword",
-            "text/plain",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+//            "application/vnd.google-apps.spreadsheet",
+//            "application/msword",
+//            "text/plain",
+//            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "application/vnd.ms-excel",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+//            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 //      "xls" =>'application/vnd.ms-excel',
 //      "xlsx" =>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 //      "xml" =>'text/xml',

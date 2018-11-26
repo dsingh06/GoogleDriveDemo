@@ -4,7 +4,7 @@
 
     <corners android:radius="60dp"/>
 
-    <solid android:color="@color/colorPrimary" />
+    <solid android:color="@color/cardview_shadow_end_color" />
 
     <padding
         android:bottom="0dp"

@@ -35,6 +35,7 @@ import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import android.webkit.MimeTypeMap
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
@@ -77,6 +78,9 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         start.isEnabled = false
         logout.isEnabled = false
         login.isEnabled = true
+          login.visibility = View.VISIBLE
+        logout.visibility = View.INVISIBLE
+
       }
 
       else -> {
@@ -84,6 +88,8 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         start.isEnabled = true
         logout.isEnabled = true
         login.isEnabled = false
+          login.visibility = View.INVISIBLE
+        logout.visibility = View.VISIBLE
       }
     }
   }
@@ -102,6 +108,9 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         val isUserLoggedin:Boolean = googleDriveService.checkLoginStatus()
         if (!isUserLoggedin)googleDriveService.auth() // Automatic login screen
 
+      login.setOnClickListener {
+          googleDriveService.auth()
+      }
         downloadAndSync.setOnClickListener {
             googleDriveService.pickFiles(null)
         }
@@ -113,7 +122,10 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             state = ButtonState.LOGGED_OUT
             setButtons()
         }
-//        setButtons()
+        imageView3.setOnClickListener{
+          startActivity(Intent(this,MyChecklist::class.java))
+        }
+    //        setButtons()
   }
 
   private fun linkVarsToViews() {
@@ -155,6 +167,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
   }
 
   override fun handleError(exception: Exception) {
+      if(exception.message==="Sign-in failed.") setButtons()
     val errorMessage = getString(R.string.status_error, exception.message)
     Snackbar.make(main_layout, errorMessage, Snackbar.LENGTH_LONG).show()
   }
@@ -162,14 +175,12 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     // found online the following function
   private fun readExcelFile(context: Context, fileName: String) {
 
-//    if (!isExternalStorageAvailable() || isExternalStorageReadOnly()) {
-//      Log.e(FragmentActivity.TAG, "Storage not available or read only")
-//      return
-//    }
-
     try {
       // Creating Input Stream
       val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
+//      val myInput = FileInputStream(file)
+//      Create a POIFSFileSystem object
+//      val myFileSystem = POIFSFileSystem(myInput)
 
       // Create a workbook using the File System
         val myWorkBook = WorkbookFactory.create(file)
@@ -199,7 +210,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             }
           }
         }
-      }
+      }//
 
       /** We now need something to iterate through the cells. */
      /* val rowIter = mySheet.rowIterator()
