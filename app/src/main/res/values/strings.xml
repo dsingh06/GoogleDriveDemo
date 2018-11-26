@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Google Drive Demo</string>
+    <string name="app_name">Checklists</string>
     <string name="source_google_drive">Google Drive</string>
     <string name="start_drive">Start Google Drive</string>
     <string name="login">Log In</string>

@@ -28,6 +28,7 @@ import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.FileProvider
@@ -63,6 +64,11 @@ class MainActivity : AppCompatActivity(), ServiceListener {
   private lateinit var googleDriveService: GoogleDriveService
   private var state = ButtonState.LOGGED_OUT
 
+  lateinit var downloadAndSync:ConstraintLayout
+  lateinit var myProfile:ConstraintLayout
+
+  private val PROFILE_ACTIVITY = 33
+
 
   private fun setButtons() {
     when (state) {
@@ -83,27 +89,36 @@ class MainActivity : AppCompatActivity(), ServiceListener {
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-    val config = GoogleDriveConfig(
-        getString(R.string.source_google_drive),
-        GoogleDriveService.documentMimeTypes
-    )
+        linkVarsToViews()
+        val config = GoogleDriveConfig(
+            getString(R.string.source_google_drive),
+            GoogleDriveService.documentMimeTypes
+        )
         googleDriveService = GoogleDriveService(this, config)
         googleDriveService.serviceListener = this
         val isUserLoggedin:Boolean = googleDriveService.checkLoginStatus()
         if (!isUserLoggedin)googleDriveService.auth() // Automatic login screen
 
-    start.setOnClickListener {
-      googleDriveService.pickFiles(null)
-    }
-    logout.setOnClickListener {
-      googleDriveService.logout()
-      state = ButtonState.LOGGED_OUT
-      setButtons()
-    }
-    setButtons()
+        downloadAndSync.setOnClickListener {
+            googleDriveService.pickFiles(null)
+        }
+        myProfile.setOnClickListener {
+            startActivityForResult(Intent(this,ProfileActivity::class.java),PROFILE_ACTIVITY)
+        }
+        logout.setOnClickListener {
+            googleDriveService.logout()
+            state = ButtonState.LOGGED_OUT
+            setButtons()
+        }
+//        setButtons()
+  }
+
+  private fun linkVarsToViews() {
+    downloadAndSync = findViewById(R.id.downloadAndSyncLayout)
+    myProfile = findViewById(R.id.myProfileLayout)
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
