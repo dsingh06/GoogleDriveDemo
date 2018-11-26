@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ProfileActivity" android:parentActivityName=".MainActivity"/>
 
         <meta-data
             android:name="com.google.android.gms.version"
