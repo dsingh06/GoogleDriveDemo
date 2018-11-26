@@ -22,7 +22,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name="com.raywenderlich.googledrivedemo.MainActivity" >
+        <activity android:name="com.thatapp.checklists.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

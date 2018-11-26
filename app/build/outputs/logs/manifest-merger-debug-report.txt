@@ -43,7 +43,7 @@ INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/m
 INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:2:1-37:12
 INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:2:1-37:12
 	package
-		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:5:5-48
+		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:5:5-37
 		INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
 		INJECTED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml
 	android:versionName
@@ -98,7 +98,7 @@ MERGED from [com.google.android.gms:play-services-basement:15.0.1] /Users/D/.gra
 		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:19:13-66
 	android:name
 		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:18:13-58
-activity#com.raywenderlich.googledrivedemo.MainActivity
+activity#com.thatapp.checklists.MainActivity
 ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:20:9-25:20
 	android:name
 		ADDED from /Users/D/Downloads/GoogleDrive-materials/GoogleDriveDemo/app/src/main/AndroidManifest.xml:20:19-47
