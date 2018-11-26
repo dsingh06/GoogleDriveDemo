@@ -3,7 +3,7 @@ package com.thatapp.checklists
 import android.support.v7.widget.RecyclerView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.R
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
