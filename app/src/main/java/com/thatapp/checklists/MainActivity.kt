@@ -157,12 +157,6 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     try {
       // Creating Input Stream
       val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
-//      val myInput = FileInputStream(file)
-
-
-
-      // Create a POIFSFileSystem object
-//      val myFileSystem = POIFSFileSystem(myInput)
 
       // Create a workbook using the File System
         val myWorkBook = WorkbookFactory.create(file)
@@ -192,7 +186,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             }
           }
         }
-      }//
+      }
 
       /** We now need something to iterate through the cells. */
      /* val rowIter = mySheet.rowIterator()
