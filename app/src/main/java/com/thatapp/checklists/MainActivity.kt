@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             setButtons()
         }
         imageView3.setOnClickListener{
-          startActivity(Intent(this,MyChecklist::class.java))
+//          startActivity(Intent(this,MyChecklist::class.java))
         }
     //        setButtons()
   }
