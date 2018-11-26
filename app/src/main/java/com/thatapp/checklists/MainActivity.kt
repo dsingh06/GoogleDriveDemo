@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         logout.isEnabled = false
         login.isEnabled = true
           login.visibility = View.VISIBLE
+        logout.visibility = View.INVISIBLE
 
       }
 
@@ -88,6 +89,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         logout.isEnabled = true
         login.isEnabled = false
           login.visibility = View.INVISIBLE
+        logout.visibility = View.VISIBLE
       }
     }
   }
@@ -120,7 +122,10 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             state = ButtonState.LOGGED_OUT
             setButtons()
         }
-//        setButtons()
+        imageView3.setOnClickListener{
+          startActivity(Intent(this,MyChecklist::class.java))
+        }
+    //        setButtons()
   }
 
   private fun linkVarsToViews() {
