@@ -94,9 +94,9 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     googleDriveService.serviceListener = this
     googleDriveService.checkLoginStatus()
 
-    login.setOnClickListener {
+//    login.setOnClickListener { Login button made
       googleDriveService.auth()
-    }
+//    }
     start.setOnClickListener {
       googleDriveService.pickFiles(null)
     }
@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
   }
 
   override fun loggedIn() {
-    state = ButtonState.LOGGED_IN
+    state = MainActivity.ButtonState.LOGGED_IN
     setButtons()
   }
 

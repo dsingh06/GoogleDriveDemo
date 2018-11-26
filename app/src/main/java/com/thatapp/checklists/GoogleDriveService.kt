@@ -231,7 +231,7 @@ class GoogleDriveService(private val activity: Activity, private val config: Goo
   /**
    * Initialize signInAccount if user has signed in and no new scope
    */
-  fun checkLoginStatus() {
+  fun checkLoginStatus():Boolean {
     val requiredScopes = HashSet<Scope>(2)
     requiredScopes.add(Drive.SCOPE_FILE)
     requiredScopes.add(Drive.SCOPE_APPFOLDER)
@@ -239,7 +239,9 @@ class GoogleDriveService(private val activity: Activity, private val config: Goo
     val containsScope = signInAccount?.grantedScopes?.containsAll(requiredScopes)
     if (signInAccount != null && containsScope == true) {
       initializeDriveClient(signInAccount!!)
+        return true
     }
+      return false
   }
 
   /**
