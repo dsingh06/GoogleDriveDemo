@@ -24,18 +24,13 @@ class MyCheckList : AppCompatActivity(){
         setContentView(R.layout.activity_my_checklists)
 
 
-        var intent:Intent = intent
-        var filename:String= intent.getStringExtra("fileName")
+        val intent:Intent = intent
+        val filename:String= intent.getStringExtra("fileName")
         Log.e("file name is ","@   "+filename)
         readExcelFile(this,filename)
     }
 
     private fun readExcelFile(context: Context, fileName: String) {
-
-//    if (!isExternalStorageAvailable() || isExternalStorageReadOnly()) {
-//      Log.e(FragmentActivity.TAG, "Storage not available or read only")
-//      return
-//    }
 
         try {
             // Creating Input Stream
@@ -59,13 +54,11 @@ class MyCheckList : AppCompatActivity(){
                             Log.e("column", "")
                             Log.e(TAG, "\n column Value: " + cell.toString())
                             questionsItem = QuestionItem("1", cell.toString(), "Test", "test")
-
                             questions.add(questionsItem)
                         } else {
                             Log.e("row", "")
                             Log.e(TAG, "\t\tCell Value: " + cell.toString())
                             questionsItem = QuestionItem("1", cell.toString(), "Test", "test")
-
                             questions.add(questionsItem)
                         }
                     }
@@ -81,8 +74,6 @@ class MyCheckList : AppCompatActivity(){
 
                 // Access the RecyclerView Adapter and load the data into it
                 rv_list.adapter = CheckListItemAdapter(questions, this)
-
-
             }
 
    } catch (e: Exception) {
