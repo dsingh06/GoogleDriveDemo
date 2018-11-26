@@ -30,12 +30,12 @@
 
         <TextView
             android:id="@+id/textView"
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="My Checklists"
             android:textColor="@android:color/white"
-            android:textSize="24sp"
+            android:textSize="30sp"
             android:textStyle="italic" />
 
     </RelativeLayout>
@@ -49,7 +49,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
             android:text="Download and Sync Checklists"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -87,7 +86,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
             android:text="My Profile"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
