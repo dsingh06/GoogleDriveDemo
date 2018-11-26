@@ -19,6 +19,7 @@ class CheckListItemAdapter(var questionItemList:List<QuestionItem>,context:Conte
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
+
         val inflatedView = LayoutInflater.from(context).inflate(R.layout.question_list,parent)
         return UserViewHolder(inflatedView)
     }
