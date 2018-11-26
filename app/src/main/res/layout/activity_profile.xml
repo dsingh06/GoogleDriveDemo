@@ -64,11 +64,9 @@
                     android:id="@+id/etyourname"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:hint="Your name (Required)"
                     android:inputType="textPersonName|textCapWords"
@@ -105,10 +103,9 @@
                     android:id="@+id/etjobtitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:hint="Job title (Required)"
                     android:inputType="textPersonName|textCapWords"
@@ -146,11 +143,9 @@
                     android:id="@+id/etcompanyname"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:hint="Company name (Required)"
                     android:inputType="textPersonName|textCapWords"
@@ -295,163 +290,6 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:text="Use square images" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView13"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@color/Gainsboro"
-                    android:paddingLeft="8dp"
-                    android:text="Status Codes" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_weight="0.1"
-                android:gravity="left"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:text="OK"
-                    android:textStyle="bold|italic" />
-
-                <EditText
-                    android:id="@+id/etok"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:lines="2"
-                    android:maxLines="2"
-                    android:hint="There is no defect and no action is required"
-                    android:inputType="textMultiLine"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_weight="0.1"
-                android:gravity="left"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:text="OBS"
-                    android:textStyle="bold|italic" />
-
-                <EditText
-                    android:id="@+id/etOBS"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:lines="2"
-                    android:maxLines="2"
-                    android:hint="Observation and no action is required"
-                    android:inputType="textMultiLine"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_weight="0.1"
-                android:gravity="left"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:text="CAT3"
-                    android:textStyle="bold|italic" />
-
-                <EditText
-                    android:id="@+id/etc3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:lines="2"
-                    android:maxLines="2"
-                    android:hint="Improvement is required"
-                    android:inputType="textMultiLine"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_weight="0.1"
-                android:gravity="start"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:text="CAT2"
-                    android:textStyle="bold|italic" />
-
-                <EditText
-                    android:id="@+id/etc2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:lines="2"
-                    android:maxLines="2"
-                    android:ems="10"
-                    android:inputType="textMultiLine"
-                    android:hint="Potentially dangerous and remedial action should be taken soon"
-                    android:textSize="12sp" />
-
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_weight="0.1"
-                android:gravity="start"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:text="CAT1"
-                    android:textStyle="bold|italic" />
-
-                <EditText
-                    android:id="@+id/etc1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:lines="2"
-                    android:maxLines="2"
-                    android:ems="10"
-                    android:inputType="textMultiLine"
-                    android:hint="There is significant risk to persons or property and immediate remedial action is required"
-                    android:textSize="12sp" />
 
             </LinearLayout>
 
