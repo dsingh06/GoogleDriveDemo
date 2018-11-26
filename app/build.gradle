@@ -9,7 +9,7 @@ ext {
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.raywenderlich.googledrivedemo"
+        applicationId 'com.thatapp.checklists'
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
@@ -22,10 +22,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:design:$support_version"
@@ -34,11 +36,9 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:$play_services_version"
     implementation "com.google.android.gms:play-services-drive:$play_services_version"
     implementation 'com.squareup.okio:okio:1.14.0'
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
-    implementation "org.apache.poi:poi:3.9"
-    implementation "org.apache.poi:poi-ooxml:3.9"
+    implementation 'org.apache.poi:poi:3.9'
+    implementation 'org.apache.poi:poi-ooxml:3.9'
 }
