@@ -49,10 +49,13 @@
                     android:layout_height="@dimen/profileIcons"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:layout_weight="0.3"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:srcCompat="@drawable/engineer"
-                    tools:layout_editor_absoluteY="11dp" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/engineer" />
 
                 <EditText
                     android:id="@+id/etyourname"
@@ -85,10 +88,13 @@
                     android:layout_height="@dimen/profileIcons"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:layout_weight="0.3"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:srcCompat="@drawable/recruitment"
-                    tools:layout_editor_absoluteY="8dp" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/recruitment" />
 
                 <EditText
                     android:id="@+id/etjobtitle"
