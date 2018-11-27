@@ -24,18 +24,13 @@ class MyCheckList : AppCompatActivity(){
         setContentView(R.layout.activity_my_checklists)
 
 
-        var intent:Intent = intent
-        var filename:String= intent.getStringExtra("fileName")
+        val intent:Intent = intent
+        val filename:String= intent.getStringExtra("fileName")
         Log.e("file name is ","@   "+filename)
         readExcelFile(this,filename)
     }
 
     private fun readExcelFile(context: Context, fileName: String) {
-
-//    if (!isExternalStorageAvailable() || isExternalStorageReadOnly()) {
-//      Log.e(FragmentActivity.TAG, "Storage not available or read only")
-//      return
-//    }
 
         try {
             // Creating Input Stream
@@ -48,12 +43,8 @@ class MyCheckList : AppCompatActivity(){
             val mySheet = myWorkBook.getSheetAt(0)
             val rowIter = mySheet.rowIterator()
             var questionsItem: QuestionItem
-
-            val sectionModelArrayList:ArrayList<SectionModel> = ArrayList()
-            val itemArrayList:ArrayList<String> = ArrayList()
-            //for loop for items
-
-
+			var heading = 0
+			var question = 0
             while (rowIter.hasNext()) {
                 val row: Row = rowIter.next()
                 val cellIterator: Iterator<Cell> = row.cellIterator()
@@ -61,16 +52,18 @@ class MyCheckList : AppCompatActivity(){
                     val cell: Cell = cellIterator.next()
 
                     if (row.rowNum >= 0) { //To filter column headings
-                        if (cell.columnIndex == 0) {
-                            questionsItem = QuestionItem("1", cell.toString(), "Test", "test","heading")
-
+                        if (cell.columnIndex == 0) {// To match column index
+                            Log.e("column", "")
+                            Log.e(TAG, "\n column Value: " + cell.toString())
+							heading+=1
+							question = 0
+                            questionsItem = QuestionItem(heading.toString(), cell.toString(), "")
                             questions.add(questionsItem)
-//todo display as a section with collapsing function
-//  itemArrayList.add(cell.toString())
-//                            sectionModelArrayList.add(SectionModel(cell.toString(), itemArrayList))
                         } else {
-                            questionsItem = QuestionItem("1", cell.toString(), "Test", "test","question")
-
+                            Log.e("row", "")
+                            Log.e(TAG, "\t\tCell Value: " + cell.toString())
+							question+=1
+                            questionsItem = QuestionItem(""+heading+"."+question, "", cell.toString())
                             questions.add(questionsItem)
                         }
                     }
@@ -81,13 +74,11 @@ class MyCheckList : AppCompatActivity(){
                 val rv_list: RecyclerView = findViewById(R.id.rc)
                 rv_list.layoutManager = LinearLayoutManager(this)
 
+               // You can use GridLayoutManager if you want multiple columns. Enter the number of columns as a parameter.
+//        rv_animal_list.layoutManager = GridLayoutManager(this, 2)
 
                 // Access the RecyclerView Adapter and load the data into it
                 rv_list.adapter = CheckListItemAdapter(questions, this)
-
-             //not using  val adapter = SectionAdapter(this, sectionModelArrayList)
-             //               rv_list.setAdapter(adapter)
-
             }
 
    } catch (e: Exception) {
