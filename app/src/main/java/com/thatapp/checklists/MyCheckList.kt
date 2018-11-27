@@ -42,7 +42,7 @@ class MyCheckList : AppCompatActivity() {
             var ques:QuestionItem
             for (i in questions) {
                 ques = i
-                Log.e("answer ",ques.answer)
+                Log.e("answer ", ques.serialNo+"   "+ques.answer)
             };
 
             Log.e("answer ","")})

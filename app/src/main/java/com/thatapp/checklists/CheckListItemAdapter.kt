@@ -8,6 +8,7 @@ import android.content.Context
 import android.graphics.Color
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.CardView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,7 +48,9 @@ class CheckListItemAdapter(var questionItemList: List<QuestionItem>, var context
                 holder.btnNo.setBackgroundColor(Color.parseColor("#ffffff"))
                 holder.btnElse.setBackgroundColor(Color.parseColor("#ffffff"))
                 quesItem.answer = "Yes"
-                notifyDataSetChanged()
+//                notifyDataSetChanged()
+
+                Log.e("clicked","yes "+ position)
             })
 
             holder.btnNo.setOnClickListener(View.OnClickListener {
@@ -55,15 +58,17 @@ class CheckListItemAdapter(var questionItemList: List<QuestionItem>, var context
                 holder.btnNo.setBackgroundColor(Color.parseColor("#456789"))
                 holder.btnElse.setBackgroundColor(Color.parseColor("#ffffff"))
                 quesItem.answer = "No"
-                notifyDataSetChanged()
+//                notifyDataSetChanged()
+                Log.e("clicked","No "+ position)
             })
 
             holder.btnElse.setOnClickListener(View.OnClickListener {
                 holder.btnYes.setBackgroundColor(Color.parseColor("#ffffff"))
                 holder.btnNo.setBackgroundColor(Color.parseColor("#ffffff"))
                 holder.btnElse.setBackgroundColor(Color.parseColor("#456789"))
-                quesItem.answer = "N/A"
-                notifyDataSetChanged()
+                quesItem.answer = "333"
+//                notifyDataSetChanged()
+                Log.e("clicked","333 "+ position)
             })
         }
     }
