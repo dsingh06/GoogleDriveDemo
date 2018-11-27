@@ -43,6 +43,8 @@ class MyCheckList : AppCompatActivity(){
             val mySheet = myWorkBook.getSheetAt(0)
             val rowIter = mySheet.rowIterator()
             var questionsItem: QuestionItem
+			var heading = 0
+			var question = 0
             while (rowIter.hasNext()) {
                 val row: Row = rowIter.next()
                 val cellIterator: Iterator<Cell> = row.cellIterator()
@@ -53,12 +55,15 @@ class MyCheckList : AppCompatActivity(){
                         if (cell.columnIndex == 0) {// To match column index
                             Log.e("column", "")
                             Log.e(TAG, "\n column Value: " + cell.toString())
-                            questionsItem = QuestionItem("1", cell.toString(), "Test", "test")
+							heading+=1
+							question = 0
+                            questionsItem = QuestionItem(heading.toString(), cell.toString(), "")
                             questions.add(questionsItem)
                         } else {
                             Log.e("row", "")
                             Log.e(TAG, "\t\tCell Value: " + cell.toString())
-                            questionsItem = QuestionItem("1", cell.toString(), "Test", "test")
+							question+=1
+                            questionsItem = QuestionItem(""+heading+"."+question, "", cell.toString())
                             questions.add(questionsItem)
                         }
                     }
@@ -69,7 +74,7 @@ class MyCheckList : AppCompatActivity(){
                 val rv_list: RecyclerView = findViewById(R.id.rc)
                 rv_list.layoutManager = LinearLayoutManager(this)
 
-                // You can use GridLayoutManager if you want multiple columns. Enter the number of columns as a parameter.
+               // You can use GridLayoutManager if you want multiple columns. Enter the number of columns as a parameter.
 //        rv_animal_list.layoutManager = GridLayoutManager(this, 2)
 
                 // Access the RecyclerView Adapter and load the data into it

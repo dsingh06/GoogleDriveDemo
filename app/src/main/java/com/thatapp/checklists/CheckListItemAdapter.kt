@@ -5,6 +5,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 
 import android.content.Context
+import android.graphics.Color
+import android.support.constraint.ConstraintLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,13 +16,9 @@ import kotlinx.android.synthetic.main.question_list.view.*
 
 class CheckListItemAdapter(var questionItemList:List<QuestionItem>,var context:Context) :  RecyclerView.Adapter<CheckListItemAdapter.UserViewHolder>() {
 
-//    private  var context: Context = context
-
     override fun getItemCount() = questionItemList.size
-private  var i=1;
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-
         val inflatedView = LayoutInflater.from(context).inflate(R.layout.question_list,parent,false)
         return UserViewHolder(inflatedView)
     }
@@ -28,12 +26,24 @@ private  var i=1;
 
     override fun onBindViewHolder(holder: CheckListItemAdapter.UserViewHolder, position: Int) {
         val quesItem = questionItemList[position]
-        holder.tvSNo.setText(quesItem.strHeading)
+		holder.serialNo.setText(quesItem.serialNo)
+		if (quesItem.serialNo.c) {
+				holder.headingLayout.setBackgroundColor(Color.parseColor("#BDBDBD"))
+				holder.heading.setText(quesItem.strHeading)
+				holder.question.setText("")
+			} else {
+				holder.heading.setText("")
+				holder.question.setText(quesItem.strQuestion)
+			}
     }
 
-    inner class UserViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    class UserViewHolder (view: View) : RecyclerView.ViewHolder(view) {
 
-         var tvSNo: TextView = view.tvSummary
+		var serialNo: TextView = view.tvQNo
+        var question: TextView = view.tvSummary
+        var heading: TextView = view.tvHeading
+		var headingLayout:ConstraintLayout = view.headingLayout
+
     }
 
 
