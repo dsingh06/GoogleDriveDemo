@@ -33,10 +33,10 @@ class MyCheckList : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_checklists)
-        var toolbar: Toolbar = findViewById(R.id.my_toolbar)
 
-        toolbar.setTitle("MY CHECKLIST")
-        setSupportActionBar(toolbar)
+		val toolbar: Toolbar = findViewById(R.id.my_toolbar)
+		setSupportActionBar(toolbar)
+        toolbar.setTitle("Checklists")
 
         val intent: Intent = intent
         val filename: String = intent.getStringExtra("fileName")
@@ -46,7 +46,7 @@ class MyCheckList : AppCompatActivity() {
             for (i in questions) {
                 ques = i
                 Log.e("answer ", ques.serialNo + "   " + ques.answer)
-            };
+            }
           CreatePdf(questions).execute(this)
 		})
         readExcelFile(this, filename)
