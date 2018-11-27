@@ -27,7 +27,7 @@ class CheckListItemAdapter(var questionItemList:List<QuestionItem>,var context:C
     override fun onBindViewHolder(holder: CheckListItemAdapter.UserViewHolder, position: Int) {
         val quesItem = questionItemList[position]
 		holder.serialNo.setText(quesItem.serialNo)
-		if (quesItem.serialNo.c) {
+		if (quesItem.serialNo.) {
 				holder.headingLayout.setBackgroundColor(Color.parseColor("#BDBDBD"))
 				holder.heading.setText(quesItem.strHeading)
 				holder.question.setText("")
