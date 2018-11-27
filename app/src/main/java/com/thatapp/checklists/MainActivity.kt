@@ -122,9 +122,9 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             state = ButtonState.LOGGED_OUT
             setButtons()
         }
-        imageView3.setOnClickListener{
-//          startActivity(Intent(this,MyChecklist::class.java))
-        }
+//        imageView3.setOnClickListener{
+//          startActivity(Intent(this,MyCheckList::class.java))
+//        }
     //        setButtons()
   }
 
@@ -147,9 +147,13 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 //    val apkURI = FileProvider.getUriForFile(
 //        this,
 //        applicationContext.packageName + ".provider",
+
 //        file)
 //    val uri = Uri.fromFile(file)
       readExcelFile(this,fileName)
+    val intent = Intent(this,MyCheckList::class.java)
+    intent.putExtra("fileName",fileName)
+    startActivity(intent)
       return
 //    val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
 //    val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)

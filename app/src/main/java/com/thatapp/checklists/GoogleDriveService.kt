@@ -129,7 +129,7 @@ class GoogleDriveService(private val activity: Activity, private val config: Goo
   private fun handleSignIn(data: Intent) {
     val getAccountTask = GoogleSignIn.getSignedInAccountFromIntent(data)
     if (getAccountTask.isSuccessful) {
-      initializeDriveClient(getAccountTask.result)
+      initializeDriveClient(getAccountTask.result!!)
     } else {
       serviceListener?.handleError(Exception("Sign-in failed.", getAccountTask.exception))
     }
@@ -167,7 +167,7 @@ class GoogleDriveService(private val activity: Activity, private val config: Goo
     val openFileTask = driveResourceClient?.openFile(drive, DriveFile.MODE_READ_ONLY)
     openFileTask?.continueWithTask { task ->
       val contents = task.result
-      contents.inputStream.use {
+      contents!!.inputStream.use {
         try {
           //This is the app's download directory, not the phones
           val storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
@@ -220,9 +220,9 @@ class GoogleDriveService(private val activity: Activity, private val config: Goo
    */
   private fun pickItem(openOptions: OpenFileActivityOptions) {
     val openTask = driveClient?.newOpenFileActivityIntentSender(openOptions)
-    openTask?.let {
+    openTask!!.let {
       openTask.continueWith { task ->
-        ActivityCompat.startIntentSenderForResult(activity, task.result, REQUEST_CODE_OPEN_ITEM,
+        ActivityCompat.startIntentSenderForResult(activity, task.result!!, REQUEST_CODE_OPEN_ITEM,
             null, 0, 0, 0, null)
       }
     }
