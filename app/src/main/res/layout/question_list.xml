@@ -9,10 +9,19 @@
     android:padding="2dp"
     app:ignore="NamespaceTypo"
     card_view:cardCornerRadius="5dp"
-    card_view:cardElevation="2dp"
-    >
+    card_view:cardElevation="2dp">
 
+    <TextView
+        android:id="@+id/head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Heading"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:visibility="gone"/>
     <LinearLayout
+        android:visibility="visible"
+        android:id="@+id/layoutLinear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -22,15 +31,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/tvQNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:layout_marginLeft="@dimen/text_size"
                 android:text="5"
                 android:textColor="@color/itemTextColor"
-                android:textSize="@dimen/text_size"
-                android:layout_marginLeft="@dimen/text_size"/>
+                android:textSize="@dimen/text_size" />
 
 
             <TextView
@@ -43,6 +53,7 @@
                 android:textSize="@dimen/text_size"
                 android:visibility="visible" />
         </LinearLayout>
+
         <TextView
             android:id="@+id/tvSummary"
             android:layout_width="wrap_content"
@@ -53,7 +64,55 @@
             android:textColor="@color/itemTextColor"
             android:textSize="10sp" />
 
+        <RelativeLayout
+            android:id="@+id/layoutButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <LinearLayout
+                android:layout_alignParentBottom="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="false"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/button_border">
+
+
+                <Button
+                    android:id="@+id/btnYes"
+                    android:layout_width="@dimen/select_option_width"
+                    android:layout_height="@dimen/select_option_height"
+                    android:text="YES"
+                    android:textSize="10sp"
+                    android:textColor="#000"
+                    android:background="@drawable/button_border_left"
+                    />
+                <Button
+
+                    android:layout_alignRight="@id/btnYes"
+                    android:id="@+id/btnNo"
+                    android:layout_width="@dimen/select_option_width"
+                    android:layout_height="@dimen/select_option_height"
+                    android:text="No"
+                    android:textSize="10sp"
+                    android:textColor="#fff"
+                    android:background="@drawable/button_border_active"
+                    />
+
+                <Button
+                    android:id="@+id/btnMaybe"
+                    android:layout_width="@dimen/select_option_width"
+                    android:layout_height="@dimen/select_option_height"
+                    android:layout_alignRight="@id/btnNo"
+                    android:text="Maybe"
+                    android:textSize="10sp"
+                    android:background="@drawable/button_border_right"
+                    />
+            </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
+
+
 
 </android.support.v7.widget.CardView>

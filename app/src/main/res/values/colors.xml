@@ -6,4 +6,5 @@
     <color name="FF5500">#FF5500</color>
     <color name="colorDivideBar">#BDBDBD</color>
     <color name="itemTextColor">#000</color>
+    <color name="colorActive">#445</color>
 </resources>
