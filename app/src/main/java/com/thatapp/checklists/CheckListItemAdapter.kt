@@ -60,14 +60,10 @@ class CheckListItemAdapter(var questionItemList: List<QuestionItem>, var context
                 holder.btnYes.setBackgroundColor(Color.parseColor("#ffffff"))
                 holder.btnNo.setBackgroundColor(Color.parseColor("#ffffff"))
                 holder.btnElse.setBackgroundColor(Color.parseColor("#456789"))
-                quesItem.answer = "Not available"
+                quesItem.answer = "N/A"
                 notifyDataSetChanged()
             })
-
-
         }
-
-
     }
 
     class UserViewHolder(view: View) : RecyclerView.ViewHolder(view) {
