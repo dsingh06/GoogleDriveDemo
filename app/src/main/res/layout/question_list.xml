@@ -63,7 +63,6 @@
                 android:textSize="@dimen/text_size"
                 android:paddingBottom="@dimen/text_size"
                 />
-
         </LinearLayout>
 
 
@@ -107,7 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignRight="@id/btnNo"
-                    android:text="Maybe"
+                    android:text="N/A"
                     android:textSize="10sp"
                     android:background="@drawable/button_border_right"
                     />

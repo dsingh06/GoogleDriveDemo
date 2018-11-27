@@ -122,10 +122,14 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             state = ButtonState.LOGGED_OUT
             setButtons()
         }
-//        imageView3.setOnClickListener{
-//          startActivity(Intent(this,MyCheckList::class.java))
-//        }
-    //        setButtons()
+        imageView3.setOnClickListener{
+//          val intent = Intent(this,DownloadedCheckListsActivity::class.java)
+//          startActivity(intent)
+        }
+	    view.setOnClickListener{
+//          val intent = Intent(this,DownloadedCheckListsActivity::class.java)
+//          startActivity(intent)
+        }
   }
 
   private fun linkVarsToViews() {
@@ -143,27 +147,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
   }
 
   override fun fileDownloaded(file: File, fileName:String) {
-//    val intent = Intent(Intent.ACTION_VIEW)
-//    val apkURI = FileProvider.getUriForFile(
-//        this,
-//        applicationContext.packageName + ".provider",
-
-//        file)
-//    val uri = Uri.fromFile(file)
-      readExcelFile(this,fileName)
-    val intent = Intent(this,MyCheckList::class.java)
-    intent.putExtra("fileName",fileName)
-    startActivity(intent)
-      return
-//    val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
-//    val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-//    intent.setDataAndType(apkURI, mimeType)
-//    intent.flags = FLAG_GRANT_READ_URI_PERMISSION
-//    if (intent.resolveActivity(packageManager) != null) {
-//      startActivity(intent)
-//    } else {
-//      Snackbar.make(main_layout, R.string.not_open_file, Snackbar.LENGTH_LONG).show()
-//    }
+      Snackbar.make(main_layout,"File download completed", Snackbar.LENGTH_LONG).show()
   }
 
   override fun cancelled() {
@@ -174,64 +158,5 @@ class MainActivity : AppCompatActivity(), ServiceListener {
       if(exception.message==="Sign-in failed.") setButtons()
     val errorMessage = getString(R.string.status_error, exception.message)
     Snackbar.make(main_layout, errorMessage, Snackbar.LENGTH_LONG).show()
-  }
-
-    // found online the following function
-  private fun readExcelFile(context: Context, fileName: String) {
-
-    try {
-      // Creating Input Stream
-      val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
-//      val myInput = FileInputStream(file)
-//      Create a POIFSFileSystem object
-//      val myFileSystem = POIFSFileSystem(myInput)
-
-      // Create a workbook using the File System
-        val myWorkBook = WorkbookFactory.create(file)
-//        if (fileName.substringAfter(".")==="xls"){
-//            myWorkBook = HSSFWorkbook(myFileSystem)
-//        } else {
-//            myWorkBook = XSSFWorkbook(myInput)
-//        }
-
-      // Get the first sheet from workbook
-      val mySheet = myWorkBook.getSheetAt(0)
-      val rowIter = mySheet.rowIterator()
-
-      while (rowIter.hasNext()) {
-        val row: Row = rowIter.next();
-        val cellIterator: Iterator<Cell> = row.cellIterator();
-        while (cellIterator.hasNext()) {
-          val cell: Cell = cellIterator.next();
-
-          if (row.getRowNum() >= 0) { //To filter column headings
-            if (cell.getColumnIndex() == 0) {// To match column index
-              Log.e("column", "")
-              Log.e(TAG, "\n column Value: " + cell.toString())
-            } else {
-              Log.e("row", "")
-              Log.e(TAG, "\t\tCell Value: " + cell.toString())
-            }
-          }
-        }
-      }//
-
-      /** We now need something to iterate through the cells. */
-     /* val rowIter = mySheet.rowIterator()
-
-      while (rowIter.hasNext()) {
-        val myRow = rowIter.next() as Row//as HSSFRow
-        val cellIter = myRow.cellIterator()
-        while (cellIter.hasNext()) {
-          val myCell = cellIter.next() as Cell//as HSSFCell
-          Log.d(TAG, "Cell Value: " + myCell.toString())
-//          Toast.makeText(context, "cell Value: " + myCell.toString(), Toast.LENGTH_SHORT).show()
-        }
-      }*/
-    } catch (e: Exception) {
-      e.printStackTrace()
-    }
-
-    return
   }
 }
