@@ -6,13 +6,6 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/my_toolbar"
             android:layout_width="match_parent"
@@ -23,44 +16,37 @@
             android:padding="0dp" />
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rc"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-
-        </android.support.v7.widget.RecyclerView>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Some Remarks" />
-        </android.support.design.widget.TextInputLayout>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rc"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
 
-        <Button
-            android:id="@+id/btnSubmit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/text_size"
-            android:background="@drawable/orange_rounded"
-            android:text="Submit" />
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-            </LinearLayout>
+                       <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Additional details"/>
+                    </android.support.design.widget.TextInputLayout>
 
+                    <Button
+                        android:id="@+id/btnSubmit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/text_size"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/orange_bluebutton"
+                        android:text="Submit" />
+
+                </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
-
-
-</LinearLayout>
 </LinearLayout>

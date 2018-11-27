@@ -7,6 +7,7 @@ import android.widget.TextView
 import android.content.Context
 import android.graphics.Color
 import android.support.constraint.ConstraintLayout
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
 import android.util.Log
 import android.view.LayoutInflater
@@ -44,8 +45,9 @@ class CheckListItemAdapter(var questionItemList: List<QuestionItem>, var context
             holder.question.setText(quesItem.strQuestion)
 
             holder.btnYes.setOnClickListener(View.OnClickListener {
-                holder.btnYes.setBackgroundColor(Color.parseColor("#456789"))
-                holder.btnNo.setBackgroundColor(Color.parseColor("#ffffff"))
+//                holder.btnYes.setBackgroundColor(Color.parseColor("#456789"))
+		holder.btnYes.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_active_left));
+				holder.btnNo.setBackgroundColor(Color.parseColor("#ffffff"))
                 holder.btnElse.setBackgroundColor(Color.parseColor("#ffffff"))
                 quesItem.answer = "Yes"
 //                notifyDataSetChanged()
@@ -65,7 +67,8 @@ class CheckListItemAdapter(var questionItemList: List<QuestionItem>, var context
             holder.btnElse.setOnClickListener(View.OnClickListener {
                 holder.btnYes.setBackgroundColor(Color.parseColor("#ffffff"))
                 holder.btnNo.setBackgroundColor(Color.parseColor("#ffffff"))
-                holder.btnElse.setBackgroundColor(Color.parseColor("#456789"))
+        //        holder.btnElse.setBackgroundColor(Color.parseColor("#456789"))
+					holder.btnElse.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_active_right));
                 quesItem.answer = "333"
 //                notifyDataSetChanged()
                 Log.e("clicked","333 "+ position)
