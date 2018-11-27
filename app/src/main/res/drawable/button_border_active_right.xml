@@ -7,7 +7,7 @@
         android:bottomRightRadius="5dp"
         android:topRightRadius="5dp" />
 
-    <stroke android:width="2px"
+    <stroke android:width="0dp"
         android:color="@color/colorPrimary" />
     <solid android:color="@color/colorPrimaryDark"/>
 

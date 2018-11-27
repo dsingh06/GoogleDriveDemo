@@ -2,5 +2,5 @@
 <resources>
     <dimen name="text_size">15sp</dimen>
     <dimen name="select_option_width">50dp</dimen>
-    <dimen name="select_option_height">30dp</dimen>
+    <dimen name="select_option_height">35dp</dimen>
 </resources>
