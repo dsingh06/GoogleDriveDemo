@@ -82,8 +82,8 @@
 
                 <Button
                     android:id="@+id/btnYes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/select_option_width"
+                    android:layout_height="@dimen/select_option_height"
                     android:text="YES"
                     android:textSize="10sp"
                     android:textColor="#000"
@@ -93,8 +93,8 @@
 
                     android:layout_alignRight="@id/btnYes"
                     android:id="@+id/btnNo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/select_option_width"
+                    android:layout_height="@dimen/select_option_height"
                     android:text="No"
                     android:textSize="10sp"
                     android:textColor="#fff"
@@ -103,8 +103,8 @@
 
                 <Button
                     android:id="@+id/btnElse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/select_option_width"
+                    android:layout_height="@dimen/select_option_height"
                     android:layout_alignRight="@id/btnNo"
                     android:text="N/A"
                     android:textSize="10sp"
