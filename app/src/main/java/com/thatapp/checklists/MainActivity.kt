@@ -56,93 +56,94 @@ import java.io.FileInputStream
 
 class MainActivity : AppCompatActivity(), ServiceListener {
 
-  enum class ButtonState {
-    LOGGED_OUT,
-    LOGGED_IN
-  }
+    enum class ButtonState {
+        LOGGED_OUT,
+        LOGGED_IN
+    }
+
     private val TAG = "MainActivity----"
 
-  private lateinit var googleDriveService: GoogleDriveService
-  private var state = ButtonState.LOGGED_OUT
+    private lateinit var googleDriveService: GoogleDriveService
+    private var state = ButtonState.LOGGED_OUT
 
-  lateinit var downloadAndSync:ConstraintLayout
-  lateinit var myProfile:ConstraintLayout
+    lateinit var downloadAndSync: ConstraintLayout
+    lateinit var myProfile: ConstraintLayout
 
-  private val PROFILE_ACTIVITY = 33
+    private val PROFILE_ACTIVITY = 33
 
 
-  private fun setButtons() {
-    when (state) {
-      ButtonState.LOGGED_OUT -> {
-        status.text = getString(R.string.status_logged_out)
-        start.isEnabled = false
-        logout.isEnabled = false
-        login.isEnabled = true
-          login.visibility = View.VISIBLE
-        logout.visibility = View.INVISIBLE
+    private fun setButtons() {
+        when (state) {
+            ButtonState.LOGGED_OUT -> {
+                status.text = getString(R.string.status_logged_out)
+                start.isEnabled = false
+                logout.isEnabled = false
+                login.isEnabled = true
+                login.visibility = View.VISIBLE
+                logout.visibility = View.INVISIBLE
 
-      }
+            }
 
-      else -> {
-        status.text = getString(R.string.status_logged_in)
-        start.isEnabled = true
-        logout.isEnabled = true
-        login.isEnabled = false
-          login.visibility = View.INVISIBLE
-        logout.visibility = View.VISIBLE
-      }
+            else -> {
+                status.text = getString(R.string.status_logged_in)
+                start.isEnabled = true
+                logout.isEnabled = true
+                login.isEnabled = false
+                login.visibility = View.INVISIBLE
+                logout.visibility = View.VISIBLE
+            }
+        }
     }
-  }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         linkVarsToViews()
         val config = GoogleDriveConfig(
-            getString(R.string.source_google_drive),
-            GoogleDriveService.documentMimeTypes
+                getString(R.string.source_google_drive),
+                GoogleDriveService.documentMimeTypes
         )
         googleDriveService = GoogleDriveService(this, config)
         googleDriveService.serviceListener = this
-        val isUserLoggedin:Boolean = googleDriveService.checkLoginStatus()
-        if (!isUserLoggedin)googleDriveService.auth() // Automatic login screen
+        val isUserLoggedin: Boolean = googleDriveService.checkLoginStatus()
+        if (!isUserLoggedin) googleDriveService.auth() // Automatic login screen
 
-      login.setOnClickListener {
-          googleDriveService.auth()
-      }
+        login.setOnClickListener {
+            googleDriveService.auth()
+        }
         downloadAndSync.setOnClickListener {
             googleDriveService.pickFiles(null)
         }
         myProfile.setOnClickListener {
-            startActivityForResult(Intent(this,ProfileActivity::class.java),PROFILE_ACTIVITY)
+            startActivityForResult(Intent(this, ProfileActivity::class.java), PROFILE_ACTIVITY)
         }
         logout.setOnClickListener {
             googleDriveService.logout()
             state = ButtonState.LOGGED_OUT
             setButtons()
         }
-//        imageView3.setOnClickListener{
-//          startActivity(Intent(this,MyCheckList::class.java))
-//        }
-    //        setButtons()
-  }
+        imageView3.setOnClickListener {
+            startActivity(Intent(this, DownloadedCheckListsActivity::class.java))
+        }
+        //        setButtons()
+    }
 
-  private fun linkVarsToViews() {
-    downloadAndSync = findViewById(R.id.downloadAndSyncLayout)
-    myProfile = findViewById(R.id.myProfileLayout)
-  }
+    private fun linkVarsToViews() {
+        downloadAndSync = findViewById(R.id.downloadAndSyncLayout)
+        myProfile = findViewById(R.id.myProfileLayout)
+    }
 
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    googleDriveService.onActivityResult(requestCode, resultCode, data)
-  }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        googleDriveService.onActivityResult(requestCode, resultCode, data)
+    }
 
-  override fun loggedIn() {
-    state = MainActivity.ButtonState.LOGGED_IN
-    setButtons()
-  }
+    override fun loggedIn() {
+        state = MainActivity.ButtonState.LOGGED_IN
+        setButtons()
+    }
 
-  override fun fileDownloaded(file: File, fileName:String) {
+    override fun fileDownloaded(file: File, fileName: String) {
 //    val intent = Intent(Intent.ACTION_VIEW)
 //    val apkURI = FileProvider.getUriForFile(
 //        this,
@@ -150,11 +151,12 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
 //        file)
 //    val uri = Uri.fromFile(file)
-      readExcelFile(this,fileName)
-    val intent = Intent(this,MyCheckList::class.java)
-    intent.putExtra("fileName",fileName)
-    startActivity(intent)
-      return
+        /*  readExcelFile(this,fileName)
+        val intent = Intent(this,MyCheckList::class.java)
+        intent.putExtra("fileName",fileName)
+        startActivity(intent)*/
+
+        return
 //    val extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
 //    val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
 //    intent.setDataAndType(apkURI, mimeType)
@@ -164,74 +166,74 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 //    } else {
 //      Snackbar.make(main_layout, R.string.not_open_file, Snackbar.LENGTH_LONG).show()
 //    }
-  }
+    }
 
-  override fun cancelled() {
-    Snackbar.make(main_layout, R.string.status_user_cancelled, Snackbar.LENGTH_LONG).show()
-  }
+    override fun cancelled() {
+        Snackbar.make(main_layout, R.string.status_user_cancelled, Snackbar.LENGTH_LONG).show()
+    }
 
-  override fun handleError(exception: Exception) {
-      if(exception.message==="Sign-in failed.") setButtons()
-    val errorMessage = getString(R.string.status_error, exception.message)
-    Snackbar.make(main_layout, errorMessage, Snackbar.LENGTH_LONG).show()
-  }
+    override fun handleError(exception: Exception) {
+        if (exception.message === "Sign-in failed.") setButtons()
+        val errorMessage = getString(R.string.status_error, exception.message)
+        Snackbar.make(main_layout, errorMessage, Snackbar.LENGTH_LONG).show()
+    }
 
     // found online the following function
-  private fun readExcelFile(context: Context, fileName: String) {
+    private fun readExcelFile(context: Context, fileName: String) {
 
-    try {
-      // Creating Input Stream
-      val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
+        try {
+            // Creating Input Stream
+            val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
 //      val myInput = FileInputStream(file)
 //      Create a POIFSFileSystem object
 //      val myFileSystem = POIFSFileSystem(myInput)
 
-      // Create a workbook using the File System
-        val myWorkBook = WorkbookFactory.create(file)
+            // Create a workbook using the File System
+            val myWorkBook = WorkbookFactory.create(file)
 //        if (fileName.substringAfter(".")==="xls"){
 //            myWorkBook = HSSFWorkbook(myFileSystem)
 //        } else {
 //            myWorkBook = XSSFWorkbook(myInput)
 //        }
 
-      // Get the first sheet from workbook
-      val mySheet = myWorkBook.getSheetAt(0)
-      val rowIter = mySheet.rowIterator()
+            // Get the first sheet from workbook
+            val mySheet = myWorkBook.getSheetAt(0)
+            val rowIter = mySheet.rowIterator()
 
-      while (rowIter.hasNext()) {
-        val row: Row = rowIter.next();
-        val cellIterator: Iterator<Cell> = row.cellIterator();
-        while (cellIterator.hasNext()) {
-          val cell: Cell = cellIterator.next();
+            while (rowIter.hasNext()) {
+                val row: Row = rowIter.next();
+                val cellIterator: Iterator<Cell> = row.cellIterator();
+                while (cellIterator.hasNext()) {
+                    val cell: Cell = cellIterator.next();
 
-          if (row.getRowNum() >= 0) { //To filter column headings
-            if (cell.getColumnIndex() == 0) {// To match column index
-              Log.e("column", "")
-              Log.e(TAG, "\n column Value: " + cell.toString())
-            } else {
-              Log.e("row", "")
-              Log.e(TAG, "\t\tCell Value: " + cell.toString())
-            }
-          }
+                    if (row.getRowNum() >= 0) { //To filter column headings
+                        if (cell.getColumnIndex() == 0) {// To match column index
+                            Log.e("column", "")
+                            Log.e(TAG, "\n column Value: " + cell.toString())
+                        } else {
+                            Log.e("row", "")
+                            Log.e(TAG, "\t\tCell Value: " + cell.toString())
+                        }
+                    }
+                }
+            }//
+
+            /** We now need something to iterate through the cells. */
+            /* val rowIter = mySheet.rowIterator()
+
+             while (rowIter.hasNext()) {
+               val myRow = rowIter.next() as Row//as HSSFRow
+               val cellIter = myRow.cellIterator()
+               while (cellIter.hasNext()) {
+                 val myCell = cellIter.next() as Cell//as HSSFCell
+                 Log.d(TAG, "Cell Value: " + myCell.toString())
+       //          Toast.makeText(context, "cell Value: " + myCell.toString(), Toast.LENGTH_SHORT).show()
+               }
+             }*/
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-      }//
 
-      /** We now need something to iterate through the cells. */
-     /* val rowIter = mySheet.rowIterator()
-
-      while (rowIter.hasNext()) {
-        val myRow = rowIter.next() as Row//as HSSFRow
-        val cellIter = myRow.cellIterator()
-        while (cellIter.hasNext()) {
-          val myCell = cellIter.next() as Cell//as HSSFCell
-          Log.d(TAG, "Cell Value: " + myCell.toString())
-//          Toast.makeText(context, "cell Value: " + myCell.toString(), Toast.LENGTH_SHORT).show()
-        }
-      }*/
-    } catch (e: Exception) {
-      e.printStackTrace()
+        return
     }
-
-    return
-  }
 }

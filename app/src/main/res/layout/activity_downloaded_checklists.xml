@@ -22,31 +22,13 @@
             android:padding="0dp" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rc"
+            android:id="@+id/rv_downloaded"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >
 
         </android.support.v7.widget.RecyclerView>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Some Remarks" />
-        </android.support.design.widget.TextInputLayout>
-
-        <Button
-            android:id="@+id/btnSubmit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/text_size"
-            android:background="@drawable/orange_rounded"
-            android:text="Submit" />
     </LinearLayout>
 
 </ScrollView>
