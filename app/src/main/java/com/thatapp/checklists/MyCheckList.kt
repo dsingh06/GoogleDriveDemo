@@ -2,10 +2,7 @@ package com.thatapp.checklists
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.os.Bundle
-import android.os.Environment
-import android.os.PersistableBundle
+import android.os.*
 import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -22,10 +19,7 @@ import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.File
-import com.itextpdf.text.pdf.PdfName.DEST
-import com.itextpdf.text.pdf.PdfPCell
-import com.itextpdf.text.pdf.PdfPTable
-import com.itextpdf.text.pdf.PdfWriter
+
 import java.io.FileOutputStream
 import java.io.IOException
 
@@ -53,38 +47,9 @@ class MyCheckList : AppCompatActivity() {
                 ques = i
                 Log.e("answer ", ques.serialNo + "   " + ques.answer)
             };
-          createPdf()})
-
+          CreatePdf(questions).execute(this)
+		})
         readExcelFile(this, filename)
-
-
-    }
-
-    private fun createPdf() {
-
-        val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-        var fileName = "test.pdf"
-       var des=storageDir.absolutePath+"/"+fileName
-      //  var DEST = File(storageDir, fileName)
-      //  val file = File(DES)
-      //  file.getParentFile().mkdirs()
-       // createPdf(DES)
-        Log.e("answer ", "create")
-
-        val document = Document()
-        PdfWriter.getInstance(document, FileOutputStream(des))
-        document.open()
-        val table = PdfPTable(3)
-//        table.setWidths(floatArrayOf(0.5f, 3f,2f))
-        for (aw in questions) {
-            var ques:QuestionItem = aw
-            table.addCell(ques.serialNo+" ")
-            table.addCell(ques.strQuestion+" ")
-            table.addCell(ques.answer+" ")
-        }
-        document.add(table)
-        document.close()
-        Log.e("answer ", "closed")
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -163,4 +128,14 @@ class MyCheckList : AppCompatActivity() {
 
         return
     }
+
+	class CreatePdf(val questions:ArrayList<QuestionItem>):AsyncTask<Context,Void,Void>(){
+
+		override fun doInBackground(vararg p0: Context): Void? {
+			val pdfCreationObject = CreatePDF(questions, p0.get(0))
+			pdfCreationObject.startPDFCreation()
+			return null
+		}
+
+	}
 }
