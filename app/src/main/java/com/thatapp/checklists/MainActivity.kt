@@ -123,12 +123,12 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             setButtons()
         }
         imageView3.setOnClickListener{
-//          val intent = Intent(this,DownloadedCheckListsActivity::class.java)
-//          startActivity(intent)
+          val intent = Intent(this,DownloadedCheckListsActivity::class.java)
+          startActivity(intent)
         }
 	    view.setOnClickListener{
-//          val intent = Intent(this,DownloadedCheckListsActivity::class.java)
-//          startActivity(intent)
+          val intent = Intent(this,DownloadedCheckListsActivity::class.java)
+          startActivity(intent)
         }
   }
 

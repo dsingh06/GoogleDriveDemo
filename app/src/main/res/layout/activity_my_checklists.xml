@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,6 +21,14 @@
             android:elevation="4dp"
             app:titleTextColor="#fff"
             android:padding="0dp" />
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rc"
@@ -47,6 +56,11 @@
             android:layout_margin="@dimen/text_size"
             android:background="@drawable/orange_rounded"
             android:text="Submit" />
-    </LinearLayout>
 
-</ScrollView>
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+
+</LinearLayout>
+</LinearLayout>

@@ -2,15 +2,19 @@ package com.thatapp.checklists
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.PersistableBundle
+import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
+import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_my_checklists.*
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
@@ -22,6 +26,7 @@ class MyCheckList : AppCompatActivity() {
     val questions: ArrayList<QuestionItem> = ArrayList()
 
     private val TAG = "Listed----"
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_checklists)
@@ -33,19 +38,21 @@ class MyCheckList : AppCompatActivity() {
         val intent: Intent = intent
         val filename: String = intent.getStringExtra("fileName")
         Log.e("file name is ", "@   " + filename)
-        readExcelFile(this, filename)
-
-
         btnSubmit.setOnClickListener(View.OnClickListener {
-           var ques:QuestionItem
+            var ques:QuestionItem
             for (i in questions) {
-               ques = i
+                ques = i
                 Log.e("answer ",ques.answer)
             };
 
             Log.e("answer ","")})
-    }
 
+        readExcelFile(this, filename)
+
+
+   }
+
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun readExcelFile(context: Context, fileName: String) {
 
         try {
@@ -95,7 +102,23 @@ class MyCheckList : AppCompatActivity() {
 
                 // Access the RecyclerView Adapter and load the data into it
                 rv_list.adapter = CheckListItemAdapter(questions, this)
-            }
+/*                rv_list.addOnScrollListener(object:RecyclerView.OnScrollListener() {
+
+                   override fun onScrolled(recyclerView:RecyclerView, dx:Int, dy:Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+                        if (dy > 1 && textView.getVisibility() === View.VISIBLE)
+                        {
+                            btnSubmit.setVisibility(View.GONE)
+                            // textDate.setVisibility(View.GONE);
+                        }
+                        else if (dy < 0 && textView.getVisibility() !== View.VISIBLE)
+                        {
+                            //mFloatingActionButton.show();
+                            btnSubmit.setVisibility(View.VISIBLE)
+                            // textDate.setVisibility(View.VISIBLE);
+                        }
+                    }
+                })*/}
 
         } catch (e: Exception) {
             e.printStackTrace()

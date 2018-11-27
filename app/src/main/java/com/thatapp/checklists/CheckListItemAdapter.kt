@@ -29,13 +29,15 @@ class CheckListItemAdapter(var questionItemList: List<QuestionItem>, var context
     override fun onBindViewHolder(holder: CheckListItemAdapter.UserViewHolder, position: Int) {
         val quesItem = questionItemList[position]
 
-        holder.serialNo.setText(quesItem.serialNo)
+
         if (!quesItem.serialNo.contains(".")) {
+            holder.serialNo.setText(quesItem.serialNo)
             holder.headingLayout.setBackgroundColor(Color.parseColor("#BDBDBD"))
             holder.heading.setText(quesItem.strHeading)
             holder.question.setText("")
             holder.btnLayout.setVisibility(View.GONE)
         } else {
+            holder.serialNo.setText("\t\t"+quesItem.serialNo)
             holder.headingLayout.setBackgroundColor(Color.parseColor("#FFFFFF"))
             holder.heading.setText("")
             holder.question.setText(quesItem.strQuestion)
