@@ -14,12 +14,21 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.itextpdf.text.*
+import com.itextpdf.text.pdf.PdfName
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_my_checklists.*
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.File
+import com.itextpdf.text.pdf.PdfName.DEST
+import com.itextpdf.text.pdf.PdfPCell
+import com.itextpdf.text.pdf.PdfPTable
+import com.itextpdf.text.pdf.PdfWriter
+import java.io.FileOutputStream
+import java.io.IOException
+
 
 class MyCheckList : AppCompatActivity() {
 
@@ -39,18 +48,44 @@ class MyCheckList : AppCompatActivity() {
         val filename: String = intent.getStringExtra("fileName")
         Log.e("file name is ", "@   " + filename)
         btnSubmit.setOnClickListener(View.OnClickListener {
-            var ques:QuestionItem
+            var ques: QuestionItem
             for (i in questions) {
                 ques = i
-                Log.e("answer ", ques.serialNo+"   "+ques.answer)
+                Log.e("answer ", ques.serialNo + "   " + ques.answer)
             };
-
-            Log.e("answer ","")})
+          createPdf()})
 
         readExcelFile(this, filename)
 
 
-   }
+    }
+
+    private fun createPdf() {
+
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+        var fileName = "test.pdf"
+       var des=storageDir.absolutePath+"/"+fileName
+      //  var DEST = File(storageDir, fileName)
+      //  val file = File(DES)
+      //  file.getParentFile().mkdirs()
+       // createPdf(DES)
+        Log.e("answer ", "create")
+
+        val document = Document()
+        PdfWriter.getInstance(document, FileOutputStream(des))
+        document.open()
+        val table = PdfPTable(3)
+//        table.setWidths(floatArrayOf(0.5f, 3f,2f))
+        for (aw in questions) {
+            var ques:QuestionItem = aw
+            table.addCell(ques.serialNo+" ")
+            table.addCell(ques.strQuestion+" ")
+            table.addCell(ques.answer+" ")
+        }
+        document.add(table)
+        document.close()
+        Log.e("answer ", "closed")
+    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun readExcelFile(context: Context, fileName: String) {
@@ -65,6 +100,7 @@ class MyCheckList : AppCompatActivity() {
             // Get the first sheet from workbook
             val mySheet = myWorkBook.getSheetAt(0)
             val rowIter = mySheet.rowIterator()
+
             var questionsItem: QuestionItem
             var heading = 0
             var question = 0
@@ -118,7 +154,8 @@ class MyCheckList : AppCompatActivity() {
                             // textDate.setVisibility(View.VISIBLE);
                         }
                     }
-                })*/}
+                })*/
+            }
 
         } catch (e: Exception) {
             e.printStackTrace()
