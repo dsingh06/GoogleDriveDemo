@@ -103,7 +103,7 @@
                     />
 
                 <Button
-                    android:id="@+id/btnMaybe"
+                    android:id="@+id/btnElse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignRight="@id/btnNo"

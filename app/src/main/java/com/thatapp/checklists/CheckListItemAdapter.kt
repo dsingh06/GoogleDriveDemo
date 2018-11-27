@@ -12,15 +12,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.question_list.view.*
 
 
-class CheckListItemAdapter(var questionItemList:List<QuestionItem>,var context:Context) :  RecyclerView.Adapter<CheckListItemAdapter.UserViewHolder>() {
+class CheckListItemAdapter(var questionItemList: List<QuestionItem>, var context: Context) : RecyclerView.Adapter<CheckListItemAdapter.UserViewHolder>() {
 
     override fun getItemCount() = questionItemList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-        val inflatedView = LayoutInflater.from(context).inflate(R.layout.question_list,parent,false)
+        val inflatedView = LayoutInflater.from(context).inflate(R.layout.question_list, parent, false)
         return UserViewHolder(inflatedView)
     }
 
@@ -28,26 +29,63 @@ class CheckListItemAdapter(var questionItemList:List<QuestionItem>,var context:C
     override fun onBindViewHolder(holder: CheckListItemAdapter.UserViewHolder, position: Int) {
         val quesItem = questionItemList[position]
 
-		holder.serialNo.setText(quesItem.serialNo)
-		if (!quesItem.serialNo.contains(".")) {
-				holder.headingLayout.setBackgroundColor(Color.parseColor("#BDBDBD"))
-				holder.heading.setText(quesItem.strHeading)
-				holder.question.setText("")
-			} else {
+        holder.serialNo.setText(quesItem.serialNo)
+        if (!quesItem.serialNo.contains(".")) {
+            holder.headingLayout.setBackgroundColor(Color.parseColor("#BDBDBD"))
+            holder.heading.setText(quesItem.strHeading)
+            holder.question.setText("")
+            holder.btnLayout.setVisibility(View.GONE)
+        } else {
             holder.headingLayout.setBackgroundColor(Color.parseColor("#FFFFFF"))
-				holder.heading.setText("")
-				holder.question.setText(quesItem.strQuestion)
-			}
+            holder.heading.setText("")
+            holder.question.setText(quesItem.strQuestion)
+
+            holder.btnYes.setOnClickListener(View.OnClickListener {
+                holder.btnYes.setBackgroundColor(Color.parseColor("#456789"))
+                holder.btnNo.setBackgroundColor(Color.parseColor("#ffffff"))
+                holder.btnElse.setBackgroundColor(Color.parseColor("#ffffff"))
+                quesItem.answer = "Yes"
+                notifyDataSetChanged()
+            })
+
+            holder.btnNo.setOnClickListener(View.OnClickListener {
+                holder.btnYes.setBackgroundColor(Color.parseColor("#ffffff"))
+                holder.btnNo.setBackgroundColor(Color.parseColor("#456789"))
+                holder.btnElse.setBackgroundColor(Color.parseColor("#ffffff"))
+                quesItem.answer = "No"
+                notifyDataSetChanged()
+            })
+
+            holder.btnElse.setOnClickListener(View.OnClickListener {
+                holder.btnYes.setBackgroundColor(Color.parseColor("#ffffff"))
+                holder.btnNo.setBackgroundColor(Color.parseColor("#ffffff"))
+                holder.btnElse.setBackgroundColor(Color.parseColor("#456789"))
+                quesItem.answer = "Not available"
+                notifyDataSetChanged()
+            })
+
+
+        }
 
 
     }
 
-    class UserViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    class UserViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-		var serialNo: TextView = view.tvQNo
+        var serialNo: TextView = view.tvQNo
         var question: TextView = view.tvQuestion
         var heading: TextView = view.tvHeading
-		var headingLayout:CardView = view.headingLayout
+        var headingLayout: CardView = view.headingLayout
+        var btnLayout: RelativeLayout = view.layoutButton
+        var btnYes: Button = view.btnYes
+        var btnNo: Button = view.btnNo
+        var btnElse: Button = view.btnElse
+        val parentView: View
+
+        init {
+            super.itemView
+            parentView = itemView
+        }
 
     }
 
