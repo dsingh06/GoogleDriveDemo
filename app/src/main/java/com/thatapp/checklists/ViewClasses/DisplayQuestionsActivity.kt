@@ -53,13 +53,13 @@ class DisplayQuestionsActivity : AppCompatActivity() {
             }
 			if (uncheckedQuestionArray.size>=1){
 				val stringOfQuestions = uncheckedQuestionArray.toString().replace("[", "").replace("]", "")
-				val alert = AlertDialog.Builder(this,android.R.style.Theme_Material_Dialog_Alert)
+				AlertDialog.Builder(this,android.R.style.Theme_Material_Dialog_Alert)
 						.setTitle("Questions skipped")
 						.setMessage("The following questions were not answered: \n"+stringOfQuestions)
-						.setPositiveButton("Go back", DialogInterface.OnClickListener { dialog, _ ->
+						.setPositiveButton("Go back", DialogInterface.OnClickListener { _ , _ ->
 							// do nothing
 						})
-						.setNegativeButton("Skip ALL", DialogInterface.OnClickListener { dialog, _ ->
+						.setNegativeButton("Skip ALL", DialogInterface.OnClickListener { _ , _ ->
 							Snackbar.make(btnSubmit,"Creating PDF...", Snackbar.LENGTH_LONG).show()
 							CreatePdf(questions).execute(this)
 						})

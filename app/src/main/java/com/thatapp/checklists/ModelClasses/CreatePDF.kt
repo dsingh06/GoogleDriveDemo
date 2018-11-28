@@ -13,11 +13,8 @@ class CreatePDF(val questions:ArrayList<QuestionItem>, val context: Context) {
 
 	val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
 	var fileName = "test.pdf"
-	var des=storageDir.absolutePath+"/"+fileName
-
+	var des = storageDir.absolutePath+"/"+fileName
 	val document = Document()
-
-
 
 	fun startPDFCreation(){
 		PdfWriter.getInstance(document, FileOutputStream(des))
