@@ -23,6 +23,59 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/textView10"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:background="@color/colorDivideBar"
+                        android:text="Checklist Details" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/textView11"
+                        android:paddingLeft="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Work Order Number" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/textView14"
+                        android:paddingLeft="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Room  / Location" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/textView15"
+                        android:paddingLeft="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Date/Time" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/editText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
+                        android:hint="Other information"
+                        android:inputType="textPersonName" />
+                    </android.support.design.widget.TextInputLayout>
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rc"
                         android:layout_width="match_parent"
@@ -31,10 +84,10 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-
                        <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                           android:paddingLeft="8dp"
                             android:hint="Additional details"/>
                     </android.support.design.widget.TextInputLayout>
 
