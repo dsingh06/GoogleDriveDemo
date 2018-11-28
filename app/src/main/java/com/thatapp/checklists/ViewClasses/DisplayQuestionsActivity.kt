@@ -45,7 +45,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 		setSupportActionBar(toolbar)
 
 		val uncheckedQuestionArray = ArrayList<String>() // to collect unchecked question's serialnumber
-        btnSubmit.setOnClickListener(View.OnClickListener {
+        btnSubmit.setOnClickListener{
             for (question in questions) {
 				if (!question.strQuestion.equals("")){
 					if (question.answer.equals("--"))uncheckedQuestionArray.add(question.serialNo)
@@ -69,7 +69,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 						.setIcon(R.drawable.ic_alert)
 						.show()
 			}
-		})
+		}
 
         loadQuestionsArray(this, filename)
     }

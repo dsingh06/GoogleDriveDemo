@@ -26,11 +26,11 @@ class DisplayChecklistAdapter(var downloaded: List<String>, var context: Context
 
 
         holder.fileName.setText(downloaded[position])
-        holder.parentView.setOnClickListener(View.OnClickListener {
+        holder.parentView.setOnClickListener{
             val intent = Intent(context, DisplayQuestionsActivity::class.java)
             intent.putExtra("fileName",downloaded[position])
                     context.startActivity(intent)
-            })
+            }
     }
 
     class UserViewHolder(view: View) : RecyclerView.ViewHolder(view) {

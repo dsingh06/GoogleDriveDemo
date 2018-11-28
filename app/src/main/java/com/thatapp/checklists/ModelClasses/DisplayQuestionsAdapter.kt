@@ -30,7 +30,6 @@ class DisplayQuestionsAdapter(var questionItemList: List<QuestionItem>, var cont
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val quesItem = questionItemList[position]
 
-
         if (!quesItem.strHeading.equals("")) {
             holder.serialNo.setText(quesItem.serialNo)
             holder.headingLayout.setBackgroundColor(Color.parseColor("#BDBDBD"))
@@ -43,7 +42,7 @@ class DisplayQuestionsAdapter(var questionItemList: List<QuestionItem>, var cont
             holder.heading.setText("")
             holder.question.setText(quesItem.strQuestion)
 
-            holder.btnYes.setOnClickListener(View.OnClickListener {
+            holder.btnYes.setOnClickListener{
 				holder.btnYes.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_active_left))
 				holder.btnNo.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_middle))
 				holder.btnElse.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_right))
@@ -53,11 +52,10 @@ class DisplayQuestionsAdapter(var questionItemList: List<QuestionItem>, var cont
 				holder.btnElse.setTextColor(Color.parseColor("#303F9F"))
 
                 quesItem.answer = "Yes"
-//                notifyDataSetChanged()
-                Log.e("clicked","yes "+ position)
-            })
+//                Log.e("clicked","yes "+ position)
+            }
 
-            holder.btnNo.setOnClickListener(View.OnClickListener {
+            holder.btnNo.setOnClickListener{
 				holder.btnYes.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_left))
 				holder.btnNo.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_middle_active))
 				holder.btnElse.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_right))
@@ -67,11 +65,10 @@ class DisplayQuestionsAdapter(var questionItemList: List<QuestionItem>, var cont
 				holder.btnElse.setTextColor(Color.parseColor("#303F9F"))
 
 				quesItem.answer = "No"
-//                notifyDataSetChanged()
-                Log.e("clicked","No "+ position)
-            })
+//                Log.e("clicked","No "+ position)
+            }
 
-            holder.btnElse.setOnClickListener(View.OnClickListener {
+            holder.btnElse.setOnClickListener{
 				holder.btnYes.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_left))
 				holder.btnNo.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_middle))
 				holder.btnElse.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_active_right))
@@ -81,14 +78,12 @@ class DisplayQuestionsAdapter(var questionItemList: List<QuestionItem>, var cont
 				holder.btnYes.setTextColor(Color.parseColor("#303F9F"))
 
 				quesItem.answer = "333"
-//                notifyDataSetChanged()
-                Log.e("clicked","333 "+ position)
-            })
+//                Log.e("clicked","333 "+ position)
+            }
         }
     }
 
     class UserViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         var serialNo: TextView = view.tvQNo
         var question: TextView = view.tvQuestion
         var heading: TextView = view.tvHeading
@@ -98,14 +93,10 @@ class DisplayQuestionsAdapter(var questionItemList: List<QuestionItem>, var cont
         var btnNo: Button = view.btnNo
         var btnElse: Button = view.btnElse
         val parentView: View
-
         init {
             super.itemView
             parentView = itemView
         }
-
     }
-
-
 }
 
