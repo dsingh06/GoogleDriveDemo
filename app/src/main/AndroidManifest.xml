@@ -14,23 +14,23 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ProfileActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".ViewClasses.ProfileActivity"
+            android:parentActivityName=".ViewClasses.MainActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".ViewClasses.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MyCheckList" />
+        <activity android:name=".ViewClasses.DisplayQuestionsActivity" />
 
-        <activity android:name=".DownloadedCheckListsActivity" />
+        <activity android:name=".ViewClasses.DisplayCheckListsActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
