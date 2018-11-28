@@ -56,14 +56,14 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 				AlertDialog.Builder(this,android.R.style.Theme_Material_Dialog_Alert)
 						.setTitle("Questions skipped")
 						.setMessage("The following questions were not answered: \n"+stringOfQuestions)
-						.setPositiveButton("Go back", DialogInterface.OnClickListener { _ , _ ->
+						.setPositiveButton("Go back",{ _ , _ ->
 							// do nothing
 						})
-						.setNegativeButton("Skip ALL", DialogInterface.OnClickListener { _ , _ ->
+						.setNegativeButton("Skip ALL",{ _ , _ ->
 							Snackbar.make(btnSubmit,"Creating PDF...", Snackbar.LENGTH_LONG).show()
 							CreatePdf(questions).execute(this)
 						})
-//						.setNeutralButton("Email Report", DialogInterface.OnClickListener { dialog, _ ->
+//						.setNeutralButton("Email Report",{ dialog, _ ->
 //
 //						})
 						.setIcon(R.drawable.ic_alert)
@@ -121,23 +121,6 @@ class DisplayQuestionsActivity : AppCompatActivity() {
                 rv_list.layoutManager = LinearLayoutManager(this)
                 // Access the RecyclerView Adapter and load the data into it
                 rv_list.adapter = DisplayQuestionsAdapter(questions, this)
-				/*                rv_list.addOnScrollListener(object:RecyclerView.OnScrollListener() {
-
-                   override fun onScrolled(recyclerView:RecyclerView, dx:Int, dy:Int) {
-                        super.onScrolled(recyclerView, dx, dy)
-                        if (dy > 1 && textView.getVisibility() === View.VISIBLE)
-                        {
-                            btnSubmit.setVisibility(View.GONE)
-                            // textDate.setVisibility(View.GONE);
-                        }
-                        else if (dy < 0 && textView.getVisibility() !== View.VISIBLE)
-                        {
-                            //mFloatingActionButton.show();
-                            btnSubmit.setVisibility(View.VISIBLE)
-                            // textDate.setVisibility(View.VISIBLE);
-                        }
-                    }
-                })*/
             }
         } catch (e: Exception) {
             e.printStackTrace()
