@@ -1,7 +1,6 @@
 package com.thatapp.checklists.ViewClasses
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.*
 import android.support.annotation.RequiresApi
@@ -12,13 +11,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import com.thatapp.checklists.ModelClasses.DisplayQuestionsAdapter
 import com.thatapp.checklists.ModelClasses.CreatePDF
 import com.thatapp.checklists.ModelClasses.QuestionItem
 import com.thatapp.checklists.R
-import kotlinx.android.synthetic.main.activity_my_checklists.*
+import kotlinx.android.synthetic.main.display_checklists.*
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.WorkbookFactory
@@ -33,7 +31,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_my_checklists)
+        setContentView(R.layout.display_checklists)
 
 		val toolbar: Toolbar = findViewById(R.id.my_toolbar)
 

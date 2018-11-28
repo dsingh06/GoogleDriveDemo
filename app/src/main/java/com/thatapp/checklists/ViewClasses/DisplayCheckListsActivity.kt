@@ -18,7 +18,7 @@ import java.io.FilenameFilter
 
 class DisplayCheckListsActivity : AppCompatActivity() {
 
-    val downloaded: ArrayList<String> = ArrayList()
+    val downloaded: ArrayList<File> = ArrayList()
     private val TAG = "Downloaded:-"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,9 +58,9 @@ class DisplayCheckListsActivity : AppCompatActivity() {
 		}
         val files= getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).listFiles(fileNameFilter)
         Log.e("Files", "Size: " + files!!.size)
-        for (i in files.indices) {
-            Log.e("Files", "FileName:" + files[i].name)
-            downloaded.add(files[i].name)
+        for (i in files) {
+//            Log.e("Files", "FileName:" + files[i].name)
+            downloaded.add(i)
         }
     }
 }
