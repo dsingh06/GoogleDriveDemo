@@ -169,14 +169,13 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 		override fun doInBackground(vararg p0: Context): Context {
 			pdfCreationObject = CreatePDF(questions, p0.get(0),fileName)
 			pdfCreationObject.startPDFCreation()
+			val obj = DriveUploadHelper(File(pdfCreationObject.des),p0[0])
+			obj.saveFileToDrive()
 			return p0[0]
 		}
 
 		override fun onPostExecute(result: Context) {
 			super.onPostExecute(result)
-
-//			DriveUploadHelper(File(pdfCreationObject.des),result) NOT WORKING
-
 			Toast.makeText(result,"PDF created",Toast.LENGTH_SHORT).show()
 			(result as DisplayQuestionsActivity).goBackMethod()
 		}

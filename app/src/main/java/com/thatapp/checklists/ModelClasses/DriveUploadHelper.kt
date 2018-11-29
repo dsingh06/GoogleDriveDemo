@@ -19,8 +19,6 @@ import com.google.android.gms.drive.MetadataChangeSet
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
-// NOT WORKING CURRENTLY
-
 class DriveUploadHelper (val fileToUpload: File, val context: Context){
 
 	private val REQUEST_CODE_CREATOR = 13
@@ -31,7 +29,7 @@ class DriveUploadHelper (val fileToUpload: File, val context: Context){
 
 	/** Create a new file and save it to Drive.  */
 
-	private fun saveFileToDrive() {
+	fun saveFileToDrive() {
 		// Start by creating a new contents, and setting a callback.
 		Log.i(TAG, "Creating new contents.")
 		mDriveResourceClient
@@ -60,8 +58,8 @@ class DriveUploadHelper (val fileToUpload: File, val context: Context){
 		// Create the initial metadata - MIME type and title.
 		// Note that the user will be able to change the title later.
 		val metadataChangeSet = MetadataChangeSet.Builder()
-				.setMimeType("image/jpeg")
-				.setTitle("Android Photo.png")
+				.setMimeType("application/pdf")
+				.setTitle(fileToUpload.name)
 				.build()
 		// Set up options to configure and display the create file activity.
 		val createFileActivityOptions = CreateFileActivityOptions.Builder()
