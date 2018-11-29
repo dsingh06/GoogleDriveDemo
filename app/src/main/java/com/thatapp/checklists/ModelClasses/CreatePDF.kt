@@ -16,6 +16,7 @@ class CreatePDF(val questions:ArrayList<QuestionItem>, val context: Context) {
 	var des = storageDir.absolutePath+"/"+fileName
 	val document = Document()
 
+
 	fun startPDFCreation(){
 		PdfWriter.getInstance(document, FileOutputStream(des))
 		document.open()
