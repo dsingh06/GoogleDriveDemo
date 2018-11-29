@@ -71,11 +71,13 @@ class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.Recy
             false
         }
         val storageDir = getFilesDir()
-        val files = File(storageDir.getAbsolutePath() + File.separator + "generated").listFiles(fileNameFilter)
-        Log.e("Files", "Size: " + files!!.size)
-        for (i in files) {
+        val files:Array<File>? = File(storageDir.getAbsolutePath() + File.separator + "generated").listFiles(fileNameFilter)
+        if (files!=null) {
+            Log.e("Files", "Size: " + files!!.size)
+            for (i in files) {
 //            Log.e("Files", "FileName:" + files[i].name)
-            downloaded.add(i)
+                downloaded.add(i)
+            }
         }
     }
 

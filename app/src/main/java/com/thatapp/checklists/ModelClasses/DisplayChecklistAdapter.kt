@@ -34,8 +34,7 @@ class DisplayChecklistAdapter(var downloaded: ArrayList<File>, var context: Cont
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
 
-
-        holder.fileName.setText(downloaded[position].name)
+        holder.fileName.setText(downloaded[position].name.substringBefore("."))
 
         holder.updateDateTime.setText("Updated: ".plus(convertLongToTime(downloaded[position].lastModified())))
 
@@ -70,7 +69,7 @@ class DisplayChecklistAdapter(var downloaded: ArrayList<File>, var context: Cont
     fun removeItem(position: Int) {
 //        remove(position:downloaded)
        // download!!.removeAt(position)
-        downloaded!!.removeAt(position)
+        downloaded.removeAt(position)
         // notify the item removed by position
         // to perform recycler view delete animations
         // NOTE: don't call notifyDataSetChanged()
@@ -79,7 +78,7 @@ class DisplayChecklistAdapter(var downloaded: ArrayList<File>, var context: Cont
     }
 
     fun restoreItem(item: File, position: Int) {
-        downloaded!!.add(position,item)
+        downloaded.add(position,item)
         // notify item added by position
         notifyItemInserted(position)
 //        notifyDataSetChanged()

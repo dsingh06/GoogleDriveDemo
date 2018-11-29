@@ -23,6 +23,7 @@ import android.text.AlteredCharSequence.make
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -74,12 +75,15 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
             false
         }
         val storageDir = getFilesDir()
-        val files = File(storageDir.getAbsolutePath() + File.separator + "downloads").listFiles(fileNameFilter)
-        Log.e("Files", "Size: " + files!!.size)
-        for (i in files) {
-//            Log.e("Files", "FileName:" + files[i].name)
-            downloaded.add(i)
-        }
+        val files:Array<File>? = File(storageDir.getAbsolutePath() + File.separator + "downloads").listFiles(fileNameFilter)
+        if (files!=null) {
+			Log.e("Files", "Size: " + files.size)
+			for (i in files) {
+				downloaded.add(i)
+			}
+		} else {
+			Toast.makeText(this,"No checklists found!",Toast.LENGTH_SHORT).show()
+		}
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
@@ -124,5 +128,4 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
             }
         }
         return super.onOptionsItemSelected(item)}
-
 }

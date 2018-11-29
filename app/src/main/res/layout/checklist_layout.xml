@@ -2,22 +2,23 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginBottom="8dp">
 
     <RelativeLayout
         android:id="@+id/view_background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#fff">
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_red_dark">
 
         <ImageView
             android:id="@+id/delete_icon"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/checklist" />
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_delete" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -25,8 +26,9 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/delete_icon"
-            android:text="delete"
-            android:textColor="#000"
+            android:text="DELETE"
+            android:shadowColor="@android:color/white"
+            android:textColor="#FFFF"
             android:textSize="13dp" />
 
     </RelativeLayout>
@@ -36,45 +38,53 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
+        android:elevation="8dp"
+        android:pointerIcon="arrow"
         android:padding="10dp">
 
         <ImageView
             android:id="@+id/ivFileImage"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:src="@drawable/engineer"
-            android:layout_marginRight="10dp"
-            android:scaleType="centerCrop" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin = "8dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/checklist" />
 
         <TextView
             android:id="@+id/tvFileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_toEndOf="@+id/ivFileImage"
             android:layout_toRightOf="@id/ivFileImage"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
-            android:textColor="#563"
-            android:textSize="17dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/tvDateTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tvFileName"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_toRightOf="@id/ivFileImage"
-            android:textColor="#678"
             android:textSize="12dp" />
 
-        <TextView
+        <!--TextView
             android:id="@+id/textView13"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@id/ivFileImage"
             android:textColor="@color/colorAccent"
-            android:textStyle="bold" />
+            android:textStyle="bold" /-->
 
     </RelativeLayout>
 </FrameLayout>
