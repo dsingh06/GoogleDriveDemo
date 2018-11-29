@@ -1,12 +1,9 @@
 package com.thatapp.checklists.ModelClasses
 
-import android.content.ClipData
 import android.support.v7.widget.RecyclerView
 
 import android.content.Context
 import android.content.Intent
-import android.support.constraint.ConstraintLayout
-import android.system.Os.remove
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +12,6 @@ import android.widget.*
 import com.thatapp.checklists.ViewClasses.DisplayQuestionsActivity
 import com.thatapp.checklists.R
 import kotlinx.android.synthetic.main.checklist_layout.view.*
-import org.openxmlformats.schemas.presentationml.x2006.main.STPlaceholderType.DT
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -23,7 +19,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class DisplayChecklistAdapter(var downloaded: ArrayList<File>, var context: Context, val type:String) : RecyclerView.Adapter<DisplayChecklistAdapter.UserViewHolder>() {
+class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context: Context, val type:String) : RecyclerView.Adapter<DisplayChecklistAndPDFAdapter.UserViewHolder>() {
 
 	private val TAG = "MyDisplayAdapter"
 

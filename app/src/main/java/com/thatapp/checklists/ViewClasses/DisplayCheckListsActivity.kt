@@ -2,24 +2,20 @@ package com.thatapp.checklists.ViewClasses
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.system.Os.accept
 import android.util.Log
-import com.thatapp.checklists.ModelClasses.DisplayChecklistAdapter
+import com.thatapp.checklists.ModelClasses.DisplayChecklistAndPDFAdapter
 import com.thatapp.checklists.R
 import java.io.File
-import java.io.FileFilter
 import java.io.FilenameFilter
 import android.support.v7.widget.helper.ItemTouchHelper
 
 import android.graphics.Color
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
-import android.text.AlteredCharSequence.make
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -30,7 +26,7 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
 
     var downloaded: ArrayList<File> = ArrayList<File>()
     private val TAG = "Downloaded:-"
-    lateinit var mAdapter: DisplayChecklistAdapter
+    lateinit var mAdapter: DisplayChecklistAndPDFAdapter
     lateinit var coordinatorLayout: CoordinatorLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +45,7 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
         val rv_list: RecyclerView = findViewById(R.id.rv_downloaded)
         rv_list.layoutManager = LinearLayoutManager(this)
         // Access the RecyclerView Adapter and load the data into it
-        mAdapter = DisplayChecklistAdapter(downloaded, this,"xls")
+        mAdapter = DisplayChecklistAndPDFAdapter(downloaded, this,"xls")
         rv_list.adapter = mAdapter
         val itemTouchHelperCallback = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rv_list)
@@ -86,7 +82,7 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
-        if (viewHolder is DisplayChecklistAdapter.UserViewHolder) {
+        if (viewHolder is DisplayChecklistAndPDFAdapter.UserViewHolder) {
             // get the removed item name to display it in snack bar
             val name = downloaded.get(viewHolder.getAdapterPosition()).getName()
             // backup of removed item for undo purpose
