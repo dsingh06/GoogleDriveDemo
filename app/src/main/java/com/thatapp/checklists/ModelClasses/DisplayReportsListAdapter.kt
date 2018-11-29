@@ -22,7 +22,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class DisplayChecklistAdapter(var downloaded: ArrayList<File>, var context: Context) : RecyclerView.Adapter<DisplayChecklistAdapter.UserViewHolder>() {
+class DisplayReportsListAdapter(var downloaded: ArrayList<File>, var context: Context) : RecyclerView.Adapter<DisplayReportsListAdapter.UserViewHolder>() {
 
 
     override fun getItemCount() = downloaded.size
@@ -39,8 +39,7 @@ class DisplayChecklistAdapter(var downloaded: ArrayList<File>, var context: Cont
 
         holder.updateDateTime.setText("Updated: ".plus(convertLongToTime(downloaded[position].lastModified())))
 
-
-        holder.parentView.setOnClickListener {
+       holder.parentView.setOnClickListener {
             val intent = Intent(context, DisplayQuestionsActivity::class.java)
             intent.putExtra("fileName", downloaded[position].name)
             context.startActivity(intent)

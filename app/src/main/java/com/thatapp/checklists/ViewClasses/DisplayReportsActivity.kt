@@ -1,6 +1,5 @@
 package com.thatapp.checklists.ViewClasses
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
@@ -20,13 +19,11 @@ import android.graphics.Color
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
 import android.text.AlteredCharSequence.make
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     var downloaded: ArrayList<File> = ArrayList<File>()
     private val TAG = "Downloaded:-"
@@ -37,10 +34,10 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
         setContentView(R.layout.activity_downloaded_checklists)
         val toolbar: Toolbar = findViewById(R.id.my_toolbar)
         coordinatorLayout = findViewById(R.id.coordinatorLayout)
-        toolbar.setTitle("Checklists")
+        toolbar.setTitle("Generated Reports")
         setSupportActionBar(toolbar)
 
-        loadAllDownloadedFiles()
+        loadAllGeneratedFiles()
         setAdapter()
 
     }
@@ -56,7 +53,7 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
 
     }
 
-    private fun loadAllDownloadedFiles() {
+    private fun loadAllGeneratedFiles() {
         val fileNameFilter = FilenameFilter { dir, name ->
             if (name.lastIndexOf('.') > 0) {
 
@@ -67,14 +64,14 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
                 val str = name.substring(lastIndex)
 
                 // match path name extension
-                if (str == ".xls") {
+                if (str == ".pdf") {
                     return@FilenameFilter true
                 }
             }
             false
         }
         val storageDir = getFilesDir()
-        val files = File(storageDir.getAbsolutePath() + File.separator + "downloads").listFiles(fileNameFilter)
+        val files = File(storageDir.getAbsolutePath() + File.separator + "generated").listFiles(fileNameFilter)
         Log.e("Files", "Size: " + files!!.size)
         for (i in files) {
 //            Log.e("Files", "FileName:" + files[i].name)
@@ -107,22 +104,5 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
 
         }
     }
-
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu_files, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle presses on the action bar menu items
-        when (item.itemId) {
-            R.id.action_showPdf -> {
-                val intent = Intent(this, DisplayReportsActivity::class.java)
-                startActivity(intent)
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)}
 
 }
