@@ -24,7 +24,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
@@ -50,11 +49,10 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
         val rv_list: RecyclerView = findViewById(R.id.rv_downloaded)
         rv_list.layoutManager = LinearLayoutManager(this)
         // Access the RecyclerView Adapter and load the data into it
-        mAdapter = DisplayChecklistAdapter(downloaded, this)
+        mAdapter = DisplayChecklistAdapter(downloaded, this,"xls")
         rv_list.adapter = mAdapter
         val itemTouchHelperCallback = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rv_list)
-
     }
 
     private fun loadAllDownloadedFiles() {
@@ -97,7 +95,6 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
             // remove the item from recycler view
             mAdapter.removeItem(viewHolder.getAdapterPosition())
             // showing snack bar with Undo option
-
             val snackbar = Snackbar
                     .make(coordinatorLayout, name + " deleted !", Snackbar.LENGTH_LONG)
             snackbar.setAction("UNDO", object : View.OnClickListener {
@@ -109,7 +106,6 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
             })
             snackbar.setActionTextColor(Color.YELLOW)
             snackbar.show()
-
         }
     }
 

@@ -26,8 +26,8 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
     val storageDir = context.getFilesDir()
     var fm = filename.replace("[", "").replace("]", "").split(".xls")
-    var timeStamp = SimpleDateFormat("ddMMMYYYY_HHmmss").format(Date())
-    var fileNm = fm[0] + "_" + timeStamp + ".pdf"
+    var timeStamp = SimpleDateFormat("dd-MM-yyyy_HH:mm").format(Date())
+    var fileNm = fm[0] + ":" + timeStamp + ".pdf"
     val filep = File(storageDir.getAbsolutePath() + File.separator + "generated")
 
     var des =filep.absolutePath+"/"+fileNm

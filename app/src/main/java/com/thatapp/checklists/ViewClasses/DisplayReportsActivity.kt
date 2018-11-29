@@ -47,7 +47,7 @@ class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.Recy
         val rv_list: RecyclerView = findViewById(R.id.rv_downloaded)
         rv_list.layoutManager = LinearLayoutManager(this)
         // Access the RecyclerView Adapter and load the data into it
-        mAdapter = DisplayChecklistAdapter(downloaded, this)
+        mAdapter = DisplayChecklistAdapter(downloaded, this, "pdf")
         rv_list.adapter = mAdapter
         val itemTouchHelperCallback = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rv_list)
@@ -74,7 +74,7 @@ class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.Recy
         val storageDir = getFilesDir()
         val files:Array<File>? = File(storageDir.getAbsolutePath() + File.separator + "generated").listFiles(fileNameFilter)
         if (files!=null) {
-            Log.e("Files", "Size: " + files!!.size)
+            Log.e("Files", "Size: " + files.size)
             for (i in files) {
 //            Log.e("Files", "FileName:" + files[i].name)
                 downloaded.add(i)
@@ -107,8 +107,6 @@ class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.Recy
             })
             snackbar.setActionTextColor(Color.YELLOW)
             snackbar.show()
-
         }
     }
-
 }

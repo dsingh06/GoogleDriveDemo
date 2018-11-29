@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.support.constraint.ConstraintLayout
 import android.system.Os.remove
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,21 +23,40 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class DisplayChecklistAdapter(var downloaded: ArrayList<File>, var context: Context) : RecyclerView.Adapter<DisplayChecklistAdapter.UserViewHolder>() {
+class DisplayChecklistAdapter(var downloaded: ArrayList<File>, var context: Context, val type:String) : RecyclerView.Adapter<DisplayChecklistAdapter.UserViewHolder>() {
 
+	private val TAG = "MyDisplayAdapter"
 
     override fun getItemCount() = downloaded.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-        val inflatedView = LayoutInflater.from(context).inflate(R.layout.checklist_layout, parent, false)
+        val inflatedView =
+		if (type.equals("xls")) {
+			LayoutInflater.from(context).inflate(R.layout.checklist_layout, parent, false)
+		} else {
+			LayoutInflater.from(context).inflate(R.layout.report_layout, parent, false)
+		}
         return UserViewHolder(inflatedView)
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
 
-        holder.fileName.setText(downloaded[position].name.substringBefore("."))
+		if(downloaded[position].name.contains(".pdf")){
+			val name:String = downloaded[position].name.substringBefore(":")
+			Log.e(TAG, name)
+			holder.fileName.setText(name)
 
-        holder.updateDateTime.setText("Updated: ".plus(convertLongToTime(downloaded[position].lastModified())))
+			val timeCreated = downloaded[position].name
+					.substringAfter(":")
+					.substringBefore(".")
+					.split("_")
+			holder.updateDateTime.setText("Created: ".plus(timeCreated[1]).plus("   ").plus(timeCreated[0]))
+			Log.e(TAG, timeCreated[0] +" "+ timeCreated[1])
+
+		} else {
+			holder.fileName.setText(downloaded[position].name.substringBefore("."))
+			holder.updateDateTime.setText("Updated: ".plus(convertLongToTime(downloaded[position].lastModified())))
+		}
 
 
         holder.parentView.setOnClickListener {
@@ -56,8 +76,8 @@ class DisplayChecklistAdapter(var downloaded: ArrayList<File>, var context: Cont
         var imageView: ImageView = view.ivFileImage
         var fileName: TextView = view.tvFileName
            var updateDateTime: TextView = view.tvDateTime
-        var viewForeground: RelativeLayout = view.view_foreground
-        var viewBackground: RelativeLayout = view.view_background
+        var viewForeground = view.view_foreground
+        var viewBackground= view.view_background
         var parentView: View
 
         init {

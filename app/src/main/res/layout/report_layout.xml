@@ -41,8 +41,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:elevation="8dp"
-        android:padding="10dp"
-        android:pointerIcon="arrow">
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/ivFileImage"
@@ -53,8 +52,10 @@
             android:layout_margin="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/checklist"
+            android:src="@drawable/pdf"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -62,31 +63,29 @@
             android:id="@+id/tvFileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@+id/ivFileImage"
-            android:layout_toRightOf="@id/ivFileImage"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
-            android:hint="test"
+            android:hint="@string/app_name"
             android:maxLines="1"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/tvDateTime"
             app:layout_constraintStart_toEndOf="@+id/ivFileImage"
-            app:layout_constraintTop_toTopOf="@+id/ivFileImage"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
             android:id="@+id/tvDateTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvFileName"
+            android:layout_below="@+id/tvFileName"
             android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_toRightOf="@id/ivFileImage"
-            android:hint="test"
-            android:textSize="12dp"
-            app:layout_constraintBottom_toBottomOf="@+id/ivFileImage"
+            android:layout_toEndOf="@+id/ivFileImage"
+            android:hint="hint"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ivFileImage"
             app:layout_constraintTop_toBottomOf="@+id/tvFileName" />
 
