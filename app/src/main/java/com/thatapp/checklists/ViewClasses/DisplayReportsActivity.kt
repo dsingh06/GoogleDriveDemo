@@ -20,6 +20,7 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
 import android.text.AlteredCharSequence.make
 import android.view.View
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -78,6 +79,9 @@ class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.Recy
 //            Log.e("Files", "FileName:" + files[i].name)
                 downloaded.add(i)
             }
+        } else{
+            Toast.makeText(this,"No files to display",Toast.LENGTH_SHORT).show()
+            finish()
         }
     }
 

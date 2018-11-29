@@ -83,6 +83,7 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
 			}
 		} else {
 			Toast.makeText(this,"No checklists found!",Toast.LENGTH_SHORT).show()
+			finish()
 		}
     }
 
