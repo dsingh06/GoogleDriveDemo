@@ -170,8 +170,15 @@ class GoogleDriveService(private val activity: Activity, private val config: Goo
       contents!!.inputStream.use {
         try {
           //This is the app's download directory, not the phones
-          val storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-          val tempFile = File(storageDir, fileName)
+          val storageDir = activity.getFilesDir()
+
+          val filep = File(storageDir.getAbsolutePath() + File.separator + "downloads")
+//
+          val tempFile = File(filep, fileName)
+
+          var t = filep.mkdirs()
+          Log.e("sss", " " + t)
+
           tempFile.createNewFile()
           val sink = Okio.buffer(Okio.sink(tempFile))
           sink.writeAll(Okio.source(it))

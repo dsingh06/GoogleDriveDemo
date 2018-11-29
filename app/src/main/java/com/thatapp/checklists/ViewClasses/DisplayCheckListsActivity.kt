@@ -18,17 +18,17 @@ import java.io.FilenameFilter
 
 class DisplayCheckListsActivity : AppCompatActivity() {
 
-    val downloaded: ArrayList<File> = ArrayList()
-    private val TAG = "Downloaded:-"
+	val downloaded: ArrayList<File> = ArrayList()
+	private val TAG = "Downloaded:-"
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_downloaded_checklists)
-        val toolbar: Toolbar = findViewById(R.id.my_toolbar)
-        toolbar.setTitle("Checklists")
-        setSupportActionBar(toolbar)
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setContentView(R.layout.activity_downloaded_checklists)
+		val toolbar: Toolbar = findViewById(R.id.my_toolbar)
+		toolbar.setTitle("Checklists")
+		setSupportActionBar(toolbar)
 
-        loadAllDownloadedFiles();
+		loadAllDownloadedFiles()
 		setAdapter()
 	}
 
@@ -56,11 +56,12 @@ class DisplayCheckListsActivity : AppCompatActivity() {
 			}
 			false
 		}
-        val files= getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).listFiles(fileNameFilter)
-        Log.e("Files", "Size: " + files!!.size)
-        for (i in files) {
+		val storageDir = getFilesDir()
+		val files = File(storageDir.getAbsolutePath() + File.separator + "downloads").listFiles(fileNameFilter)
+		Log.e("Files", "Size: " + files!!.size)
+		for (i in files) {
 //            Log.e("Files", "FileName:" + files[i].name)
-            downloaded.add(i)
-        }
-    }
+			downloaded.add(i)
+		}
+	}
 }

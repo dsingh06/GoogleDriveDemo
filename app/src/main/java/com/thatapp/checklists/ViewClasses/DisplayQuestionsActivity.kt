@@ -42,11 +42,14 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 		toolbar.setTitle(filename)
 		setSupportActionBar(toolbar)
 
-		val uncheckedQuestionArray = ArrayList<String>() // to collect unchecked question's serialnumber
+		var uncheckedQuestionArray = ArrayList<String>() // to collect unchecked question's serialnumber
         btnSubmit.setOnClickListener{
             for (question in questions) {
 				if (!question.strQuestion.equals("")){
-					if (question.answer.equals("--"))uncheckedQuestionArray.add(question.serialNo)
+					if (question.answer.equals("--"))
+                    {
+                        uncheckedQuestionArray.add(question.serialNo)
+                    }
 				}
             }
 			if (uncheckedQuestionArray.size>=1){
@@ -55,11 +58,11 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 						.setTitle("Questions skipped")
 						.setMessage("The following questions were not answered: \n"+stringOfQuestions)
 						.setPositiveButton("Go back",{ _ , _ ->
-							// do nothing
+							uncheckedQuestionArray.clear()
 						})
 						.setNegativeButton("Skip ALL",{ _ , _ ->
 							Snackbar.make(btnSubmit,"Creating PDF...", Snackbar.LENGTH_LONG).show()
-							CreatePdf(questions).execute(this)
+							CreatePdf(questions,filename).execute(this)
 						})
 //						.setNeutralButton("Email Report",{ dialog, _ ->
 //
@@ -77,7 +80,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 
         try {
             // Creating Input Stream
-            val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
+            val file = File(context.getFilesDir().getAbsolutePath() + File.separator + "downloads", fileName)
 
             // Create a workbook using the File System
             val myWorkBook = WorkbookFactory.create(file)
@@ -128,10 +131,10 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 
 	private fun goBackMethod() =  finish()
 
-	class CreatePdf(val questions:ArrayList<QuestionItem>):AsyncTask<Context,Void,Context>(){
+	class CreatePdf(val questions:ArrayList<QuestionItem>,val fileName: String):AsyncTask<Context,Void,Context>(){
 
 		override fun doInBackground(vararg p0: Context): Context {
-			val pdfCreationObject = CreatePDF(questions, p0.get(0))
+			val pdfCreationObject = CreatePDF(questions, p0.get(0),fileName)
 			pdfCreationObject.startPDFCreation()
 			return p0[0]
 		}
