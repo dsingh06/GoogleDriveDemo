@@ -6,7 +6,16 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
     </style>
+
+    <style name="MyDatePickerDialogTheme" parent="Theme.AppCompat.DayNight.Dialog">
+        <!--item name="android:datePickerStyle">@style/MyDatePickerStyle</item-->
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    </style>
+
     <dimen name="profileIcons">40dp</dimen>
 
 </resources>

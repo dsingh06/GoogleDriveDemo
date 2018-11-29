@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.RelativeLayout
 import com.thatapp.checklists.R
+import com.thatapp.checklists.ViewClasses.DisplayQuestionsActivity
 import kotlinx.android.synthetic.main.question_list.view.*
 
 
@@ -43,6 +44,7 @@ class DisplayQuestionsAdapter(var questionItemList: List<QuestionItem>, var cont
             holder.question.setText(quesItem.strQuestion)
 
             holder.btnYes.setOnClickListener{
+				if (position>=0) (context as DisplayQuestionsActivity).hideSoftKeyboard()
 				holder.btnYes.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_active_left))
 				holder.btnNo.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_middle))
 				holder.btnElse.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_right))
@@ -52,10 +54,10 @@ class DisplayQuestionsAdapter(var questionItemList: List<QuestionItem>, var cont
 				holder.btnElse.setTextColor(Color.parseColor("#303F9F"))
 
                 quesItem.answer = "Yes"
-//                Log.e("clicked","yes "+ position)
             }
 
             holder.btnNo.setOnClickListener{
+				if (position>=0) (context as DisplayQuestionsActivity).hideSoftKeyboard()
 				holder.btnYes.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_left))
 				holder.btnNo.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_middle_active))
 				holder.btnElse.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_right))
@@ -65,10 +67,10 @@ class DisplayQuestionsAdapter(var questionItemList: List<QuestionItem>, var cont
 				holder.btnElse.setTextColor(Color.parseColor("#303F9F"))
 
 				quesItem.answer = "No"
-//                Log.e("clicked","No "+ position)
             }
 
             holder.btnElse.setOnClickListener{
+				if (position>=0) (context as DisplayQuestionsActivity).hideSoftKeyboard()
 				holder.btnYes.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_left))
 				holder.btnNo.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_middle))
 				holder.btnElse.setBackground(ContextCompat.getDrawable(context, R.drawable.button_border_active_right))
@@ -77,8 +79,7 @@ class DisplayQuestionsAdapter(var questionItemList: List<QuestionItem>, var cont
 				holder.btnNo.setTextColor(Color.parseColor("#303F9F"))
 				holder.btnYes.setTextColor(Color.parseColor("#303F9F"))
 
-				quesItem.answer = "333"
-//                Log.e("clicked","333 "+ position)
+				quesItem.answer = "N/A"
             }
         }
     }

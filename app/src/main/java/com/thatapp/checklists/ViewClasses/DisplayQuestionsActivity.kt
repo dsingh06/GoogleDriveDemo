@@ -1,5 +1,6 @@
 package com.thatapp.checklists.ViewClasses
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.*
@@ -11,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.thatapp.checklists.ModelClasses.DisplayQuestionsAdapter
 import com.thatapp.checklists.ModelClasses.CreatePDF
@@ -21,6 +23,10 @@ import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.File
+import android.view.inputmethod.InputMethodManager
+import android.widget.DatePicker
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class DisplayQuestionsActivity : AppCompatActivity() {
@@ -41,6 +47,22 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 
 		toolbar.setTitle(filename)
 		setSupportActionBar(toolbar)
+
+		tvdateTime.setText(SimpleDateFormat("dd/MM/yyyy    HH:mm").format(Date()))
+		val newCalendar = Calendar.getInstance();
+		val siteDatePickerDialog = DatePickerDialog(this,R.style.MyDatePickerDialogTheme, DatePickerDialog.OnDateSetListener {
+			datePicker: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+			val newDate = Calendar.getInstance();
+			newDate.set(year, monthOfYear, dayOfMonth);
+			tvdateTime.setText(SimpleDateFormat("dd/MM/yyyy    HH:mm", Locale.US).format(newDate.getTime()));
+
+		},newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH))
+		tvdateTime.setOnFocusChangeListener(object: View.OnFocusChangeListener {
+			override fun onFocusChange(v: View?, hasFocus: Boolean) {
+				if (hasFocus) siteDatePickerDialog.show()
+				v!!.clearFocus()
+			}
+		})
 
 		var uncheckedQuestionArray = ArrayList<String>() // to collect unchecked question's serialnumber
         btnSubmit.setOnClickListener{
@@ -69,6 +91,9 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 //						})
 						.setIcon(R.drawable.ic_alert)
 						.show()
+			} else {
+				Snackbar.make(btnSubmit,"Creating PDF...", Snackbar.LENGTH_LONG).show()
+				CreatePdf(questions,filename).execute(this)
 			}
 		}
 
@@ -130,6 +155,13 @@ class DisplayQuestionsActivity : AppCompatActivity() {
     }
 
 	private fun goBackMethod() =  finish()
+
+	fun hideSoftKeyboard() {
+		if (currentFocus != null) {
+			val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+			inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+		}
+	}
 
 	class CreatePdf(val questions:ArrayList<QuestionItem>,val fileName: String):AsyncTask<Context,Void,Context>(){
 

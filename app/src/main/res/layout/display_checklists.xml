@@ -28,6 +28,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="8dp"
+                        android:gravity="center"
                         android:background="@color/colorDivideBar"
                         android:text="Checklist Details" />
 
@@ -57,7 +58,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                     <EditText
-                        android:id="@+id/textView15"
+                        android:id="@+id/tvdateTime"
                         android:paddingLeft="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -75,6 +76,14 @@
                         android:hint="Other information"
                         android:inputType="textPersonName" />
                     </android.support.design.widget.TextInputLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:gravity="center"
+                        android:background="@color/colorDivideBar"
+                        android:text="Questions" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rc"

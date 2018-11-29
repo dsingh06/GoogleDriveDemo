@@ -61,7 +61,6 @@ class DisplayCheckListsActivity : AppCompatActivity() {
 		if (files!=null) {
 			Log.e("Files", "Size: " + files.size)
 			for (i in files) {
-				//            Log.e("Files", "FileName:" + files[i].name)
 				downloaded.add(i)
 			}
 		}

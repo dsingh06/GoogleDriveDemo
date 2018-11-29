@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ViewClasses.DisplayQuestionsActivity" />
+        <activity android:name=".ViewClasses.DisplayQuestionsActivity" android:windowSoftInputMode="stateHidden"/>
 
         <activity android:name=".ViewClasses.DisplayCheckListsActivity" />
 
