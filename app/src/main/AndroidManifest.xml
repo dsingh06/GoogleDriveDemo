@@ -31,7 +31,7 @@
         <activity android:name=".ViewClasses.DisplayQuestionsActivity" android:windowSoftInputMode="stateHidden"/>
 
         <activity android:name=".ViewClasses.DisplayCheckListsActivity" />
-
+        <activity android:name=".ViewClasses.DisplayReportsActivity" />
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
