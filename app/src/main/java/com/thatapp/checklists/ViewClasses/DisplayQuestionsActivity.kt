@@ -25,6 +25,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.File
 import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
+import com.thatapp.checklists.ModelClasses.DriveUploadHelper
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -164,15 +165,18 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 	}
 
 	class CreatePdf(val questions:ArrayList<QuestionItem>,val fileName: String):AsyncTask<Context,Void,Context>(){
-
+		lateinit var pdfCreationObject:CreatePDF
 		override fun doInBackground(vararg p0: Context): Context {
-			val pdfCreationObject = CreatePDF(questions, p0.get(0),fileName)
+			pdfCreationObject = CreatePDF(questions, p0.get(0),fileName)
 			pdfCreationObject.startPDFCreation()
 			return p0[0]
 		}
 
 		override fun onPostExecute(result: Context) {
 			super.onPostExecute(result)
+
+//			DriveUploadHelper(File(pdfCreationObject.des),result) NOT WORKING
+
 			Toast.makeText(result,"PDF created",Toast.LENGTH_SHORT).show()
 			(result as DisplayQuestionsActivity).goBackMethod()
 		}
