@@ -64,11 +64,11 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         if (type.equals("xls")) {
 
             holder.parentView.setOnClickListener {
-                /*     val intent = Intent(context, DisplayQuestionsActivity::class.java)
+                     val intent = Intent(context, DisplayQuestionsActivity::class.java)
                      intent.putExtra("fileName", downloaded[position].name)
                      context.startActivity(intent)
-         */
 
+/*
                 val popup = PopupMenu(context, holder.parentView)
                 popup.inflate(R.menu.menu_popup)
                 popup.gravity = Gravity.CENTER
@@ -96,12 +96,9 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                     }
                 })
                 popup.show()
-
-
+*/
             }
         }
-
-
     }
 
     private fun convertLongToTime(time: Long): String {
