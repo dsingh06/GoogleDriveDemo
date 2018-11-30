@@ -89,14 +89,14 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
             val deletedItem = downloaded.get(viewHolder.getAdapterPosition())
             val deletedIndex = viewHolder.getAdapterPosition()
             // remove the item from recycler view
-            mAdapter.removeItem(viewHolder.getAdapterPosition())
+            mAdapter.removeItem(viewHolder.getAdapterPosition(),"checklist")
             // showing snack bar with Undo option
             val snackbar = Snackbar
                     .make(coordinatorLayout, name + " deleted !", Snackbar.LENGTH_LONG)
             snackbar.setAction("UNDO", object : View.OnClickListener {
                 override fun onClick(view: View) {
                     // undo is selected, restore the deleted item
-                    mAdapter.restoreItem(deletedItem, deletedIndex)
+                    mAdapter.restoreItem(deletedItem, deletedIndex,"checklist")
 
                 }
             })

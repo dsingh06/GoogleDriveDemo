@@ -88,7 +88,7 @@ class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.Recy
             val deletedItem = downloaded.get(viewHolder.getAdapterPosition())
             val deletedIndex = viewHolder.getAdapterPosition()
             // remove the item from recycler view
-            mAdapter.removeItem(viewHolder.getAdapterPosition())
+            mAdapter.removeItem(viewHolder.getAdapterPosition(),"report")
             // showing snack bar with Undo option
 
             val snackbar = Snackbar
@@ -96,7 +96,7 @@ class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.Recy
             snackbar.setAction("UNDO", object : View.OnClickListener {
                 override fun onClick(view: View) {
                     // undo is selected, restore the deleted item
-                    mAdapter.restoreItem(deletedItem, deletedIndex)
+                    mAdapter.restoreItem(deletedItem, deletedIndex,"report")
 
                 }
             })

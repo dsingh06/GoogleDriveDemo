@@ -46,18 +46,18 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         if (downloaded[position].name.contains(".pdf")) {
             val name: String = downloaded[position].name.substringBefore(":")
             Log.e(TAG, name)
-            holder.fileName.setText(name)
+            holder.fileName.text = name
 
             val timeCreated = downloaded[position].name
                     .substringAfter(":")
                     .substringBefore(".")
                     .split("_")
-            holder.updateDateTime.setText("Created: ".plus(timeCreated[1]).plus("   ").plus(timeCreated[0]))
+            holder.updateDateTime.text = "Created: ".plus(timeCreated[1]).plus("   ").plus(timeCreated[0])
             Log.e(TAG, timeCreated[0] + " " + timeCreated[1])
 
         } else {
-            holder.fileName.setText(downloaded[position].name.substringBefore("."))
-            holder.updateDateTime.setText("Updated: ".plus(convertLongToTime(downloaded[position].lastModified())))
+            holder.fileName.text = downloaded[position].name.substringBefore(".")
+            holder.updateDateTime.text = "Updated: ".plus(convertLongToTime(downloaded[position].lastModified()))
         }
 
 
@@ -75,7 +75,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                 popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
 
                     override fun onMenuItemClick(item: MenuItem): Boolean {
-                        when (item.getItemId()) {
+                        when (item.itemId) {
                             R.id.action_showPdf -> {
                                 val intent = Intent(context, DisplayQuestionsActivity::class.java)
                                 intent.putExtra("fileName", downloaded[position].name)
@@ -124,7 +124,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         }
     }
 
-    fun removeItem(position: Int) {
+    fun removeItem(position: Int, dir: String) {
 //        remove(position:downloaded)
         // download!!.removeAt(position)
         var fileName = downloaded[position].name
@@ -133,8 +133,16 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         // to perform recycler view delete animations
         // NOTE: don't call notifyDataSetChanged()
 //        Log.e("file", fileName)
-        val dir1 = File(context.getFilesDir().absolutePath + File.separator + "downloads")
-        if (dir1.isDirectory()) {
+        lateinit var dir1: File
+        if (dir.equals("checklist")) {
+            dir1 = File(context.filesDir.absolutePath + File.separator + "downloads")
+            Log.e("type","checklist")
+        } else  if (dir.equals("report")) {
+            dir1 = File(context.filesDir.absolutePath + File.separator + "generated")
+            Log.e("type","report")
+        }
+
+        if (dir1.isDirectory) {
             val children = dir1.list()
             Log.e("children", "" + children.size)
 
@@ -148,7 +156,8 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                         File(dir1, listOfFiles[i].name).delete()
                         downloaded.removeAt(position)
                         notifyItemRemoved(position)
-                        Log.e("File ","Deleted ") }
+                        Log.e("File ", "Deleted ")
+                    }
 
                 } else if (listOfFiles[i].isDirectory) {
                     Log.e("Directory ", listOfFiles[i].name)
@@ -163,17 +172,23 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 //        notifyDataSetChanged()
     }
 
-    fun restoreItem(item: File, position: Int) {
+    fun restoreItem(item: File, position: Int, dir: String) {
 
-        try{
-            val storageDir = context.getFilesDir()
+        try {
 
-            val filep = File(storageDir.getAbsolutePath() + File.separator + "downloads")
-//
-            val tempFile = File(filep, item.name)
+            lateinit var dir1: File
+            if (dir.equals("checklist")) {
+                dir1 = File(context.filesDir.absolutePath + File.separator + "downloads")
+                Log.e("type","checklist")
+            } else  if (dir.equals("report")) {
+                dir1 = File(context.filesDir.absolutePath + File.separator + "generated")
+                Log.e("type","generated")
+            }
 
-            var t = filep.mkdirs()
-            Log.e("directory created", "downloads " + t)
+            val tempFile = File(dir1, item.name)
+
+            var t = dir1.mkdirs()
+            Log.e("directory created", " " + t)
 
             tempFile.createNewFile()
 
@@ -181,9 +196,10 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
             notifyItemInserted(position)
 //        notifyDataSetChanged()
-    }catch (e:Exception){
+        } catch (e: Exception) {
 
-        }}
+        }
+    }
 
 /*    private var mContext: Context? = null
     private var download: MutableList<File>? = null
