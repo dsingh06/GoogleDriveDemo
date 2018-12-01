@@ -14,9 +14,6 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import com.thatapp.checklists.ModelClasses.DisplayQuestionsAdapter
-import com.thatapp.checklists.ModelClasses.CreatePDF
-import com.thatapp.checklists.ModelClasses.QuestionItem
 import com.thatapp.checklists.R
 import kotlinx.android.synthetic.main.display_checklists.*
 import org.apache.poi.ss.usermodel.Cell
@@ -25,7 +22,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.File
 import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
-import com.thatapp.checklists.ModelClasses.DriveUploadHelper
+import com.thatapp.checklists.ModelClasses.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -169,8 +166,9 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 		override fun doInBackground(vararg p0: Context): Context {
 			pdfCreationObject = CreatePDF(questions, p0.get(0),fileName)
 			pdfCreationObject.startPDFCreation()
-			val obj = DriveUploadHelper(File(pdfCreationObject.des),p0[0])
-			obj.saveFileToDrive()
+			// Tried with DriveUploadHelper before
+			val obj = DriveUploadHelper2(File(pdfCreationObject.des),p0[0])
+			//obj.saveFileToDrive()
 			return p0[0]
 		}
 
