@@ -27,10 +27,11 @@
                         android:id="@+id/textView10"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="8dp"
+                        android:background="@color/colorAccent"
                         android:gravity="center"
-                        android:background="@color/colorDivideBar"
-                        android:text="Checklist Details" />
+                        android:text="Checklist Details"
+                        android:textSize="14sp"
+                        android:textStyle="italic" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -80,10 +81,11 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="8dp"
+                        android:background="@color/colorAccent"
                         android:gravity="center"
-                        android:background="@color/colorDivideBar"
-                        android:text="Questions" />
+                        android:text="Questions"
+                        android:textSize="14sp"
+                        android:textStyle="italic" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rc"

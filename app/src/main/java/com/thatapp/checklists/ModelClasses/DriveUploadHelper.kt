@@ -3,33 +3,40 @@ package com.thatapp.checklists.ModelClasses
 import android.content.Context
 import android.support.annotation.NonNull
 import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.drive.DriveContents
 import com.google.android.gms.tasks.Task
 import android.graphics.Bitmap
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.drive.Drive
 import com.google.android.gms.tasks.Continuation
 import com.thatapp.checklists.ViewClasses.DisplayQuestionsActivity
 import java.io.File
 import android.support.v4.app.ActivityCompat.startIntentSenderForResult
 import android.content.IntentSender
-import com.google.android.gms.drive.CreateFileActivityOptions
-import com.google.android.gms.drive.MetadataChangeSet
+import android.widget.Toast
+import com.google.android.gms.drive.*
+import com.google.android.gms.drive.Drive.getDriveResourceClient
 import java.io.ByteArrayOutputStream
 import java.io.IOException
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.drive.Drive
+
+
+
+
 
 class DriveUploadHelper (val fileToUpload: File, val context: Context){
 
 	private val REQUEST_CODE_CREATOR = 13
 	private val TAG = "MyDriveHelper"
 
-	val mDriveClient = Drive.getDriveClient(context as DisplayQuestionsActivity, GoogleSignIn.getLastSignedInAccount(context)!!);
-	val mDriveResourceClient = Drive.getDriveResourceClient(context as DisplayQuestionsActivity, GoogleSignIn.getLastSignedInAccount(context)!!);
+	val mDriveClient = Drive.getDriveClient(context as DisplayQuestionsActivity, GoogleSignIn.getLastSignedInAccount(context)!!)
+	val mDriveResourceClient = Drive.getDriveResourceClient(context as DisplayQuestionsActivity, GoogleSignIn.getLastSignedInAccount(context)!!)
 
 	/** Create a new file and save it to Drive.  */
 
+
 	fun saveFileToDrive() {
+//		createFolder()
 		// Start by creating a new contents, and setting a callback.
 		Log.i(TAG, "Creating new contents.")
 		mDriveResourceClient
@@ -41,8 +48,41 @@ class DriveUploadHelper (val fileToUpload: File, val context: Context){
 								return createFileIntentSender(task.result!!, fileToUpload)
 							}
 						})
-				.addOnFailureListener { e -> Log.w(TAG, "Failed to create new contents.", e) }
+				.addOnCompleteListener {
+					Toast.makeText(context,"Ready to upload file",Toast.LENGTH_SHORT).show()
+				}
+				.addOnFailureListener { e ->
+					Toast.makeText(context,"Upload to Google Drive failed!",Toast.LENGTH_SHORT).show()
+					//Log.w(TAG, "Failed to create new contents.", e)
+				}
 	}
+
+/*	private fun createFolder() {
+		mDriveResourceClient
+				.getRootFolder()
+				.continueWithTask({ task ->
+					val parentFolder = task.getResult()
+					val changeSet = MetadataChangeSet.Builder()
+							.setTitle("Name")
+							.setMimeType(DriveFolder.MIME_TYPE)
+							.setStarred(true)
+							.build()
+					mDriveResourceClient.createFolder(parentFolder, changeSet)
+				})
+				.addOnSuccessListener(this,
+						{ driveFolder ->
+							showMessage(getString(R.string.file_created,
+									driveFolder.getDriveId().encodeToString()))
+							finish()
+						})
+				.addOnFailureListener(this, { e ->
+					Log.e(TAG, "Unable to create file", e)
+					showMessage(getString(R.string.file_create_error))
+					finish()
+				})
+	}
+*/
+
 
 	private fun createFileIntentSender(driveContents: DriveContents, image: File): Task<Void> {
 		Log.i(TAG, "New contents created.")
@@ -73,5 +113,6 @@ class DriveUploadHelper (val fileToUpload: File, val context: Context){
 							startIntentSenderForResult(context as DisplayQuestionsActivity,task.getResult()!!, REQUEST_CODE_CREATOR, null, 0, 0, 0,null)
 							null
 						}
+
 	}
 }
