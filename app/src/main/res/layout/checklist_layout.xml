@@ -101,7 +101,9 @@
             android:layout_toRightOf="@id/ivFileImage"
             android:textColor="@color/colorAccent"
             android:textStyle="bold" /-->
+
         <ImageView
+            android:id="@+id/ivShare"
             android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
