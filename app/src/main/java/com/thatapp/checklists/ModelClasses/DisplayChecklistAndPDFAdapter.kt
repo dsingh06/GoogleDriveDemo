@@ -36,6 +36,10 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
     private val TAG = "MyDisplayAdapter"
     private lateinit  var cacheFile: File
     private var file_name = ""
+
+    private lateinit var mPrivateRootDir: File
+
+
     override fun getItemCount() = downloaded.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -50,8 +54,10 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        lateinit var requestFile: File
-
+       // lateinit var requestFile: File
+     var  mResultIntent : Intent = Intent(".ACTION_RETURN_FILE")
+        // Get the files/ subdirectory of internal storage
+        mPrivateRootDir = context.filesDir
         if (downloaded[position].name.contains(".pdf")) {
             val name: String = downloaded[position].name.substringBefore(":")
             Log.e(TAG, name)
@@ -65,54 +71,35 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             Log.e(TAG, timeCreated[0] + " " + timeCreated[1])
             holder.ivShare.setVisibility(View.VISIBLE)
 
-            holder.ivShare.setOnClickListener({
+            holder.ivShare.setOnClickListener {
+
+
                 file_name = downloaded[position].name
-                share()
+                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator, downloaded[position].name)
 
-                /*                 requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator, downloaded[position].name)
-                           /*                val intent = Intent()
-                                           intent.action = Intent.ACTION_SEND
-                                           intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(requestFile))
-                                           intent.type = "application/pdf"
-                                           context.startActivity(intent)
-                             */
-                           //requestFile = File(downloaded[position].name)
+                val fileUri: Uri? = try {
+                    FileProvider.getUriForFile(
+                            context,
+                            "com.thatapp.checklists.provider",
+                            requestFile)
 
-                         //  val requestFile = File(downloaded[position].name)
-
-                           //setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                           /*
-                        * Most file-related method calls need to be in
-                        * try-catch blocks.
-                        */
-                           lateinit var fileUri:Uri
-                           // Use the FileProvider to get a content URI
-                                         try {
-                                             fileUri = FileProvider.getUriForFile(
-                                                     context,
-                                                     "com.thatapp.checklists.fileprovider",
-                                                     requestFile)
-                                         } catch (e: Exception) {
-                                             Log.e("File Selector",
-                                                     "The selected file can't be shared: " + requestFile.toString()+"  "+e.toString())
-                                         }
-           //                Log.e("uri", Uri.fromFile(requestFile).toString())
-                           /* if (Uri.fromFile(requestFile) != null) {
+                  } catch (e: Exception) {
+                    Log.e("File Selector",
+                            "The selected file can't be shared: $requestFile")
+                    null
+                }
+                try {
+                    val intent = Intent()
+                    intent.action = Intent.ACTION_SEND
+                    intent.putExtra(Intent.EXTRA_STREAM, fileUri)
+                    intent.type = "application/pdf"
+                    context.startActivity(intent)
+                }catch(e:Exception) {
+                    Log.e("inn err",e.toString())
+                }
 
 
-
-                                val mResultIntent: Intent = Intent()
-                                mResultIntent.setAction(Intent.ACTION_SEND)
-
-                                // Put the Uri and MIME type in the result Intent
-                                mResultIntent.setDataAndType(Uri.fromFile(requestFile), context.getContentResolver().getType(Uri.fromFile(requestFile)))
-                                Log.e("uri", Uri.fromFile(requestFile).toString())
-                                context.startActivity(mResultIntent)
-
-                            }*/
-                           // Log.e("uri",""+fileUri.toString())
-                  */
-            })
+            }
 
         } else {
             holder.fileName.text = downloaded[position].name.substringBefore(".")
@@ -127,35 +114,6 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                 val intent = Intent(context, DisplayQuestionsActivity::class.java)
                 intent.putExtra("fileName", downloaded[position].name)
                 context.startActivity(intent)
-/*
-                val popup = PopupMenu(context, holder.parentView)
-                popup.inflate(R.menu.menu_popup)
-                popup.gravity = Gravity.CENTER
-                popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
-
-                    override fun onMenuItemClick(item: MenuItem): Boolean {
-                        when (item.itemId) {
-                            R.id.action_showPdf -> {
-                                val intent = Intent(context, DisplayQuestionsActivity::class.java)
-                                intent.putExtra("fileName", downloaded[position].name)
-                                context.startActivity(intent)
-                                return true
-                            }
-
-                            R.id.action_share -> {
-                                //handle menu2 click
-                                return true
-                            }
-                            R.id.action_delete -> {
-                                //handle menu3 click
-                                return true
-                            }
-                            else -> return false
-                        }
-                    }
-                })
-                popup.show()
-*/
             }
         }
     }
@@ -182,14 +140,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
     }
 
     fun removeItem(position: Int, dir: String) {
-//        remove(position:downloaded)
-        // download!!.removeAt(position)
         var fileName = downloaded[position].name
-
-        // notify the item removed by position
-        // to perform recycler view delete animations
-        // NOTE: don't call notifyDataSetChanged()
-//        Log.e("file", fileName)
         lateinit var dir1: File
         if (dir.equals("checklist")) {
             dir1 = File(context.filesDir.absolutePath + File.separator + "downloads")
@@ -226,7 +177,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
         }
 
-//        notifyDataSetChanged()
+
     }
 
     fun restoreItem(item: File, position: Int, dir: String) {
@@ -270,20 +221,6 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 */
 
 
-    fun share() {
-
-        try {
-            cacheFile = File(context.filesDir.absolutePath + File.separator + "generated"+File.separator+file_name)
-            val uri = FileProvider.getUriForFile(context, context.getPackageName(), cacheFile)
-
-         val intent = Intent(Intent.ACTION_VIEW)
-         intent.data = uri
-         intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-         context.startActivity(intent)
-     }catch(e:Exception){
-            Log.e("err",e.toString())
-        }
-    }
 
 }
 
