@@ -84,12 +84,13 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
         if (viewHolder is DisplayChecklistAndPDFAdapter.UserViewHolder) {
             // get the removed item name to display it in snack bar
-            val name = downloaded.get(viewHolder.getAdapterPosition()).getName()
+            val name = downloaded.get(position).name //(viewHolder.getAdapterPosition()).getName()
             // backup of removed item for undo purpose
-            val deletedItem = downloaded.get(viewHolder.getAdapterPosition())
-            val deletedIndex = viewHolder.getAdapterPosition()
+//            val deletedItem = downloaded.get(viewHolder.getAdapterPosition())
+            val deletedItem = downloaded.get(position)
+            val deletedIndex = position //viewHolder.getAdapterPosition()
             // remove the item from recycler view
-            mAdapter.removeItem(viewHolder.getAdapterPosition(),"checklist")
+            mAdapter.removeItem(position,"checklist")//(viewHolder.getAdapterPosition(),"checklist")
             // showing snack bar with Undo option
             val snackbar = Snackbar
                     .make(coordinatorLayout, name + " deleted !", Snackbar.LENGTH_LONG)
@@ -97,6 +98,7 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
                 override fun onClick(view: View) {
                     // undo is selected, restore the deleted item
                     mAdapter.restoreItem(deletedItem, deletedIndex,"checklist")
+                    Log.e("data","pos  "+position+"   adapter pos"+viewHolder.getAdapterPosition())
 
                 }
             })

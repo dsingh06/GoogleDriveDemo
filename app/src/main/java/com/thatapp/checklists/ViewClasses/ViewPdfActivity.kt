@@ -116,17 +116,6 @@ class ViewPdfActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-
-    /*override fun onStart() {
-        super.onStart()
-        try {
-            openRenderer()
-            showPage(pageIndex)
-        } catch (e: IOException) {
-            Log.d(TAG, e.toString())
-        }
-    }
-*/
     override fun onStop() {
         try {
             closeRenderer()

@@ -85,7 +85,8 @@ class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.Recy
             // get the removed item name to display it in snack bar
             val name = downloaded.get(viewHolder.getAdapterPosition()).getName()
             // backup of removed item for undo purpose
-            val deletedItem = downloaded.get(viewHolder.getAdapterPosition())
+            //val deletedItem = downloaded.get(viewHolder.getAdapterPosition())
+            val deletedItem = downloaded.get(position)
             val deletedIndex = viewHolder.getAdapterPosition()
             // remove the item from recycler view
             mAdapter.removeItem(viewHolder.getAdapterPosition(),"report")
