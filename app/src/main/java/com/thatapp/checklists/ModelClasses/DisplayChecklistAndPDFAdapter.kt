@@ -1,34 +1,26 @@
 package com.thatapp.checklists.ModelClasses
 
-import android.app.Activity
 import android.support.v7.widget.RecyclerView
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
-import android.support.annotation.RequiresApi
 import android.support.v4.content.FileProvider
-import android.support.v7.view.menu.MenuPopupHelper
 import android.util.Log
 import android.view.*
 import android.widget.*
 import com.thatapp.checklists.R
 import com.thatapp.checklists.ViewClasses.DisplayQuestionsActivity
+import com.thatapp.checklists.ViewClasses.ViewPdfActivity
 import kotlinx.android.synthetic.main.checklist_layout.view.*
 
 
-import okio.Okio
 import java.io.File
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
 import kotlin.collections.ArrayList
-import com.thatapp.checklists.ViewClasses.MainActivity
-import android.support.v4.content.ContextCompat.startActivity
-import java.nio.file.Files.exists
-import android.support.v4.content.ContextCompat.startActivity
 
 
 class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context: Context, val type: String) : RecyclerView.Adapter<DisplayChecklistAndPDFAdapter.UserViewHolder>() {
@@ -75,7 +67,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
 
                 file_name = downloaded[position].name
-                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator, downloaded[position].name)
+                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" +File.separator +"awasrishabh@gmail.com"+ File.separator, downloaded[position].name)
 
                 val fileUri: Uri? = try {
                     FileProvider.getUriForFile(
@@ -96,6 +88,40 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                     context.startActivity(intent)
                 }catch(e:Exception) {
                     Log.e("inn err",e.toString())
+                }
+
+
+            }
+
+
+
+            holder.parentView.setOnClickListener {
+                file_name = downloaded[position].name
+                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" +File.separator +"awasrishabh@gmail.com"+ File.separator, downloaded[position].name)
+
+                val fileUri: Uri? = try {
+                    FileProvider.getUriForFile(
+                            context,
+                            "com.thatapp.checklists.provider",
+                            requestFile)
+
+                } catch (e: Exception) {
+                    Log.e("File Selector",
+                            "The selected file can't be shared: $requestFile")
+                    null
+                }
+                try {
+                    val intent = Intent(context, ViewPdfActivity::class.java)
+                    intent.putExtra("fileName", downloaded[position].name)
+
+                    /*                   val intent = Intent(android.content.Intent.ACTION_VIEW)
+                                       intent.setDataAndType(fileUri, "application/pdf")
+                                       intent.putExtra(Intent.EXTRA_STREAM, fileUri)
+                                       intent.putExtra(Intent.FLAG_ACTIVITY_CLEAR_TOP,true)*/
+                    context.startActivity(intent)
+
+                }catch(e:Exception) {
+                    Log.e("inn view",e.toString())
                 }
 
 
@@ -143,10 +169,10 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         var fileName = downloaded[position].name
         lateinit var dir1: File
         if (dir.equals("checklist")) {
-            dir1 = File(context.filesDir.absolutePath + File.separator + "downloads")
+            dir1 = File(context.filesDir.absolutePath + File.separator + "downloads"+File.separator +"awasrishabh@gmail.com")
             Log.e("type", "checklist")
         } else if (dir.equals("report")) {
-            dir1 = File(context.filesDir.absolutePath + File.separator + "generated")
+            dir1 = File(context.filesDir.absolutePath + File.separator + "generated"+File.separator +"awasrishabh@gmail.com")
             Log.e("type", "report")
         }
 
@@ -186,10 +212,10 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
             lateinit var dir1: File
             if (dir.equals("checklist")) {
-                dir1 = File(context.filesDir.absolutePath + File.separator + "downloads")
+                dir1 = File(context.filesDir.absolutePath + File.separator + "downloads"+File.separator +"awasrishabh@gmail.com")
                 Log.e("type", "checklist")
             } else if (dir.equals("report")) {
-                dir1 = File(context.filesDir.absolutePath + File.separator + "generated")
+                dir1 = File(context.filesDir.absolutePath + File.separator + "generated"+File.separator +"awasrishabh@gmail.com")
                 Log.e("type", "generated")
             }
 

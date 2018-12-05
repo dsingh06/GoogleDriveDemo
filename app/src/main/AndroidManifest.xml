@@ -32,6 +32,7 @@
 
         <activity android:name=".ViewClasses.DisplayCheckListsActivity" />
         <activity android:name=".ViewClasses.DisplayReportsActivity" />
+        <activity    android:name=".ViewClasses.ViewPdfActivity"/>
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
