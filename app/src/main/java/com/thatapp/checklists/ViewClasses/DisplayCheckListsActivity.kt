@@ -21,6 +21,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 
+import okio.Okio
+
 
 class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
@@ -84,28 +86,28 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
         if (viewHolder is DisplayChecklistAndPDFAdapter.UserViewHolder) {
             // get the removed item name to display it in snack bar
-            val name = downloaded.get(position).name //(viewHolder.getAdapterPosition()).getName()
+
+            val name = downloaded.get(position).getName()
             // backup of removed item for undo purpose
-//            val deletedItem = downloaded.get(viewHolder.getAdapterPosition())
             val deletedItem = downloaded.get(position)
-            val deletedIndex = position //viewHolder.getAdapterPosition()
+            val deletedIndex = position
             // remove the item from recycler view
-            mAdapter.removeItem(position,"checklist")//(viewHolder.getAdapterPosition(),"checklist")
+            mAdapter.removeItem(position,"checklist")
+
             // showing snack bar with Undo option
+
             val snackbar = Snackbar
                     .make(coordinatorLayout, name + " deleted !", Snackbar.LENGTH_LONG)
             snackbar.setAction("UNDO", object : View.OnClickListener {
                 override fun onClick(view: View) {
                     // undo is selected, restore the deleted item
                     mAdapter.restoreItem(deletedItem, deletedIndex,"checklist")
-                    Log.e("data","pos  "+position+"   adapter pos"+viewHolder.getAdapterPosition())
 
                 }
             })
             snackbar.setActionTextColor(Color.YELLOW)
             snackbar.show()
-        }
-    }
+        }    }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

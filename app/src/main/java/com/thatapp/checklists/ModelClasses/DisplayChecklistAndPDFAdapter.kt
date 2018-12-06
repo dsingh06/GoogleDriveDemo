@@ -13,20 +13,23 @@ import com.thatapp.checklists.R
 import com.thatapp.checklists.ViewClasses.DisplayQuestionsActivity
 import com.thatapp.checklists.ViewClasses.ViewPdfActivity
 import kotlinx.android.synthetic.main.checklist_layout.view.*
+import okio.Okio
 
 
-import java.io.File
 import java.lang.Exception
+import java.nio.file.Files
 import java.text.SimpleDateFormat
 import java.util.*
 
 import kotlin.collections.ArrayList
+import java.io.*
+import java.nio.channels.FileChannel
 
 
 class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context: Context, val type: String) : RecyclerView.Adapter<DisplayChecklistAndPDFAdapter.UserViewHolder>() {
 
     private val TAG = "MyDisplayAdapter"
-    private lateinit  var cacheFile: File
+    private lateinit var cacheFile: File
     private var file_name = ""
 
     private lateinit var mPrivateRootDir: File
@@ -46,8 +49,8 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-       // lateinit var requestFile: File
-     var  mResultIntent : Intent = Intent(".ACTION_RETURN_FILE")
+        // lateinit var requestFile: File
+        var mResultIntent: Intent = Intent(".ACTION_RETURN_FILE")
         // Get the files/ subdirectory of internal storage
         mPrivateRootDir = context.filesDir
         if (downloaded[position].name.contains(".pdf")) {
@@ -67,7 +70,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
 
                 file_name = downloaded[position].name
-                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" +File.separator +"awasrishabh@gmail.com"+ File.separator, downloaded[position].name)
+                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh@gmail.com" + File.separator, downloaded[position].name)
 
                 val fileUri: Uri? = try {
                     FileProvider.getUriForFile(
@@ -75,7 +78,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                             "com.thatapp.checklists.provider",
                             requestFile)
 
-                  } catch (e: Exception) {
+                } catch (e: Exception) {
                     Log.e("File Selector",
                             "The selected file can't be shared: $requestFile")
                     null
@@ -86,8 +89,8 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                     intent.putExtra(Intent.EXTRA_STREAM, fileUri)
                     intent.type = "application/pdf"
                     context.startActivity(intent)
-                }catch(e:Exception) {
-                    Log.e("inn err",e.toString())
+                } catch (e: Exception) {
+                    Log.e("inn err", e.toString())
                 }
 
 
@@ -97,7 +100,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
             holder.parentView.setOnClickListener {
                 file_name = downloaded[position].name
-                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" +File.separator +"awasrishabh@gmail.com"+ File.separator, downloaded[position].name)
+                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh@gmail.com" + File.separator, downloaded[position].name)
 
                 val fileUri: Uri? = try {
                     FileProvider.getUriForFile(
@@ -120,8 +123,8 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                                        intent.putExtra(Intent.FLAG_ACTIVITY_CLEAR_TOP,true)*/
                     context.startActivity(intent)
 
-                }catch(e:Exception) {
-                    Log.e("inn view",e.toString())
+                } catch (e: Exception) {
+                    Log.e("inn view", e.toString())
                 }
 
 
@@ -163,9 +166,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             super.itemView
             parentView = itemView
         }
-    }
-
-    fun removeItem(position: Int, dir: String) {
+    }fun removeItem(position: Int, dir: String) {
         var fileName = downloaded[position].name
         lateinit var dir1: File
         if (dir.equals("checklist")) {
@@ -175,35 +176,22 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             dir1 = File(context.filesDir.absolutePath + File.separator + "generated"+File.separator +"awasrishabh@gmail.com")
             Log.e("type", "report")
         }
+var tempFile=File(context.filesDir.absolutePath + File.separator + "trash"+File.separator +"awasrishabh@gmail.com"+File.separator+fileName)
 
         if (dir1.isDirectory) {
-            val children = dir1.list()
-            Log.e("children", "" + children.size)
 
-            val listOfFiles = dir1.listFiles()
-
-            for (i in listOfFiles!!.indices) {
-                if (listOfFiles[i].isFile) {
-                    Log.e("File ", listOfFiles[i].name)
-                    Log.e("file to del", fileName)
-                    if (fileName.equals(listOfFiles[i].name)) {
-                        File(dir1, listOfFiles[i].name).delete()
+                       try {
+                           File(dir1.absolutePath +File.separator+ fileName).copyTo(tempFile,true)
+                           File(dir1.absolutePath+File.separator+ fileName).delete()
+                       } catch (e:Exception){
+                           Log.e("err copy ",e.toString())
+                       }
                         downloaded.removeAt(position)
                         notifyItemRemoved(position)
                         Log.e("File ", "Deleted ")
-                    }
-
-                } else if (listOfFiles[i].isDirectory) {
-                    Log.e("Directory ", listOfFiles[i].name)
-                }
-            }
-
         } else {
             Log.e("children", "not found")
-
         }
-
-
     }
 
     fun restoreItem(item: File, position: Int, dir: String) {
@@ -211,6 +199,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         try {
 
             lateinit var dir1: File
+            var dirTemp=File(context.filesDir.absolutePath + File.separator + "trash"+File.separator +"awasrishabh@gmail.com")
             if (dir.equals("checklist")) {
                 dir1 = File(context.filesDir.absolutePath + File.separator + "downloads"+File.separator +"awasrishabh@gmail.com")
                 Log.e("type", "checklist")
@@ -226,6 +215,14 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
             tempFile.createNewFile()
 
+                        try {
+                            File(dirTemp.absolutePath +File.separator+ item.name).copyTo(tempFile,true)
+                            File(dirTemp.absolutePath+File.separator + item.name).delete()
+                        } catch (e:FileAlreadyExistsException){
+
+                            Log.e("err temp deleted ",e.toString())
+                        }
+
             downloaded.add(position, item)
 
             notifyItemInserted(position)
@@ -235,18 +232,45 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         }
     }
 
-/*    private var mContext: Context? = null
-    private var download: MutableList<File>? = null
 
 
-    init {
-        this.mContext = context
-        this.download = ArrayList<File>(downloaded)
-
+/*
+    @Throws(IOException::class)
+    fun copyDirectory(sourceLocation:File, targetLocation:File) {
+        if (sourceLocation.isDirectory())
+        {
+            if (!targetLocation.exists())
+            {
+                targetLocation.mkdirs()
+            }
+            val children = sourceLocation.list()
+            for (i in children.indices)
+            {
+                copyDirectory(File(sourceLocation, children[i]), File(
+                        targetLocation, children[i]))
+            }
+        }
+        else
+        {
+            copyFile(sourceLocation, targetLocation)
+        }
     }
+    /**
+     * @param sourceLocation
+     * @param targetLocation
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    @Throws(FileNotFoundException::class, IOException::class)
+    fun copyFile(sourceLocation:File, targetLocation:File) {   //no use
+        Log.e("dir source",""+sourceLocation.name)
+        Log.e("dir target",""+targetLocation.name)
+
+        val inp = FileInputStream(sourceLocation.absolutePath+File.separator+file_name)
+        val out = FileOutputStream(targetLocation.absolutePath+File.separator+file_name)
+        val sink = Okio.buffer(Okio.sink(out))
+        sink.writeAll(Okio.source(inp))
+        sink.close()  }
 */
-
-
-
 }
 
