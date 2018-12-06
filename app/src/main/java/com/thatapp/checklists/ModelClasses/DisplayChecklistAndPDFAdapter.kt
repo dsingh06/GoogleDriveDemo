@@ -169,6 +169,14 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
     }
 
     fun removeItem(position: Int, dir: String) {
+        /*
+        For undo of delete file this method takes two parameters
+        position refers to the item position in adapter
+        dir refers to the corresponding file type
+        getting the directory where file is to be restored
+
+         */
+
         var fileName = downloaded[position].name
         lateinit var dir1: File
         if (dir.equals("checklist")) {
@@ -180,11 +188,12 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         }
         var tempFile = File(context.filesDir.absolutePath + File.separator + "trash" + File.separator + "awasrishabh@gmail.com" + File.separator + fileName)
 
+        // checking if the directory exists
         if (dir1.isDirectory) {
-
+            //get the file and copy to trash directory and delete the file form original directory
             try {
-                File(dir1.absolutePath + File.separator + fileName).copyTo(tempFile, true)
-                File(dir1.absolutePath + File.separator + fileName).delete()
+                File(dir1.absolutePath + File.separator + fileName).copyTo(tempFile, true)   //creating a copy
+                File(dir1.absolutePath + File.separator + fileName).delete()   //deleting the original file
             } catch (e: Exception) {
                 Log.e("err copy ", e.toString())
             }
@@ -197,6 +206,12 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
     }
 
     fun restoreItem(item: File, position: Int, dir: String) {
+        /*
+        For restoring the deleted file this method takes two parameters
+        position refers to the item position in adapter
+        dir refers to the corresponding file type
+        getting the directory where file is to be restored
+        */
 
         try {
 
@@ -218,17 +233,16 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             tempFile.createNewFile()
 
             try {
-                File(dirTemp.absolutePath + File.separator + item.name).copyTo(tempFile, true)
-                File(dirTemp.absolutePath + File.separator + item.name).delete()
+                File(dirTemp.absolutePath + File.separator + item.name).copyTo(tempFile, true)  //copy file from trash to desired directory
+                File(dirTemp.absolutePath + File.separator + item.name).delete() //deleting the file from trash
             } catch (e: FileAlreadyExistsException) {
-
                 Log.e("err temp deleted ", e.toString())
             }
 
             downloaded.add(position, item)
 
             notifyItemInserted(position)
-
+            /* this is used to delete the any remaining file from trash*/
             val listOfFiles = dirTemp.listFiles()
 
             for (i in listOfFiles!!.indices) {
