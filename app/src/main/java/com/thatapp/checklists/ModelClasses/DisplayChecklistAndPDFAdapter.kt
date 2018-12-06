@@ -166,29 +166,31 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             super.itemView
             parentView = itemView
         }
-    }fun removeItem(position: Int, dir: String) {
+    }
+
+    fun removeItem(position: Int, dir: String) {
         var fileName = downloaded[position].name
         lateinit var dir1: File
         if (dir.equals("checklist")) {
-            dir1 = File(context.filesDir.absolutePath + File.separator + "downloads"+File.separator +"awasrishabh@gmail.com")
+            dir1 = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator + "awasrishabh@gmail.com")
             Log.e("type", "checklist")
         } else if (dir.equals("report")) {
-            dir1 = File(context.filesDir.absolutePath + File.separator + "generated"+File.separator +"awasrishabh@gmail.com")
+            dir1 = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh@gmail.com")
             Log.e("type", "report")
         }
-var tempFile=File(context.filesDir.absolutePath + File.separator + "trash"+File.separator +"awasrishabh@gmail.com"+File.separator+fileName)
+        var tempFile = File(context.filesDir.absolutePath + File.separator + "trash" + File.separator + "awasrishabh@gmail.com" + File.separator + fileName)
 
         if (dir1.isDirectory) {
 
-                       try {
-                           File(dir1.absolutePath +File.separator+ fileName).copyTo(tempFile,true)
-                           File(dir1.absolutePath+File.separator+ fileName).delete()
-                       } catch (e:Exception){
-                           Log.e("err copy ",e.toString())
-                       }
-                        downloaded.removeAt(position)
-                        notifyItemRemoved(position)
-                        Log.e("File ", "Deleted ")
+            try {
+                File(dir1.absolutePath + File.separator + fileName).copyTo(tempFile, true)
+                File(dir1.absolutePath + File.separator + fileName).delete()
+            } catch (e: Exception) {
+                Log.e("err copy ", e.toString())
+            }
+            downloaded.removeAt(position)
+            notifyItemRemoved(position)
+            Log.e("File ", "Deleted ")
         } else {
             Log.e("children", "not found")
         }
@@ -199,12 +201,12 @@ var tempFile=File(context.filesDir.absolutePath + File.separator + "trash"+File.
         try {
 
             lateinit var dir1: File
-            var dirTemp=File(context.filesDir.absolutePath + File.separator + "trash"+File.separator +"awasrishabh@gmail.com")
+            var dirTemp = File(context.filesDir.absolutePath + File.separator + "trash" + File.separator + "awasrishabh@gmail.com")
             if (dir.equals("checklist")) {
-                dir1 = File(context.filesDir.absolutePath + File.separator + "downloads"+File.separator +"awasrishabh@gmail.com")
+                dir1 = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator + "awasrishabh@gmail.com")
                 Log.e("type", "checklist")
             } else if (dir.equals("report")) {
-                dir1 = File(context.filesDir.absolutePath + File.separator + "generated"+File.separator +"awasrishabh@gmail.com")
+                dir1 = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh@gmail.com")
                 Log.e("type", "generated")
             }
 
@@ -215,23 +217,34 @@ var tempFile=File(context.filesDir.absolutePath + File.separator + "trash"+File.
 
             tempFile.createNewFile()
 
-                        try {
-                            File(dirTemp.absolutePath +File.separator+ item.name).copyTo(tempFile,true)
-                            File(dirTemp.absolutePath+File.separator + item.name).delete()
-                        } catch (e:FileAlreadyExistsException){
+            try {
+                File(dirTemp.absolutePath + File.separator + item.name).copyTo(tempFile, true)
+                File(dirTemp.absolutePath + File.separator + item.name).delete()
+            } catch (e: FileAlreadyExistsException) {
 
-                            Log.e("err temp deleted ",e.toString())
-                        }
+                Log.e("err temp deleted ", e.toString())
+            }
 
             downloaded.add(position, item)
 
             notifyItemInserted(position)
+
+            val listOfFiles = dirTemp.listFiles()
+
+            for (i in listOfFiles!!.indices) {
+                if (listOfFiles[i].isFile) {
+                    File(dirTemp, listOfFiles[i].name).delete()
+                } else if (listOfFiles[i].isDirectory) {
+                    listOfFiles[i].delete()
+                }
+            }
+
+
 //        notifyDataSetChanged()
         } catch (e: Exception) {
 
         }
     }
-
 
 
 /*
