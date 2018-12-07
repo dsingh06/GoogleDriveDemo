@@ -94,6 +94,7 @@ class ViewPdfActivity : AppCompatActivity(), View.OnClickListener {
     private var pageIndex: Int = INITIAL_PAGE_INDEX
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_pdf)
@@ -103,7 +104,7 @@ class ViewPdfActivity : AppCompatActivity(), View.OnClickListener {
 
 
         val intent: Intent = intent
-        val filename: String = intent.getStringExtra("fileName")
+        filename = intent.getStringExtra("fileName")
         Log.e("file name is ", "@   " + filename)
         openRenderer(filename)
         showPage(pageIndex)
@@ -225,5 +226,13 @@ class ViewPdfActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
-
+    override fun onStart() {
+        super.onStart()
+        try {
+            openRenderer(filename)
+            showPage(pageIndex)
+        } catch (e: IOException) {
+            Log.d(TAG, e.toString())
+        }
+    }
 }

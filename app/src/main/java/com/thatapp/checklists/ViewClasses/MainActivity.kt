@@ -20,6 +20,11 @@ import com.thatapp.checklists.R
 import com.thatapp.checklists.ModelClasses.ServiceListener
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
+import android.net.NetworkInfo
+import android.content.Context.CONNECTIVITY_SERVICE
+import android.net.ConnectivityManager
+import android.content.Context
+import android.widget.Toast
 
 
 class MainActivity : AppCompatActivity(), ServiceListener {
@@ -65,7 +70,16 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(com.thatapp.checklists.R.layout.activity_main)
+        val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val activeNetwork = cm.activeNetworkInfo
+        val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
+        if (isConnected) {
+//            googleDriveService.auth()
+        } else {
+            Toast.makeText(applicationContext,"No Internet Connection.\nPlease ensure internet connectivity for accessing seamless services",Toast.LENGTH_LONG).show()
+        }
 
         linkVarsToViews()
         val config = GoogleDriveConfig(
@@ -75,10 +89,29 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         googleDriveService = GoogleDriveService(this, config)
         googleDriveService.serviceListener = this
         val isUserLoggedin: Boolean = googleDriveService.checkLoginStatus()
-        if (!isUserLoggedin) googleDriveService.auth() // Automatic login screen
+        if (!isUserLoggedin) {
+            val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+            val activeNetwork = cm.activeNetworkInfo
+            val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
+            if (isConnected) {
+                googleDriveService.auth()
+            } else {
+                Toast.makeText(applicationContext,"No Internet Connection",Toast.LENGTH_SHORT).show()
+            }
+        }
 
         login.setOnClickListener {
-            googleDriveService.auth()
+
+            val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+            val activeNetwork = cm.activeNetworkInfo
+            val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
+            if (isConnected) {
+                googleDriveService.auth()
+            } else {
+                Toast.makeText(applicationContext,"No Internet Connection",Toast.LENGTH_SHORT).show()
+            }
         }
         downloadAndSync.setOnClickListener {
 
