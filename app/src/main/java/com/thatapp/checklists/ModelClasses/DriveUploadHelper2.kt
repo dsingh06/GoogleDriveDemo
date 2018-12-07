@@ -26,7 +26,6 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.common.api.ResultCallback
 import com.google.android.gms.drive.Drive
 import com.google.android.gms.drive.Drive.getDriveResourceClient
-import com.google.android.gms.drive.DriveApi.DriveContentsResult
 import com.google.android.gms.drive.DriveFolder
 import com.google.android.gms.drive.DriveResourceClient
 import com.google.android.gms.drive.MetadataChangeSet
@@ -50,7 +49,8 @@ class DriveUploadHelper2(val fileToUpload: File, val context: Context) : Connect
      */
     private fun saveFileToDrive() {
         // Start by creating a new contents, and setting a callback.
-        Log.i(TAG, "Creating new contents.")
+        Log.e(TAG, "Creating new contents.")
+   //     createFolder()
         val image = mBitmapToSave
         Drive.DriveApi.newDriveContents(mGoogleApiClient)
                 .setResultCallback(ResultCallback { result ->
@@ -166,6 +166,7 @@ class DriveUploadHelper2(val fileToUpload: File, val context: Context) : Connect
 //			return
 //		}
 
+
         saveFileToDrive()
     }
 
@@ -176,27 +177,7 @@ class DriveUploadHelper2(val fileToUpload: File, val context: Context) : Connect
     }
 
 
-//    private fun createFolder() {
-//        getDriveResourceClient()
-//                .getRootFolder()
-//                .continueWithTask({ task->
-//                    val parentFolder = task.getResult()
-//                    val changeSet = MetadataChangeSet.Builder()
-//                            .setTitle("New folder")
-//                            .setMimeType(DriveFolder.MIME_TYPE)
-//                            .setStarred(true)
-//                            .build()
-//                    getDriveResourceClient().createFolder(parentFolder, changeSet) })
-//                .addOnSuccessListener(this,
-//                        { driveFolder->
-//                            showMessage(getString(R.string.file_created,
-//                                    driveFolder.getDriveId().encodeToString()))
-//                            finish() })
-//                .addOnFailureListener(this, { e->
-//                    Log.e(TAG, "Unable to create file", e)
-//                    showMessage(getString(R.string.file_create_error))
-//                    finish() })
-//    }
+
     companion object {
 
         private val TAG = "drive-quickstart"

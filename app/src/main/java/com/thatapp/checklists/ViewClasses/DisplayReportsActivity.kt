@@ -17,6 +17,12 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
 import android.view.View
 import android.widget.Toast
+import com.google.android.gms.drive.Drive
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
+
+
+
 
 
 class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
@@ -104,4 +110,23 @@ class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.Recy
             snackbar.show()
         }
     }
+
+
+/*
+    fun FindOrCreateDriveFile() {
+        // Check if we already have a driveID file
+        val context = applicationContext
+        var sPreviousDriveID="1212"
+        if (sPreviousDriveID.length() > 0) {
+            Log.e("log", "Using saved drive ID: $sPreviousDriveID")
+            Drive.DriveApi.fetchDriveId(getGoogleApiClient(), sPreviousDriveID)
+                    .setResultCallback(driveFetchIDCallback)
+        } else {
+            // create new contents resource
+            Log.e("this", "Attempting to create new drive file")
+            Drive.DriveApi.newDriveContents(getGoogleApiClient())
+                    .setResultCallback(driveContentsCallback)
+        }
+    }
+*/
 }

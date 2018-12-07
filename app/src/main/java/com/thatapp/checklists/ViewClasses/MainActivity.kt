@@ -1,5 +1,6 @@
 package com.thatapp.checklists.ViewClasses
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -24,7 +25,19 @@ import android.net.NetworkInfo
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.content.Context
+import android.support.annotation.NonNull
 import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.Scope
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.api.client.extensions.android.http.AndroidHttp
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import com.google.api.client.json.gson.GsonFactory
+import com.google.api.services.drive.Drive
+import com.google.api.services.drive.DriveScopes
+import com.thatapp.checklists.ModelClasses.DriveServiceHelper
 
 
 class MainActivity : AppCompatActivity(), ServiceListener {
@@ -36,15 +49,19 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
     private val TAG = "MainActivity----"
 
-    private lateinit var googleDriveService: GoogleDriveService
+    private val REQUEST_CODE_SIGN_IN = 1
+    private val REQUEST_CODE_OPEN_DOCUMENT = 2
+
+
+    private lateinit var mDriveService: DriveServiceHelper
     private var state = ButtonState.LOGGED_OUT
 
     lateinit var downloadAndSync: ConstraintLayout
     lateinit var myProfile: ConstraintLayout
 
     private val PROFILE_ACTIVITY = 33
-
-
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
+    val isUserLoggedin: Boolean = false
     private fun setButtons() {
         when (state) {
             ButtonState.LOGGED_OUT -> {
@@ -71,34 +88,38 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.thatapp.checklists.R.layout.activity_main)
-        val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        val activeNetwork = cm.activeNetworkInfo
-        val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
-        if (isConnected) {
-//            googleDriveService.auth()
-        } else {
-            Toast.makeText(applicationContext,"No Internet Connection.\nPlease ensure internet connectivity for accessing seamless services",Toast.LENGTH_LONG).show()
-        }
+        var gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
+
+        /*      val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+              val activeNetwork = cm.activeNetworkInfo
+              val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
+              if (isConnected) {
+               //   mDriveService.checkLoginStatus()
+              } else {
+                  Toast.makeText(applicationContext, "No Internet Connection.\nPlease ensure internet connectivity for accessing seamless services", Toast.LENGTH_LONG).show()
+              }
+      */
         linkVarsToViews()
-        val config = GoogleDriveConfig(
-                getString(R.string.source_google_drive),
-                GoogleDriveService.documentMimeTypes
-        )
-        googleDriveService = GoogleDriveService(this, config)
-        googleDriveService.serviceListener = this
-        val isUserLoggedin: Boolean = googleDriveService.checkLoginStatus()
+
+        //mDriveService.checkLoginStatus()
         if (!isUserLoggedin) {
             val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
             val activeNetwork = cm.activeNetworkInfo
             val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
             if (isConnected) {
-                googleDriveService.auth()
+                requestSignIn()
             } else {
-                Toast.makeText(applicationContext,"No Internet Connection",Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_SHORT).show()
             }
+        } else {
+            Log.e("login ", "" + isUserLoggedin)
         }
 
         login.setOnClickListener {
@@ -108,21 +129,21 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             val activeNetwork = cm.activeNetworkInfo
             val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
             if (isConnected) {
-                googleDriveService.auth()
+                requestSignIn()
             } else {
-                Toast.makeText(applicationContext,"No Internet Connection",Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_SHORT).show()
             }
         }
         downloadAndSync.setOnClickListener {
 
-            googleDriveService.pickFiles(null)
+            mDriveService.createFilePickerIntent()
 
         }
         myProfile.setOnClickListener {
             startActivityForResult(Intent(this, ProfileActivity::class.java), PROFILE_ACTIVITY)
         }
         logout.setOnClickListener {
-            googleDriveService.logout()
+            logoutUser()
             state = ButtonState.LOGGED_OUT
             setButtons()
         }
@@ -136,18 +157,75 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         }
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
+        when (requestCode) {
+            REQUEST_CODE_SIGN_IN -> if (resultCode == Activity.RESULT_OK && resultData != null) {
+                handleSignInResult(resultData)
+            }
+
+            REQUEST_CODE_OPEN_DOCUMENT -> if (resultCode == Activity.RESULT_OK && resultData != null) {
+                val uri = resultData.data
+                if (uri != null) {
+                    //  openFileFromFilePicker(uri)
+                }
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, resultData)
+    }
+
+    fun requestSignIn() {
+        Log.e("service", "Requesting sign-in")
+        val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestScopes(Scope(DriveScopes.DRIVE_FILE))
+
+                .build()
+
+        val client = GoogleSignIn.getClient(this, signInOptions)
+
+        // The result of the sign-in Intent is handled in onActivityResult.
+        startActivityForResult(client.signInIntent, REQUEST_CODE_SIGN_IN)
+    }
+
+
+    /**
+     * Handles the `result` of a completed sign-in activity initiated from [ ][.requestSignIn].
+     */
+    fun handleSignInResult(result: Intent) {
+        GoogleSignIn.getSignedInAccountFromIntent(result)
+                .addOnSuccessListener { googleAccount ->
+                    Log.e(TAG, "Signed in as " + googleAccount.email!!)
+
+                    // Use the authenticated account to sign in to the Drive service.
+                    val credential = GoogleAccountCredential.usingOAuth2(
+                            this, setOf(DriveScopes.DRIVE_FILE))
+                    credential.selectedAccount = googleAccount.account
+
+                    val googleDriveService = Drive.Builder(
+                            AndroidHttp.newCompatibleTransport(),
+                            GsonFactory(),
+                            credential)
+                            .setApplicationName("Drive API Migration")
+                            .build()
+
+                    mDriveService = DriveServiceHelper(googleDriveService)
+
+                    state = MainActivity.ButtonState.LOGGED_IN
+                    setButtons()
+                }
+                .addOnFailureListener { exception -> Log.e(TAG, "Unable to sign in.", exception) }
+    }
+
+
     private fun linkVarsToViews() {
         downloadAndSync = findViewById(R.id.downloadAndSyncLayout)
         myProfile = findViewById(R.id.myProfileLayout)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        googleDriveService.onActivityResult(requestCode, resultCode, data)
-    }
-
     override fun loggedIn() {
-        state = ButtonState.LOGGED_IN
-        setButtons()
+
     }
 
     override fun fileDownloaded(file: File, fileName: String) {
@@ -164,5 +242,20 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         Snackbar.make(main_layout, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 
+    private fun logoutUser() {
+        mGoogleSignInClient.signOut().addOnSuccessListener { Log.e("log","out ") }.addOnCanceledListener { Log.e("log","failed") }
+    }
 
+    override fun onStart() {
+        super.onStart()
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        Log.e("acc", account!!.displayName)
+    }
+
+    fun signIn() {
+
+        var signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
+        startActivityForResult(signInIntent, REQUEST_CODE_SIGN_IN)
+    }
 }
+

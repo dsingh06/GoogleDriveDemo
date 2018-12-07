@@ -43,6 +43,14 @@ import com.google.android.gms.tasks.Task
 import okio.Okio
 import java.io.File
 import java.util.*
+import com.google.android.gms.drive.Drive
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
+import android.provider.Settings.Global.getString
+import com.google.android.gms.common.api.ResultCallback
+import com.google.android.gms.common.api.Status
+import com.google.android.gms.drive.Drive.getDriveClient
+
 
 class GoogleDriveService(private val activity: Activity, private val config: GoogleDriveConfig) {
 
@@ -268,9 +276,6 @@ class GoogleDriveService(private val activity: Activity, private val config: Goo
     fun logout() {
         googleSignInClient.signOut()
         signInAccount = null
-    }
-
-    private fun displayFiles() {
     }
 
 }
