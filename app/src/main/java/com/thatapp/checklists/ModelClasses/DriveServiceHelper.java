@@ -4,25 +4,36 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.ContactsContract;
 import android.provider.OpenableColumns;
 import android.support.v4.util.Pair;
+import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.api.client.http.ByteArrayContent;
+import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import okio.Okio;
 
 
 /**
@@ -34,9 +45,9 @@ public class DriveServiceHelper {
     private Drive mDriveService;
 
 
-      public DriveServiceHelper(Drive driveService) {
-                mDriveService = driveService;
-        }
+    public DriveServiceHelper(Drive driveService) {
+        mDriveService = driveService;
+    }
 
 
     ServiceListener serviceListener = null;
@@ -44,12 +55,12 @@ public class DriveServiceHelper {
     /**
      * Creates a text file in the user's My Drive folder and returns its file ID.
      */
-    public Task<String> createFile() {
+    public Task<String> createFile(File file) {
         return Tasks.call(mExecutor, () -> {
             File metadata = new File()
                     .setParents(Collections.singletonList("root"))
-                    .setMimeType("application/vnd.ms-excel")
-                    .setName("Untitled file");
+                    .setMimeType("application/pdf")
+                    .setName(file.getName());
 
             File googleFile = mDriveService.files().create(metadata).execute();
             if (googleFile == null) {
@@ -93,6 +104,17 @@ public class DriveServiceHelper {
     public Task<Void> saveFile(String fileId, String name, String content) {
         return Tasks.call(mExecutor, () -> {
             // Create a File containing any metadata changes.
+
+
+            File fileMetadata = new File();
+            fileMetadata.setName("chrcklists");
+            fileMetadata.setMimeType("application/vnd.google-apps.folder");
+
+            File file = mDriveService.files().create(fileMetadata)
+                    .setFields("id")
+                    .execute();
+            System.out.println("Folder ID: " + file.getId());
+
             File metadata = new File().setName(name);
 
             // Convert content to an AbstractInputStreamContent instance.
@@ -102,6 +124,28 @@ public class DriveServiceHelper {
             mDriveService.files().update(fileId, metadata, contentStream).execute();
             return null;
         });
+    }
+
+
+    public void downloadFile(String fileId) {
+        // Retrieve the metadata as a File object.
+        try {
+            File metadata = mDriveService.files().get(fileId).execute();
+            String fileName = metadata.getName();
+
+            OutputStream outputStream = new ByteArrayOutputStream();
+            mDriveService.files().export(fileId, "application/pdf")
+                    .executeMediaAndDownloadTo(outputStream);
+
+
+            java.io.File file = new java.io.File(Environment.getRootDirectory() + "/downloads/user/"+fileName+metadata.getFileExtension());
+            FileOutputStream fOut = new FileOutputStream(file);
+
+            fOut.close();
+
+
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -135,11 +179,14 @@ public class DriveServiceHelper {
             ContentResolver contentResolver, Uri uri) {
         return Tasks.call(mExecutor, () -> {
             // Retrieve the document's display name from its metadata.
-            String name;
+            String name=" ";
+
             try (Cursor cursor = contentResolver.query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                     name = cursor.getString(nameIndex);
+                    Log.e("name",name);
+                    downloadFile(name);
                 } else {
                     throw new IOException("Empty cursor returned for file.");
                 }
@@ -155,6 +202,7 @@ public class DriveServiceHelper {
                     stringBuilder.append(line);
                 }
                 content = stringBuilder.toString();
+                Log.e("con",content);
             }
 
             return Pair.create(name, content);
@@ -166,13 +214,12 @@ public class DriveServiceHelper {
       /*  GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activity);
         //updateUI(account);
 
-
-   */     return false;
+   */
+        return false;
     }
 
     /**
      * Starts a sign-in activity using [.REQUEST_CODE_SIGN_IN].
      */
-
 
 }

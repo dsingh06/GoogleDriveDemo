@@ -25,6 +25,7 @@ import android.net.NetworkInfo
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.content.Context
+import android.net.Uri
 import android.support.annotation.NonNull
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -136,7 +137,8 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         }
         downloadAndSync.setOnClickListener {
 
-            mDriveService.createFilePickerIntent()
+            openFilePicker()
+            //mDriveService.createFilePickerIntent()
 
         }
         myProfile.setOnClickListener {
@@ -167,7 +169,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             REQUEST_CODE_OPEN_DOCUMENT -> if (resultCode == Activity.RESULT_OK && resultData != null) {
                 val uri = resultData.data
                 if (uri != null) {
-                    //  openFileFromFilePicker(uri)
+                    openFileFromFilePicker(uri)
                 }
             }
         }
@@ -243,13 +245,13 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     }
 
     private fun logoutUser() {
-        mGoogleSignInClient.signOut().addOnSuccessListener { Log.e("log","out ") }.addOnCanceledListener { Log.e("log","failed") }
+        mGoogleSignInClient.signOut().addOnSuccessListener { Log.e("log", "out ") }.addOnCanceledListener { Log.e("log", "failed") }
     }
 
     override fun onStart() {
         super.onStart()
         val account = GoogleSignIn.getLastSignedInAccount(this)
-        Log.e("acc", account!!.displayName)
+//        Log.e("acc", account!!.displayName)
     }
 
     fun signIn() {
@@ -257,5 +259,27 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         var signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
         startActivityForResult(signInIntent, REQUEST_CODE_SIGN_IN)
     }
+
+    private fun openFilePicker() {
+        if (mDriveService != null) {
+            Log.d(TAG, "Opening file picker.")
+
+            val pickerIntent = mDriveService.createFilePickerIntent()
+
+            // The result of the SAF Intent is handled in onActivityResult.
+            startActivityForResult(pickerIntent, REQUEST_CODE_OPEN_DOCUMENT)
+        }
+    }
+
+    private fun openFileFromFilePicker(uri: Uri) {
+        if (mDriveService != null) {
+            Log.d(TAG, "Opening " + uri.path!!)
+
+
+            mDriveService.openFileUsingStorageAccessFramework(contentResolver, uri)
+                    .addOnSuccessListener { Log.e("file", "success") }
+                    .addOnFailureListener({ exception -> Log.e(TAG, "Unable to open file from picker.", exception) })
+        } }
+
 }
 
