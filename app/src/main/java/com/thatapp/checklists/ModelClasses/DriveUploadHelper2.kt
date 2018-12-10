@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v4.app.ActivityCompat.startIntentSenderForResult
 import android.util.Log
 import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -29,6 +30,10 @@ import com.google.android.gms.drive.Drive.getDriveResourceClient
 import com.google.android.gms.drive.DriveFolder
 import com.google.android.gms.drive.DriveResourceClient
 import com.google.android.gms.drive.MetadataChangeSet
+import com.google.api.client.extensions.android.http.AndroidHttp
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import com.google.api.client.json.gson.GsonFactory
+import com.google.api.services.drive.DriveScopes
 import com.thatapp.checklists.R
 import com.thatapp.checklists.ViewClasses.DisplayQuestionsActivity
 import java.io.File
@@ -43,14 +48,14 @@ class DriveUploadHelper2(val fileToUpload: File, val context: Context) : Connect
 
     private var mGoogleApiClient: GoogleApiClient? = null
     private var mBitmapToSave: File = fileToUpload
-
+    lateinit var mDriveService: DriveServiceHelper
     /**
      * Create a new file and save it to Drive.
      */
     private fun saveFileToDrive() {
         // Start by creating a new contents, and setting a callback.
         Log.e(TAG, "Creating new contents.")
-   //     createFolder()
+        //     createFolder()
         val image = mBitmapToSave
         Drive.DriveApi.newDriveContents(mGoogleApiClient)
                 .setResultCallback(ResultCallback { result ->
@@ -166,7 +171,19 @@ class DriveUploadHelper2(val fileToUpload: File, val context: Context) : Connect
 //			return
 //		}
 
+/*        val accountN = GoogleSignIn.getLastSignedInAccount(context)
+        val credential = GoogleAccountCredential.usingOAuth2(
+                context, setOf(DriveScopes.DRIVE_FILE))
+        credential.selectedAccount = accountN!!.account
+        val googleDriveService = com.google.api.services.drive.Drive.Builder(
+                AndroidHttp.newCompatibleTransport(),
+                GsonFactory(),
+                credential)
+                .setApplicationName("Checklist")
+                .build()
 
+        mDriveService = DriveServiceHelper(googleDriveService)
+        mDriveService.createFile(fileToUpload)*/
         saveFileToDrive()
     }
 
@@ -175,7 +192,6 @@ class DriveUploadHelper2(val fileToUpload: File, val context: Context) : Connect
         Toast.makeText(context, "Internet connection problem", Toast.LENGTH_LONG).show()
         Log.i(TAG, "GoogleApiClient connection suspended")
     }
-
 
 
     companion object {

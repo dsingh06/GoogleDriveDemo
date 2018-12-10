@@ -184,7 +184,7 @@ class GoogleDriveService(private val activity: Activity, private val config: Goo
                     //This is the app's download directory, not the phones
                     val storageDir = activity.getFilesDir()
 
-                    val filep = File(storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + "awasrishabh@gmail.com")
+                    val filep = File(storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + "rishabh")
 //
                     val tempFile = File(filep, fileName)
 

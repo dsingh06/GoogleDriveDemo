@@ -2,16 +2,22 @@ package com.thatapp.checklists.ModelClasses;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Path;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.ContactsContract;
+import android.provider.DocumentsContract;
 import android.provider.OpenableColumns;
+import android.support.v4.content.FileProvider;
 import android.support.v4.util.Pair;
 import android.util.Log;
 
+import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.api.client.http.ByteArrayContent;
@@ -20,6 +26,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import com.thatapp.checklists.ViewClasses.MainActivity;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -29,7 +36,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -43,10 +54,13 @@ import okio.Okio;
 public class DriveServiceHelper {
     private final Executor mExecutor = Executors.newSingleThreadExecutor();
     private Drive mDriveService;
+    private Activity activity;
+    private Context context;
 
-
-    public DriveServiceHelper(Drive driveService) {
-        mDriveService = driveService;
+    public DriveServiceHelper(Drive driveService, Activity activity, Context context) {
+        this.mDriveService = driveService;
+        this.activity = activity;
+        this.context = context;
     }
 
 
@@ -55,7 +69,7 @@ public class DriveServiceHelper {
     /**
      * Creates a text file in the user's My Drive folder and returns its file ID.
      */
-    public Task<String> createFile(File file) {
+    public Task<String> createFile(java.io.File file) {
         return Tasks.call(mExecutor, () -> {
             File metadata = new File()
                     .setParents(Collections.singletonList("root"))
@@ -67,6 +81,7 @@ public class DriveServiceHelper {
                 throw new IOException("Null result when requesting file creation.");
             }
 
+            Log.e("fid", "" + googleFile.getId());
             return googleFile.getId();
         });
     }
@@ -107,11 +122,11 @@ public class DriveServiceHelper {
 
 
             File fileMetadata = new File();
-            fileMetadata.setName("chrcklists");
+            fileMetadata.setName("checklists");
             fileMetadata.setMimeType("application/vnd.google-apps.folder");
 
             File file = mDriveService.files().create(fileMetadata)
-                    .setFields("id")
+                    .setFields(fileId)
                     .execute();
             System.out.println("Folder ID: " + file.getId());
 
@@ -130,21 +145,33 @@ public class DriveServiceHelper {
     public void downloadFile(String fileId) {
         // Retrieve the metadata as a File object.
         try {
+
             File metadata = mDriveService.files().get(fileId).execute();
+//            File metadata = mDriveService.files().list().setQ("name=sds");
             String fileName = metadata.getName();
 
+            java.io.File storageDir = context.getFilesDir();
+            java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads" + java.io.File.separator + "awasrishabh@gmail.com");
+
+            java.io.File des = new java.io.File(filep.getAbsolutePath() + java.io.File.separator + fileName);
+
+            Boolean t = filep.mkdirs();
+            Log.e("dir created", " " + t);
+
+
             OutputStream outputStream = new ByteArrayOutputStream();
-            mDriveService.files().export(fileId, "application/pdf")
+            mDriveService.files().get(fileId)
                     .executeMediaAndDownloadTo(outputStream);
+            Log.e("file in download 121 ", fileName);
 
-
-            java.io.File file = new java.io.File(Environment.getRootDirectory() + "/downloads/user/"+fileName+metadata.getFileExtension());
-            FileOutputStream fOut = new FileOutputStream(file);
-
+            FileOutputStream fOut = new FileOutputStream(des);
+            fOut.write(((ByteArrayOutputStream) outputStream).toByteArray());
+            Log.e("file ", "12");
             fOut.close();
-
+            Log.e("file download", "success");
 
         } catch (Exception e) {
+            Log.e("file download", e.toString());
         }
     }
 
@@ -156,9 +183,43 @@ public class DriveServiceHelper {
      * request Drive Full Scope in the <a href="https://play.google.com/apps/publish">Google
      * Developer's Console</a> and be submitted to Google for verification.</p>
      */
-    public Task<FileList> queryFiles() {
+    public Task<FileList> queryFiles() throws IOException {
+        // listing();
+        //queryA();
         return Tasks.call(mExecutor, () ->
-                mDriveService.files().list().setSpaces("drive").execute());
+
+                mDriveService.files().list().setSpaces("drive").setFields("files(id, name)")
+                        .execute());
+//      mDriveService.files().export("","application/vnd.ms-excel")
+    }
+
+    public void queryA() throws IOException {
+        // listing();
+        FileList result = mDriveService.files().list().setSpaces("drive")
+                .execute();
+
+//        Log.e("Found ", "file  "+result.getId());
+        for (File file : result.getFiles()) {
+            Log.e("\nFound ", "file: " + file.getName() + "     " + file.getId());
+        }
+
+
+        // return mDriveService.files().list().setSpaces("drive").setFields("files(id, name)")
+        //       .execute();
+//      mDriveService.files().export("","application/vnd.ms-excel")
+    }
+
+    public void listing() throws IOException {
+
+        FileList result = mDriveService.files().list()
+                .setQ("name='application/vnd.ms-excel'")
+                .setSpaces("drive")
+                .setFields("files(id, name)")
+                .execute();
+        for (File file : result.getFiles()) {
+            System.out.printf("Found file: %s (%s)\n",
+                    file.getName(), file.getId());
+        }
     }
 
     /**
@@ -179,14 +240,50 @@ public class DriveServiceHelper {
             ContentResolver contentResolver, Uri uri) {
         return Tasks.call(mExecutor, () -> {
             // Retrieve the document's display name from its metadata.
-            String name=" ";
+            String name = "";
+            String fileID = "";
+
+            //  java.io.File requestFile = new java.io.File(Environment.getDataDirectory().getAbsolutePath() + java.io.File.separator + "generated" + java.io.File.separator + "awasrishabh@gmail.com" + java.io.File.separator, name);
+            // final String id = DocumentsContract.getDocumentId(uri);
+            //Log.e("doc id", "" + id);
+
+            //downloadFile("1QjGPyzDaE2XwwJMb6rfbaIhsBA4h2AiP");
+
+/*
+            Uri fileUri = null;
+            try {
+                FileProvider.getUriForFile(
+                        this,
+                        "com.thatapp.checklists.provider",
+                        requestFile);
+
+            } catch ( Exception e) {
+                Log.e("File Selector",
+                        "The selected file can't be shared: $requestFile");
+            }
+
+            DocumentsContract.copyDocument(contentResolver,uri,fileUri);*/
 
             try (Cursor cursor = contentResolver.query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                     name = cursor.getString(nameIndex);
-                    Log.e("name",name);
-                    downloadFile(name);
+
+                    Log.e("name", name);
+
+                    FileList result = mDriveService.files().list().setSpaces("drive")
+                            .execute();
+
+                    for (File file : result.getFiles()) {
+                        if (file.getName().equalsIgnoreCase(name)) {
+                            Log.e("\nmatched ", "file: " + file.getName() + "     " + file.getId());
+                            downloadFile(file.getId());
+                        }
+                    }
+
+
+                    //queryFiles();
+                    // downloadFile(name);
                 } else {
                     throw new IOException("Empty cursor returned for file.");
                 }
@@ -202,13 +299,43 @@ public class DriveServiceHelper {
                     stringBuilder.append(line);
                 }
                 content = stringBuilder.toString();
-                Log.e("con",content);
+                Log.e("con", content);
             }
+
 
             return Pair.create(name, content);
         });
     }
 
+    /*
+        public void writeToFile(String data) {
+            // Get the directory for the user's public pictures directory.
+            File path = new File(Context.getFilesDir().absolutePath+ File.separator+"/YourFolder/")
+
+            // Make sure the path directory exists.
+            if (!path.exists())
+            {
+                // Make it, if it doesn't exit
+                path.mkdirs()
+            }
+            val file = File(path, "config.xls")
+            // Save your stream, don't forget to flush() it before closing it.
+            try
+            {
+                file.createNewFile()
+                val fOut = FileOutputStream(file)
+                val myOutWriter = OutputStreamWriter(fOut)
+                myOutWriter.append(data)
+                myOutWriter.close()
+                fOut.flush()
+                fOut.close()
+            }
+            catch (e:IOException) {
+                Log.e("Exception", "File write failed: " + e.toString())
+            }
+        }
+
+      */
     public Boolean checkLoginStatus() {
 
       /*  GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activity);

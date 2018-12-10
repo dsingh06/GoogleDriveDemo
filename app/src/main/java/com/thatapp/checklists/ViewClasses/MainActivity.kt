@@ -15,18 +15,17 @@ import com.google.android.gms.drive.query.Filters
 import com.google.android.gms.drive.query.Query
 import com.google.android.gms.drive.query.SearchableField
 import com.google.android.gms.tasks.Task
-import com.thatapp.checklists.ModelClasses.GoogleDriveConfig
-import com.thatapp.checklists.ModelClasses.GoogleDriveService
 import com.thatapp.checklists.R
-import com.thatapp.checklists.ModelClasses.ServiceListener
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
 import android.net.NetworkInfo
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.content.Context
 import android.net.Uri
+import android.os.Build
+import android.provider.DocumentsContract
 import android.support.annotation.NonNull
+import android.support.v4.provider.DocumentFile
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -38,7 +37,9 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
-import com.thatapp.checklists.ModelClasses.DriveServiceHelper
+import com.google.api.services.drive.model.FileList
+import com.thatapp.checklists.ModelClasses.*
+import java.io.*
 
 
 class MainActivity : AppCompatActivity(), ServiceListener {
@@ -54,7 +55,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     private val REQUEST_CODE_OPEN_DOCUMENT = 2
 
 
-    private lateinit var mDriveService: DriveServiceHelper
+    private lateinit var mDriverServiceHelper: DriveServiceHelper
     private var state = ButtonState.LOGGED_OUT
 
     lateinit var downloadAndSync: ConstraintLayout
@@ -63,6 +64,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     private val PROFILE_ACTIVITY = 33
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     val isUserLoggedin: Boolean = false
+
     private fun setButtons() {
         when (state) {
             ButtonState.LOGGED_OUT -> {
@@ -101,14 +103,14 @@ class MainActivity : AppCompatActivity(), ServiceListener {
               val activeNetwork = cm.activeNetworkInfo
               val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
               if (isConnected) {
-               //   mDriveService.checkLoginStatus()
+               //   mDriverServiceHelper.checkLoginStatus()
               } else {
                   Toast.makeText(applicationContext, "No Internet Connection.\nPlease ensure internet connectivity for accessing seamless services", Toast.LENGTH_LONG).show()
               }
       */
         linkVarsToViews()
 
-        //mDriveService.checkLoginStatus()
+        //mDriverServiceHelper.checkLoginStatus()
         if (!isUserLoggedin) {
             val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -138,12 +140,13 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         downloadAndSync.setOnClickListener {
 
             openFilePicker()
-            //mDriveService.createFilePickerIntent()
+            //mDriverServiceHelper.createFilePickerIntent()
 
         }
         myProfile.setOnClickListener {
             startActivityForResult(Intent(this, ProfileActivity::class.java), PROFILE_ACTIVITY)
         }
+
         logout.setOnClickListener {
             logoutUser()
             state = ButtonState.LOGGED_OUT
@@ -151,9 +154,12 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         }
         imageView3.setOnClickListener {
             val intent = Intent(this, DisplayCheckListsActivity::class.java)
+            Log.e("clicked", " iv3")
             startActivity(intent)
+
         }
         view.setOnClickListener {
+            Log.e("clicked", " VIEW")
             val intent = Intent(this, DisplayCheckListsActivity::class.java)
             startActivity(intent)
         }
@@ -169,6 +175,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             REQUEST_CODE_OPEN_DOCUMENT -> if (resultCode == Activity.RESULT_OK && resultData != null) {
                 val uri = resultData.data
                 if (uri != null) {
+
                     openFileFromFilePicker(uri)
                 }
             }
@@ -209,10 +216,10 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                             AndroidHttp.newCompatibleTransport(),
                             GsonFactory(),
                             credential)
-                            .setApplicationName("Drive API Migration")
+                            .setApplicationName("Checklist")
                             .build()
 
-                    mDriveService = DriveServiceHelper(googleDriveService)
+                    mDriverServiceHelper = DriveServiceHelper(googleDriveService,this,applicationContext)
 
                     state = MainActivity.ButtonState.LOGGED_IN
                     setButtons()
@@ -250,6 +257,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
     override fun onStart() {
         super.onStart()
+
         val account = GoogleSignIn.getLastSignedInAccount(this)
 //        Log.e("acc", account!!.displayName)
     }
@@ -261,10 +269,13 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     }
 
     private fun openFilePicker() {
-        if (mDriveService != null) {
-            Log.d(TAG, "Opening file picker.")
+        query()
+        //    mDriverServiceHelper.listing()
 
-            val pickerIntent = mDriveService.createFilePickerIntent()
+        if (mDriverServiceHelper != null) {
+            Log.e(TAG, "Opening file picker.")
+
+            val pickerIntent = mDriverServiceHelper.createFilePickerIntent()
 
             // The result of the SAF Intent is handled in onActivityResult.
             startActivityForResult(pickerIntent, REQUEST_CODE_OPEN_DOCUMENT)
@@ -272,14 +283,156 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     }
 
     private fun openFileFromFilePicker(uri: Uri) {
-        if (mDriveService != null) {
-            Log.d(TAG, "Opening " + uri.path!!)
+        if (mDriverServiceHelper != null) {
+
+            Log.e(TAG, "Opening " + uri.path!!)
+
+            mDriverServiceHelper.openFileUsingStorageAccessFramework(contentResolver, uri)
+                    /*.addOnSuccessListener {
+                        Log.e("file", "success")
 
 
-            mDriveService.openFileUsingStorageAccessFramework(contentResolver, uri)
-                    .addOnSuccessListener { Log.e("file", "success") }
+                        var file: DocumentFile? = null
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+                                file = DocumentFile.fromSingleUri(this, uri)
+                                if (file != null) {
+                                    //writeToFile()
+                                }
+                            }
+                    }*/
+                    .addOnSuccessListener { namePair ->
+                        Log.e("values", namePair.first)
+
+//                        mDriverServiceHelper.downloadFile("");
+                        writeToFile(namePair.first!!, namePair.second!!)
+                    }
+
                     .addOnFailureListener({ exception -> Log.e(TAG, "Unable to open file from picker.", exception) })
-        } }
+        }
+    }
 
+    fun writeToFile(fileName: String, data: String) {
+        // Get the directory for the user's public pictures directory.
+        val path = File(getFilesDir().absolutePath + File.separator + "/downloads/" + File.separator + "rishabh")
+//        val path = java.io.File(+java.io.File.separator + "/downloads/")
+
+        // Make sure the path directory exists.
+        if (!path.exists()) {
+            // Make it, if it doesn't exit
+            val t = path.mkdirs()
+            Log.e("path", path.getPath() + "   " + t)
+        }
+        val file = java.io.File(path, fileName)
+        // Save your stream, don't forget to flush() it before closing it.
+        try {
+            file.createNewFile()
+            val fOut = FileOutputStream(file)
+            val myOutWriter = PrintWriter(fOut)
+            myOutWriter.append(data)
+            myOutWriter.close()
+            fOut.flush()
+            fOut.close()
+        } catch (e: IOException) {
+            Log.e("Exception", "File write failed: " + e.toString())
+        }
+
+
+    }
+
+    fun copy(copy: DocumentFile, uri: Uri): Boolean {
+        lateinit var inStream: InputStream
+        lateinit var outStream: OutputStream
+        val dir = copy//File(filesDir.absolutePath,copy)
+        val mime = "application/vnd.ms-excel"
+        var dir2 = DocumentFile.fromFile(File(filesDir.absolutePath + File.separator + "downloads", copy.name))
+        val copiedFileName = "copied.jpg"
+        val copiedMimeType = mime
+        inStream = getContentResolver().openInputStream(copy.uri)
+        outStream = getContentResolver().openOutputStream(dir2.createFile(copiedMimeType, copiedFileName.replace(".jpg", ""))!!.getUri())
+        val DEFAULT_BUFFER_SIZE = 1024 * 4
+        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+        var bytesRead: Int
+        do {
+
+            bytesRead = inStream.read(buffer)
+
+            if (bytesRead == null)
+
+                break
+
+            outStream.write(bytesRead)
+            Log.e("outtt", "" + bytesRead)
+
+        } while (true)
+        Toast.makeText(this@MainActivity, "Succeed to create 'copied.jpg'", Toast.LENGTH_SHORT).show()
+        // val copy2 = dir.copyTo(dir2, true)
+        /*try {
+            inStream = FileInputStream(copy)
+            outStream = getContentResolver().openOutputStream(uri)
+            val buffer = ByteArray(16384)
+            var bytesRead: Int
+            do {
+
+                bytesRead = inStream.read(buffer)
+
+                if (bytesRead == null)
+
+                    break
+
+                println(bytesRead)
+
+            } while (true)
+
+            /*  while ((bytesRead = inStream.read(buffer)) != -1) {
+                  outStream.write(buffer, 0, bytesRead)
+              }*/
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            try {
+                inStream.close()
+                outStream.close()
+                return true
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }*/
+        return false
+    }
+
+
+    fun query() {
+        run({
+            if (mDriverServiceHelper != null) {
+                Log.e(TAG, "Querying for files.")
+//                mDriverServiceHelper.queryA()
+//
+
+                mDriverServiceHelper.queryFiles()
+                        .addOnSuccessListener({ fileList ->
+                            val builder = StringBuilder()
+                            for (file in fileList.getFiles()) {
+                                builder.append(file.id).append("\t\t\t")
+                                builder.append(file.getName()).append("\n")
+                            }
+                            val fileNames = builder.toString()
+                            Log.e("file", fileNames)
+//
+//                            for (file in result.getFiles()) {
+//                                System.out.printf("Found file: %s (%s)\n",
+//                                        file.getName(), file.getId())
+//                            }
+                        })
+                        .addOnFailureListener({ exception -> Log.e(TAG, "Unable to query files.", exception) })
+            }
+        })
+    }
 }
+
+
+
+
 

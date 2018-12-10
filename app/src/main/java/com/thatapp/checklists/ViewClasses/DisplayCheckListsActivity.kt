@@ -47,7 +47,7 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
         val rv_list: RecyclerView = findViewById(R.id.rv_downloaded)
         rv_list.layoutManager = LinearLayoutManager(this)
         // Access the RecyclerView Adapter and load the data into it
-        mAdapter = DisplayChecklistAndPDFAdapter(downloaded, this,"xls")
+        mAdapter = DisplayChecklistAndPDFAdapter(downloaded, this, "xls")
         rv_list.adapter = mAdapter
         val itemTouchHelperCallback = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rv_list)
@@ -71,16 +71,16 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
             false
         }
         val storageDir = getFilesDir()
-        val files:Array<File>? = File(storageDir.getAbsolutePath() + File.separator + "downloads"+File.separator +"awasrishabh@gmail.com").listFiles(fileNameFilter)
-        if (files!=null) {
-			Log.e("Files", "Size: " + files.size)
-			for (i in files) {
-				downloaded.add(i)
-			}
-		} else {
-			Toast.makeText(this,"No checklists found!",Toast.LENGTH_SHORT).show()
-			finish()
-		}
+        val files: Array<File>? = File(storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + "rishabh").listFiles(fileNameFilter)
+        if (files != null) {
+            Log.e("Files", "Size: " + files.size)
+            for (i in files) {
+                downloaded.add(i)
+            }
+        } else {
+            Toast.makeText(this, "No checklists found!", Toast.LENGTH_SHORT).show()
+            finish()
+        }
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
@@ -92,7 +92,7 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
             val deletedItem = downloaded.get(position)
             val deletedIndex = position
             // remove the item from recycler view
-            mAdapter.removeItem(position,"checklist")
+            mAdapter.removeItem(position, "checklist")
 
             // showing snack bar with Undo option
 
@@ -101,13 +101,14 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
             snackbar.setAction("UNDO", object : View.OnClickListener {
                 override fun onClick(view: View) {
                     // undo is selected, restore the deleted item
-                    mAdapter.restoreItem(deletedItem, deletedIndex,"checklist")
+                    mAdapter.restoreItem(deletedItem, deletedIndex, "checklist")
 
                 }
             })
             snackbar.setActionTextColor(Color.YELLOW)
             snackbar.show()
-        }    }
+        }
+    }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -115,6 +116,7 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
         inflater.inflate(R.menu.menu_files, menu)
         return super.onCreateOptionsMenu(menu)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle presses on the action bar menu items
         when (item.itemId) {
@@ -124,5 +126,6 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
                 return true
             }
         }
-        return super.onOptionsItemSelected(item)}
+        return super.onOptionsItemSelected(item)
+    }
 }
