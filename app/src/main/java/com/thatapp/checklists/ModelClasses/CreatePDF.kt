@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Environment
 import android.util.Log
 import com.itextpdf.text.Document
+import com.itextpdf.text.Image
 import java.io.FileOutputStream
 
 import com.itextpdf.text.pdf.PdfPTable
@@ -12,25 +13,34 @@ import java.io.File
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import android.provider.MediaStore.Images.Media.getBitmap
+import android.graphics.drawable.BitmapDrawable
+import android.R
+import android.graphics.drawable.Drawable
+
 
 class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, val filename: String) {
 
-   /* val storageDir = context.getFilesDir().absolutePath
-    var fm = filename.replace("[", "").replace("]", "").split(".xls")
-    var timeStamp = SimpleDateFormat("dd/MMM/YYYY_HH:mm:ss").format(Date())
-    var fileNm = fm[0] + "_" + timeStamp + ".pdf"
+    /* val storageDir = context.getFilesDir().absolutePath
+     var fm = filename.replace("[", "").replace("]", "").split(".xls")
+     var timeStamp = SimpleDateFormat("dd/MMM/YYYY_HH:mm:ss").format(Date())
+     var fileNm = fm[0] + "_" + timeStamp + ".pdf"
 
-    var des = storageDir + "/" + fileNm
-    */
+     var des = storageDir + "/" + fileNm
+     */
 
 
     val storageDir = context.getFilesDir()
     var fm = filename.replace("[", "").replace("]", "").split(".xls")
     var timeStamp = SimpleDateFormat("dd-MM-yyyy_HH:mm").format(Date())
     var fileNm = fm[0] + ":" + timeStamp + ".pdf"
-    val filep = File(storageDir.getAbsolutePath() + File.separator + "generated"+ File.separator +"awasrishabh@gmail.com")
+    val filep = File(storageDir.getAbsolutePath() + File.separator + "generated" + File.separator + "awasrishabh")
 
-    var des =filep.absolutePath+"/"+fileNm
+    var des = filep.absolutePath + "/" + fileNm
 
 
     val document = Document()
@@ -38,7 +48,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
     fun startPDFCreation() {
 
         var t = filep.mkdirs()
-            Log.e("sss", " " + t)
+        Log.e("sss", " " + t)
 
         try {
             PdfWriter.getInstance(document, FileOutputStream(des))
@@ -46,6 +56,20 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
             Log.e("eee", ex.toString())
         }
         document.open()
+        /* try {
+             // get input stream
+
+             val d = context.assets.
+             val bitDw = d as BitmapDrawable
+             val bmp = bitDw.bitmap
+             val stream = ByteArrayOutputStream()
+             bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
+             val image = Image.getInstance(stream.toByteArray())
+             document.add(image)
+         } catch (ex: IOException) {
+             return
+         }*/
+
         val table = PdfPTable(3)
 //        table.setWidths(floatArrayOf(0.5f, 3f,2f))
         for (aw in questions) {

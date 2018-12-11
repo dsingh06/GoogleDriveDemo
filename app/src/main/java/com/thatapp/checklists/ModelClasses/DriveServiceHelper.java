@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.OpenableColumns;
 import android.support.v4.util.Pair;
 import android.util.Log;
+
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.api.client.http.ByteArrayContent;
@@ -17,7 +19,12 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import com.google.api.services.drive.model.Permission;
+import com.google.api.services.drive.model.TeamDrive;
+import com.google.api.services.drive.model.TeamDriveList;
 import com.thatapp.checklists.ViewClasses.MainActivity;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -32,6 +39,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -138,7 +146,6 @@ public class DriveServiceHelper {
         try {
 
             File metadata = mDriveService.files().get(fileId).execute();
-//            File metadata = mDriveService.files().list().setQ("name=sds");
             String fileName = metadata.getName();
 
             java.io.File storageDir = context.getFilesDir();
@@ -176,7 +183,7 @@ public class DriveServiceHelper {
      */
     public Task<FileList> queryFiles() throws IOException {
         // listing();
-        //queryA();
+
         return Tasks.call(mExecutor, () ->
 
                 mDriveService.files().list().setSpaces("drive").setFields("files(id, name)")
@@ -184,20 +191,47 @@ public class DriveServiceHelper {
 //      mDriveService.files().export("","application/vnd.ms-excel")
     }
 
-    public void queryA() throws IOException {
-        // listing();
-        FileList result = mDriveService.files().list().setSpaces("drive")
+
+    public void queryA() throws IOException, IllegalStateException {
+
+        TeamDrive teamDriveMetadata = new TeamDrive();
+        teamDriveMetadata.setName("Project Resources");
+        String requestId = UUID.randomUUID().toString();
+        TeamDrive teamDriver = mDriveService.teamdrives().create(requestId,
+                teamDriveMetadata)
                 .execute();
-
-//        Log.e("Found ", "file  "+result.getId());
-        for (File file : result.getFiles()) {
-            Log.e("\nFound ", "file: " + file.getName() + "     " + file.getId());
-        }
+        System.out.println("Team Drive ID: " + teamDriver.getId());
 
 
-        // return mDriveService.files().list().setSpaces("drive").setFields("files(id, name)")
-        //       .execute();
-//      mDriveService.files().export("","application/vnd.ms-excel")
+        String pageToken = null;
+        Permission newOrganizerPermission = new Permission()
+                .setType("user")
+                .setRole("organizer")
+                .setEmailAddress("user@example.com");
+
+        do {
+            TeamDriveList result = mDriveService.teamdrives().list()
+                    .setFields("nextPageToken, teamDrives(id, name)")
+                    .setUseDomainAdminAccess(true)
+                    .setPageToken(pageToken)
+                    .execute();
+            for (TeamDrive teamDrive : result.getTeamDrives()) {
+                System.out.printf("Found Team Drive without organizer: %s (%s)\n",
+                        teamDrive.getName(), teamDrive.getId());
+                // Note: For improved efficiency, consider batching
+                // permission insert requests
+                Permission permissionResult = mDriveService.permissions()
+                        .create(teamDrive.getId(), newOrganizerPermission)
+                        .setUseDomainAdminAccess(true)
+                        .setSupportsTeamDrives(true)
+                        .setFields("id")
+                        .execute();
+                Log.e("Added permission: ", "121   " + permissionResult.getId());
+
+            }
+            pageToken = result.getNextPageToken();
+        } while (pageToken != null);
+
     }
 
     public void listing() throws IOException {
@@ -249,7 +283,7 @@ public class DriveServiceHelper {
                             downloadFile(file.getId());
                         }
                     }
-            } else {
+                } else {
                     throw new IOException("Empty cursor returned for file.");
                 }
             }

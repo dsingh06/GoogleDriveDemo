@@ -70,7 +70,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
 
                 file_name = downloaded[position].name
-                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh@gmail.com" + File.separator, downloaded[position].name)
+                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh" + File.separator, downloaded[position].name)
 
                 val fileUri: Uri? = try {
                     FileProvider.getUriForFile(
@@ -100,7 +100,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
             holder.parentView.setOnClickListener {
                 file_name = downloaded[position].name
-                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh@gmail.com" + File.separator, downloaded[position].name)
+                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh" + File.separator, downloaded[position].name)
 
                 val fileUri: Uri? = try {
                     FileProvider.getUriForFile(
@@ -216,12 +216,12 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         try {
 
             lateinit var dir1: File
-            var dirTemp = File(context.filesDir.absolutePath + File.separator + "trash" + File.separator + "awasrishabh@gmail.com")
+            var dirTemp = File(context.filesDir.absolutePath + File.separator + "trash" + File.separator + "awasrishabh")
             if (dir.equals("checklist")) {
-                dir1 = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator + "awasrishabh@gmail.com")
+                dir1 = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator + "awasrishabh")
                 Log.e("type", "checklist")
             } else if (dir.equals("report")) {
-                dir1 = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh@gmail.com")
+                dir1 = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh")
                 Log.e("type", "generated")
             }
 

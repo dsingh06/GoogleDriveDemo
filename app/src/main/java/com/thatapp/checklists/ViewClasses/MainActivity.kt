@@ -22,6 +22,7 @@ import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.content.Context
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Build
 import android.provider.DocumentsContract
 import android.support.annotation.NonNull
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     private val REQUEST_CODE_OPEN_DOCUMENT = 2
 
 
-    private lateinit var mDriverServiceHelper: DriveServiceHelper
+    public lateinit var mDriverServiceHelper: DriveServiceHelper
     private var state = ButtonState.LOGGED_OUT
 
     lateinit var downloadAndSync: ConstraintLayout
@@ -219,7 +220,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                             .setApplicationName("Checklist")
                             .build()
 
-                    mDriverServiceHelper = DriveServiceHelper(googleDriveService,this,applicationContext)
+                    mDriverServiceHelper = DriveServiceHelper(googleDriveService, this, applicationContext)
 
                     state = MainActivity.ButtonState.LOGGED_IN
                     setButtons()
@@ -270,7 +271,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
     private fun openFilePicker() {
         query()
-        //    mDriverServiceHelper.listing()
+
 
         if (mDriverServiceHelper != null) {
             Log.e(TAG, "Opening file picker.")
@@ -340,41 +341,11 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
     }
 
-    fun copy(copy: DocumentFile, uri: Uri): Boolean {
-        lateinit var inStream: InputStream
-        lateinit var outStream: OutputStream
-        val dir = copy//File(filesDir.absolutePath,copy)
-        val mime = "application/vnd.ms-excel"
-        var dir2 = DocumentFile.fromFile(File(filesDir.absolutePath + File.separator + "downloads", copy.name))
-        val copiedFileName = "copied.jpg"
-        val copiedMimeType = mime
-        inStream = getContentResolver().openInputStream(copy.uri)
-        outStream = getContentResolver().openOutputStream(dir2.createFile(copiedMimeType, copiedFileName.replace(".jpg", ""))!!.getUri())
-        val DEFAULT_BUFFER_SIZE = 1024 * 4
-        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
-        var bytesRead: Int
-        do {
-
-            bytesRead = inStream.read(buffer)
-
-            if (bytesRead == null)
-
-                break
-
-            outStream.write(bytesRead)
-            Log.e("outtt", "" + bytesRead)
-
-        } while (true)
-        Toast.makeText(this@MainActivity, "Succeed to create 'copied.jpg'", Toast.LENGTH_SHORT).show()
-        return false
-    }
-
-
     fun query() {
         run({
             if (mDriverServiceHelper != null) {
                 Log.e(TAG, "Querying for files.")
-//                mDriverServiceHelper.queryA()
+                // mDriverServiceHelper.queryA()
 //
 
                 mDriverServiceHelper.queryFiles()
@@ -395,7 +366,11 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                         .addOnFailureListener({ exception -> Log.e(TAG, "Unable to query files.", exception) })
             }
         })
+
     }
+
+
+
 }
 
 

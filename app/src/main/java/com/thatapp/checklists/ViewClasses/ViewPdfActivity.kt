@@ -138,7 +138,7 @@ class ViewPdfActivity : AppCompatActivity(), View.OnClickListener {
     private fun openRenderer(fileName:String) {
 
 
-        val file = File(getFilesDir().getAbsolutePath() + File.separator + "generated"+File.separator +"awasrishabh@gmail.com", fileName)
+        val file = File(getFilesDir().getAbsolutePath() + File.separator + "generated"+File.separator +"awasrishabh", fileName)
 
         // In this sample, we read a PDF from the assets directory.
 //        val file = File(cacheDir, filename)

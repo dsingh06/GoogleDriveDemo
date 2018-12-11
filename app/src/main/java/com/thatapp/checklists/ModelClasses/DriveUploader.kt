@@ -61,6 +61,7 @@ class DriveUploader(private val fileName: java.io.File, private val context: Con
 
                       Log.e("create", "folder success" + googleFile.id)
           */
+            var status = false
             val request = mDriveService.files().list().setQ(
                     "mimeType='application/vnd.google-apps.folder'").execute()
             for (file in request.getFiles()) {
@@ -68,9 +69,42 @@ class DriveUploader(private val fileName: java.io.File, private val context: Con
                 if (file.getName().equals("CheckList App", ignoreCase = true)) {
                     Log.e("matched ", "file: " + file.getName() + "    " + file.getId())
                     saveFile(file.getId())
+                    status = true
                     break
                 }
 
+
+            }
+
+            if (!status) {
+
+                val folderMetadata = File()
+                folderMetadata.name = "CheckList App"
+
+
+                folderMetadata.mimeType = "application/vnd.google-apps.folder"
+                Log.e("create", "folder")
+
+                val googleFile = mDriveService.files().create(folderMetadata).execute()
+                        ?: throw IOException("Null result when requesting file creation.")
+
+                googleFile.id
+
+                Log.e("create", "folder success" + googleFile.id)
+
+                var status = false
+                val request = mDriveService.files().list().setQ(
+                        "mimeType='application/vnd.google-apps.folder'").execute()
+                for (file in request.getFiles()) {
+                    Log.e("data ", "file: " + file.getName() + " " + file.getId())
+                    if (file.getName().equals("CheckList App", ignoreCase = true)) {
+                        Log.e("matched ", "file: " + file.getName() + "    " + file.getId())
+                        saveFile(file.getId())
+                        status = true
+                        break
+                    }
+
+                }
             }
 
 

@@ -34,7 +34,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/private/var/folders/w9/b00bmqxs2hb7s__80bzjd29m0000gn/T/AppTranslocation/599CBC75-F747-496D-AD5E-A3413ECEE2E5/d/Android%20Studio%203.3%20Preview.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_delete_sweep_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/C:/Users/Rishabh%20Awasthi/Downloads/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_done_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -55,9 +55,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_delete" />
+                                      <entry key="outputName" value="ic_yes" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="ffffff" />
+                                      <entry key="themeColor" value="05ff1b" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -86,8 +86,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="191b9f" />
-                                      <entry key="foregroundImage" value="$PROJECT_DIR$/app/src/main/res/drawable/checklist.png" />
+                                      <entry key="foregroundImage" value="C:\rishabh\D\GoogleDriveDemo\app\src\main\res\drawable\checklist.png" />
                                     </map>
                                   </option>
                                 </PersistentState>
