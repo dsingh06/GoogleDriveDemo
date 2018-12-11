@@ -22,9 +22,15 @@ import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.File
 import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.drive.Drive.getDriveResourceClient
 import com.google.android.gms.drive.DriveFolder
 import com.google.android.gms.drive.MetadataChangeSet
+import com.google.api.client.extensions.android.http.AndroidHttp
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import com.google.api.client.json.gson.GsonFactory
+import com.google.api.services.drive.Drive
+import com.google.api.services.drive.DriveScopes
 import com.thatapp.checklists.ModelClasses.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,68 +41,67 @@ class DisplayQuestionsActivity : AppCompatActivity() {
     val questions: ArrayList<QuestionItem> = ArrayList()
 
     private val TAG = "My_LogMainActivity"
+    private lateinit var mDriverServiceHelper: DriveServiceHelper
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.display_checklists)
 
-		val toolbar: Toolbar = findViewById(R.id.my_toolbar)
+        val toolbar: Toolbar = findViewById(R.id.my_toolbar)
 
         val intent: Intent = intent
         val filename: String = intent.getStringExtra("fileName")
         Log.e("file name is ", "@   " + filename)
 
-		toolbar.setTitle(filename)
-		setSupportActionBar(toolbar)
+        toolbar.setTitle(filename)
+        setSupportActionBar(toolbar)
 
-		tvdateTime.setText(SimpleDateFormat("dd/MM/yyyy    HH:mm").format(Date()))
-		val newCalendar = Calendar.getInstance();
-		val siteDatePickerDialog = DatePickerDialog(this,R.style.MyDatePickerDialogTheme, DatePickerDialog.OnDateSetListener {
-			datePicker: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
-			val newDate = Calendar.getInstance();
-			newDate.set(year, monthOfYear, dayOfMonth);
-			tvdateTime.setText(SimpleDateFormat("dd/MM/yyyy    HH:mm", Locale.US).format(newDate.getTime()));
+        tvdateTime.setText(SimpleDateFormat("dd/MM/yyyy    HH:mm").format(Date()))
+        val newCalendar = Calendar.getInstance();
+        val siteDatePickerDialog = DatePickerDialog(this, R.style.MyDatePickerDialogTheme, DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+            val newDate = Calendar.getInstance();
+            newDate.set(year, monthOfYear, dayOfMonth);
+            tvdateTime.setText(SimpleDateFormat("dd/MM/yyyy    HH:mm", Locale.US).format(newDate.getTime()));
 
-		},newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH))
-		tvdateTime.setOnFocusChangeListener(object: View.OnFocusChangeListener {
-			override fun onFocusChange(v: View?, hasFocus: Boolean) {
-				if (hasFocus) siteDatePickerDialog.show()
-				v!!.clearFocus()
-			}
-		})
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH))
+        tvdateTime.setOnFocusChangeListener(object : View.OnFocusChangeListener {
+            override fun onFocusChange(v: View?, hasFocus: Boolean) {
+                if (hasFocus) siteDatePickerDialog.show()
+                v!!.clearFocus()
+            }
+        })
 
-		var uncheckedQuestionArray = ArrayList<String>() // to collect unchecked question's serialnumber
-        btnSubmit.setOnClickListener{
+        var uncheckedQuestionArray = ArrayList<String>() // to collect unchecked question's serialnumber
+        btnSubmit.setOnClickListener {
             for (question in questions) {
-				if (!question.strQuestion.equals("")){
-					if (question.answer.equals("--"))
-                    {
+                if (!question.strQuestion.equals("")) {
+                    if (question.answer.equals("--")) {
                         uncheckedQuestionArray.add(question.serialNo)
                     }
-				}
+                }
             }
-			if (uncheckedQuestionArray.size>=1){
-				val stringOfQuestions = uncheckedQuestionArray.toString().replace("[", "").replace("]", "")
-				AlertDialog.Builder(this,android.R.style.Theme_Material_Dialog_Alert)
-						.setTitle("Questions skipped")
-						.setMessage("The following questions were not answered: \n"+stringOfQuestions)
-						.setPositiveButton("Go back",{ _ , _ ->
-							uncheckedQuestionArray.clear()
-						})
-						.setNegativeButton("Skip ALL",{ _ , _ ->
-							Snackbar.make(btnSubmit,"Creating PDF...", Snackbar.LENGTH_LONG).show()
-							CreatePdf(questions,filename).execute(this)
-						})
+            if (uncheckedQuestionArray.size >= 1) {
+                val stringOfQuestions = uncheckedQuestionArray.toString().replace("[", "").replace("]", "")
+                AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
+                        .setTitle("Questions skipped")
+                        .setMessage("The following questions were not answered: \n" + stringOfQuestions)
+                        .setPositiveButton("Go back", { _, _ ->
+                            uncheckedQuestionArray.clear()
+                        })
+                        .setNegativeButton("Skip ALL", { _, _ ->
+                            Snackbar.make(btnSubmit, "Creating PDF...", Snackbar.LENGTH_LONG).show()
+                            CreatePdf(questions, filename).execute(this)
+                        })
 //						.setNeutralButton("Email Report",{ dialog, _ ->
 //
 //						})
-						.setIcon(R.drawable.ic_alert)
-						.show()
-			} else {
-				Snackbar.make(btnSubmit,"Creating PDF...", Snackbar.LENGTH_LONG).show()
-				CreatePdf(questions,filename).execute(this)
-			}
-		}
+                        .setIcon(R.drawable.ic_alert)
+                        .show()
+            } else {
+                Snackbar.make(btnSubmit, "Creating PDF...", Snackbar.LENGTH_LONG).show()
+                CreatePdf(questions, filename).execute(this)
+            }
+        }
 
         loadQuestionsArray(this, filename)
     }
@@ -106,7 +111,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 
         try {
             // Creating Input Stream
-            val file = File(context.getFilesDir().getAbsolutePath() + File.separator + "downloads"+File.separator +"awasrishabh@gmail.com", fileName)
+            val file = File(context.getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + "awasrishabh", fileName)
 
             // Create a workbook using the File System
             val myWorkBook = WorkbookFactory.create(file)
@@ -155,31 +160,52 @@ class DisplayQuestionsActivity : AppCompatActivity() {
         return
     }
 
-	private fun goBackMethod() =  finish()
+    private fun goBackMethod() = finish()
 
-	fun hideSoftKeyboard() {
-		if (currentFocus != null) {
-			val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-			inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
-		}
-	}
+    fun hideSoftKeyboard() {
+        if (currentFocus != null) {
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        }
+    }
 
-	class CreatePdf(val questions:ArrayList<QuestionItem>,val fileName: String):AsyncTask<Context,Void,Context>(){
-		lateinit var pdfCreationObject:CreatePDF
-		override fun doInBackground(vararg p0: Context): Context {
-			pdfCreationObject = CreatePDF(questions, p0.get(0),fileName)
-			pdfCreationObject.startPDFCreation()
-			// Tried with DriveUploadHelper before
-			val obj = DriveUploadHelper2(File(pdfCreationObject.des),p0[0])
-			//obj.saveFileToDrive()
-			return p0[0]
-		}
+    class CreatePdf(val questions: ArrayList<QuestionItem>, val fileName: String) : AsyncTask<Context, Void, Context>() {
+        lateinit var pdfCreationObject: CreatePDF
+        override fun doInBackground(vararg p0: Context): Context {
+            pdfCreationObject = CreatePDF(questions, p0.get(0), fileName)
+            pdfCreationObject.startPDFCreation()
+            // Tried with DriveUploadHelper before
+            //val obj = DriveUploader(File(pdfCreationObject.des), p0[0])
+            val obj = DriveUploader(File(pdfCreationObject.des), p0[0])
+            return p0[0]
+        }
 
-		override fun onPostExecute(result: Context) {
-			super.onPostExecute(result)
-			Toast.makeText(result,"PDF created",Toast.LENGTH_SHORT).show()
-			(result as DisplayQuestionsActivity).goBackMethod()
-		}
-	}
+        override fun onPostExecute(result: Context) {
+            super.onPostExecute(result)
+            Toast.makeText(result, "PDF created", Toast.LENGTH_SHORT).show()
+            (result as DisplayQuestionsActivity).goBackMethod()
+        }
+    }
 
-}
+    fun checkService() {
+        val credential = GoogleAccountCredential.usingOAuth2(
+                this, setOf(DriveScopes.DRIVE_FILE))
+        val googleAccount = GoogleSignIn.getLastSignedInAccount(this)
+        if (googleAccount != null) {
+            credential.selectedAccount = googleAccount.account
+        }
+
+        val googleDriveService = Drive.Builder(
+                AndroidHttp.newCompatibleTransport(),
+                GsonFactory(),
+                credential)
+                .setApplicationName("Checklist")
+                .build()
+
+        mDriverServiceHelper = DriveServiceHelper(googleDriveService, this, applicationContext)
+
+
+    }
+
+
+    }

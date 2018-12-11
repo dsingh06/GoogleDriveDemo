@@ -180,13 +180,13 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         var fileName = downloaded[position].name
         lateinit var dir1: File
         if (dir.equals("checklist")) {
-            dir1 = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator + "awasrishabh@gmail.com")
+            dir1 = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator + "awasrishabh")
             Log.e("type", "checklist")
         } else if (dir.equals("report")) {
-            dir1 = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh@gmail.com")
+            dir1 = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh")
             Log.e("type", "report")
         }
-        var tempFile = File(context.filesDir.absolutePath + File.separator + "trash" + File.separator + "awasrishabh@gmail.com" + File.separator + fileName)
+        var tempFile = File(context.filesDir.absolutePath + File.separator + "trash" + File.separator + "awasrishabh" + File.separator + fileName)
 
         // checking if the directory exists
         if (dir1.isDirectory) {

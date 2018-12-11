@@ -2,22 +2,13 @@ package com.thatapp.checklists.ModelClasses;
 
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Path;
 import android.net.Uri;
-import android.os.Environment;
-import android.provider.ContactsContract;
-import android.provider.DocumentsContract;
 import android.provider.OpenableColumns;
-import android.support.v4.content.FileProvider;
 import android.support.v4.util.Pair;
 import android.util.Log;
-
-import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.api.client.http.ByteArrayContent;
@@ -151,7 +142,7 @@ public class DriveServiceHelper {
             String fileName = metadata.getName();
 
             java.io.File storageDir = context.getFilesDir();
-            java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads" + java.io.File.separator + "awasrishabh@gmail.com");
+            java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads" + java.io.File.separator + "awasrishabh");
 
             java.io.File des = new java.io.File(filep.getAbsolutePath() + java.io.File.separator + fileName);
 
@@ -241,28 +232,6 @@ public class DriveServiceHelper {
         return Tasks.call(mExecutor, () -> {
             // Retrieve the document's display name from its metadata.
             String name = "";
-            String fileID = "";
-
-            //  java.io.File requestFile = new java.io.File(Environment.getDataDirectory().getAbsolutePath() + java.io.File.separator + "generated" + java.io.File.separator + "awasrishabh@gmail.com" + java.io.File.separator, name);
-            // final String id = DocumentsContract.getDocumentId(uri);
-            //Log.e("doc id", "" + id);
-
-            //downloadFile("1QjGPyzDaE2XwwJMb6rfbaIhsBA4h2AiP");
-
-/*
-            Uri fileUri = null;
-            try {
-                FileProvider.getUriForFile(
-                        this,
-                        "com.thatapp.checklists.provider",
-                        requestFile);
-
-            } catch ( Exception e) {
-                Log.e("File Selector",
-                        "The selected file can't be shared: $requestFile");
-            }
-
-            DocumentsContract.copyDocument(contentResolver,uri,fileUri);*/
 
             try (Cursor cursor = contentResolver.query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
@@ -280,11 +249,7 @@ public class DriveServiceHelper {
                             downloadFile(file.getId());
                         }
                     }
-
-
-                    //queryFiles();
-                    // downloadFile(name);
-                } else {
+            } else {
                     throw new IOException("Empty cursor returned for file.");
                 }
             }
@@ -301,52 +266,8 @@ public class DriveServiceHelper {
                 content = stringBuilder.toString();
                 Log.e("con", content);
             }
-
-
             return Pair.create(name, content);
         });
     }
-
-    /*
-        public void writeToFile(String data) {
-            // Get the directory for the user's public pictures directory.
-            File path = new File(Context.getFilesDir().absolutePath+ File.separator+"/YourFolder/")
-
-            // Make sure the path directory exists.
-            if (!path.exists())
-            {
-                // Make it, if it doesn't exit
-                path.mkdirs()
-            }
-            val file = File(path, "config.xls")
-            // Save your stream, don't forget to flush() it before closing it.
-            try
-            {
-                file.createNewFile()
-                val fOut = FileOutputStream(file)
-                val myOutWriter = OutputStreamWriter(fOut)
-                myOutWriter.append(data)
-                myOutWriter.close()
-                fOut.flush()
-                fOut.close()
-            }
-            catch (e:IOException) {
-                Log.e("Exception", "File write failed: " + e.toString())
-            }
-        }
-
-      */
-    public Boolean checkLoginStatus() {
-
-      /*  GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activity);
-        //updateUI(account);
-
-   */
-        return false;
-    }
-
-    /**
-     * Starts a sign-in activity using [.REQUEST_CODE_SIGN_IN].
-     */
 
 }

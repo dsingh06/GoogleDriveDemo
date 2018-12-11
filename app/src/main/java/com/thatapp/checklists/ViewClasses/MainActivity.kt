@@ -366,40 +366,6 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
         } while (true)
         Toast.makeText(this@MainActivity, "Succeed to create 'copied.jpg'", Toast.LENGTH_SHORT).show()
-        // val copy2 = dir.copyTo(dir2, true)
-        /*try {
-            inStream = FileInputStream(copy)
-            outStream = getContentResolver().openOutputStream(uri)
-            val buffer = ByteArray(16384)
-            var bytesRead: Int
-            do {
-
-                bytesRead = inStream.read(buffer)
-
-                if (bytesRead == null)
-
-                    break
-
-                println(bytesRead)
-
-            } while (true)
-
-            /*  while ((bytesRead = inStream.read(buffer)) != -1) {
-                  outStream.write(buffer, 0, bytesRead)
-              }*/
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            try {
-                inStream.close()
-                outStream.close()
-                return true
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }*/
         return false
     }
 
