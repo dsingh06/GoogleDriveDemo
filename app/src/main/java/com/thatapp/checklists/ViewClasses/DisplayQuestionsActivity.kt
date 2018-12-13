@@ -173,10 +173,13 @@ class DisplayQuestionsActivity : AppCompatActivity() {
         lateinit var pdfCreationObject: CreatePDF
         override fun doInBackground(vararg p0: Context): Context {
             pdfCreationObject = CreatePDF(questions, p0.get(0), fileName)
-            pdfCreationObject.startPDFCreation()
-            // Tried with DriveUploadHelper before
+          try {
+              pdfCreationObject.startPDFCreation()
+          }catch (e:Exception){
+              Log.e("create",""+e.toString())
+          } // Tried with DriveUploadHelper before
             //val obj = DriveUploader(File(pdfCreationObject.des), p0[0])
-            val obj = DriveUploader(File(pdfCreationObject.des), p0[0])
+           val obj = DriveUploader(File(pdfCreationObject.des), p0[0])
             return p0[0]
         }
 

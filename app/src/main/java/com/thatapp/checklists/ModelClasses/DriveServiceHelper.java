@@ -55,15 +55,15 @@ public class DriveServiceHelper {
     private Drive mDriveService;
     private Activity activity;
     private Context context;
+    ServiceListener serviceListener;
 
     public DriveServiceHelper(Drive driveService, Activity activity, Context context) {
         this.mDriveService = driveService;
         this.activity = activity;
         this.context = context;
+        serviceListener = (ServiceListener) activity;
     }
 
-
-    ServiceListener serviceListener = null;
 
     /**
      * Creates a text file in the user's My Drive folder and returns its file ID.
@@ -168,8 +168,10 @@ public class DriveServiceHelper {
             fOut.close();
             Log.e("file download", "success");
 
+            serviceListener.fileDownloaded(des, "abcd");
         } catch (Exception e) {
             Log.e("file download", e.toString());
+            serviceListener.handleError(e);
         }
     }
 
@@ -274,10 +276,13 @@ public class DriveServiceHelper {
 
                     Log.e("name", name);
 
-                    FileList result = mDriveService.files().list().setSpaces("drive")
+                    FileList result = mDriveService.files().list().setSpaces("drive").setQ(
+                            "mimeType='application/vnd.ms-excel'")
                             .execute();
 
+
                     for (File file : result.getFiles()) {
+                        Log.e("values ", "file: " + file.getName() + "     " + file.getId());
                         if (file.getName().equalsIgnoreCase(name)) {
                             Log.e("\nmatched ", "file: " + file.getName() + "     " + file.getId());
                             downloadFile(file.getId());

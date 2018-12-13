@@ -79,7 +79,7 @@ class DisplayQuestionsAdapter(var questionItemList: List<QuestionItem>, var cont
 				holder.btnNo.setTextColor(Color.parseColor("#303F9F"))
 				holder.btnYes.setTextColor(Color.parseColor("#303F9F"))
 
-				quesItem.answer = "N/A"
+				quesItem.answer = "--"
             }
         }
     }
