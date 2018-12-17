@@ -20,6 +20,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.thatapp.checklists.ModelClasses.PrefManager
 
 import okio.Okio
 
@@ -30,9 +31,11 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
     private val TAG = "Downloaded:-"
     lateinit var mAdapter: DisplayChecklistAndPDFAdapter
     lateinit var coordinatorLayout: CoordinatorLayout
+    lateinit var prefManager:PrefManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_downloaded_checklists)
+        prefManager = PrefManager(this)
         val toolbar: Toolbar = findViewById(R.id.my_toolbar)
         coordinatorLayout = findViewById(R.id.coordinatorLayout)
         toolbar.setTitle("Checklists")
@@ -71,7 +74,7 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
             false
         }
         val storageDir = getFilesDir()
-        val files: Array<File>? = File(storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + "awasrishabh").listFiles(fileNameFilter)
+        val files: Array<File>? = File(storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + prefManager.dirName).listFiles(fileNameFilter)
         if (files != null) {
             Log.e("Files", "Size: " + files.size)
             for (i in files) {

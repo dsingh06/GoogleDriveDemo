@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.provider.OpenableColumns;
 import android.support.v4.util.Pair;
 import android.util.Log;
@@ -56,12 +57,14 @@ public class DriveServiceHelper {
     private Activity activity;
     private Context context;
     ServiceListener serviceListener;
+    PrefManager prefManager;
 
     public DriveServiceHelper(Drive driveService, Activity activity, Context context) {
         this.mDriveService = driveService;
         this.activity = activity;
         this.context = context;
         serviceListener = (ServiceListener) activity;
+        prefManager = new PrefManager(activity);
     }
 
 
@@ -149,7 +152,8 @@ public class DriveServiceHelper {
             String fileName = metadata.getName();
 
             java.io.File storageDir = context.getFilesDir();
-            java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads" + java.io.File.separator + "awasrishabh");
+            prefManager = new PrefManager(context);
+            java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads" + java.io.File.separator + prefManager.getDirName());
 
             java.io.File des = new java.io.File(filep.getAbsolutePath() + java.io.File.separator + fileName);
 
@@ -183,76 +187,56 @@ public class DriveServiceHelper {
      * request Drive Full Scope in the <a href="https://play.google.com/apps/publish">Google
      * Developer's Console</a> and be submitted to Google for verification.</p>
      */
-    public Task<FileList> queryFiles() throws IOException {
-        // listing();
+    public boolean driveCheck() throws IOException {
 
-        return Tasks.call(mExecutor, () ->
+        boolean result = false;
 
-                mDriveService.files().list().setSpaces("drive").setFields("files(id, name)")
-                        .execute());
-//      mDriveService.files().export("","application/vnd.ms-excel")
+        if (prefManager.getJobTitle().length() < 5) {
+            return false;
+        } else if (prefManager.getCompanyName().length() < 5) {
+            return false;
+        } else if (prefManager.getUserName().length() < 5) {
+            return false;
+        } else {
+            return true;
+        }
+
+
+       // return result;
     }
 
 
     public void queryA() throws IOException, IllegalStateException {
 
-        TeamDrive teamDriveMetadata = new TeamDrive();
-        teamDriveMetadata.setName("Project Resources");
-        String requestId = UUID.randomUUID().toString();
-        TeamDrive teamDriver = mDriveService.teamdrives().create(requestId,
-                teamDriveMetadata)
+        FileList result = mDriveService.files().list().setCorpus("user").setSpaces("Drive")
+                .setQ("mimeType='application/vnd.google-apps.folder' and trashed=false and sharedWithMe=true and title='CheckList App'")
                 .execute();
-        System.out.println("Team Drive ID: " + teamDriver.getId());
-
-
-        String pageToken = null;
-        Permission newOrganizerPermission = new Permission()
-                .setType("user")
-                .setRole("organizer")
-                .setEmailAddress("user@example.com");
-
-        do {
-            TeamDriveList result = mDriveService.teamdrives().list()
-                    .setFields("nextPageToken, teamDrives(id, name)")
-                    .setUseDomainAdminAccess(true)
-                    .setPageToken(pageToken)
-                    .execute();
-            for (TeamDrive teamDrive : result.getTeamDrives()) {
-                System.out.printf("Found Team Drive without organizer: %s (%s)\n",
-                        teamDrive.getName(), teamDrive.getId());
-                // Note: For improved efficiency, consider batching
-                // permission insert requests
-                Permission permissionResult = mDriveService.permissions()
-                        .create(teamDrive.getId(), newOrganizerPermission)
-                        .setUseDomainAdminAccess(true)
-                        .setSupportsTeamDrives(true)
-                        .setFields("id")
-                        .execute();
-                Log.e("Added permission: ", "121   " + permissionResult.getId());
-
-            }
-            pageToken = result.getNextPageToken();
-        } while (pageToken != null);
+        for (File file : result.getFiles()) {
+            Log.e("values ", file.getName() + "   " + file.getId());
+        }
 
     }
 
     public void listing() throws IOException {
 
-        FileList result = mDriveService.files().list()
-                .setQ("name='application/vnd.ms-excel'")
-                .setSpaces("drive")
-                .setFields("files(id, name)")
+        FileList result = mDriveService.files().list().setCorpus("user")
+                .setQ("sharedWithMe=true and mimeType='application/vnd.google-apps.folder'")
                 .execute();
-        for (File file : result.getFiles()) {
-            System.out.printf("Found file: %s (%s)\n",
-                    file.getName(), file.getId());
+        Log.e("results", "  " + result.size());
+        Log.e("results", "  " + result.getKind());
+        Log.e("results", "  " + result.getFiles().toString());
+        List files = result.getFiles();
+        for (int i = 0; i < files.size(); i++) {
+            Log.e("Found file: ", "wewewe   " + files.get(i).toString() + "   ");
         }
+
     }
 
     /**
      * Returns an {@link Intent} for opening the Storage Access Framework file picker.
      */
     public Intent createFilePickerIntent() {
+
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("application/vnd.ms-excel");
@@ -276,15 +260,16 @@ public class DriveServiceHelper {
 
                     Log.e("name", name);
 
-                    FileList result = mDriveService.files().list().setSpaces("drive").setQ(
-                            "mimeType='application/vnd.ms-excel'")
+                    FileList result = mDriveService.files().list().setSpaces("drive")
+                            .setQ("mimeType='application/vnd.ms-excel'")
                             .execute();
 
+                    Log.e("size", " 111 " + result.getFiles().size());
 
                     for (File file : result.getFiles()) {
                         Log.e("values ", "file: " + file.getName() + "     " + file.getId());
                         if (file.getName().equalsIgnoreCase(name)) {
-                            Log.e("\nmatched ", "file: " + file.getName() + "     " + file.getId());
+                            Log.e("file id found ", "file: " + file.getName() + "     " + file.getId());
                             downloadFile(file.getId());
                         }
                     }

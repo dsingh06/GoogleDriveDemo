@@ -27,6 +27,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import com.thatapp.checklists.ModelClasses.PrefManager
 import com.thatapp.checklists.R
 import java.io.File
 import java.io.FileOutputStream
@@ -93,11 +94,13 @@ class ViewPdfActivity : AppCompatActivity(), View.OnClickListener {
      */
     private var pageIndex: Int = INITIAL_PAGE_INDEX
 
-
+lateinit var prefManager:PrefManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_pdf)
+
+        prefManager=PrefManager(this)
         imageView = findViewById(R.id.image)
         btnPrevious = findViewById<Button>(R.id.previous).also { it.setOnClickListener(this) }
         btnNext = findViewById<Button>(R.id.next).also { it.setOnClickListener(this) }
@@ -138,7 +141,7 @@ class ViewPdfActivity : AppCompatActivity(), View.OnClickListener {
     private fun openRenderer(fileName:String) {
 
 
-        val file = File(getFilesDir().getAbsolutePath() + File.separator + "generated"+File.separator +"awasrishabh", fileName)
+        val file = File(getFilesDir().getAbsolutePath() + File.separator + "generated"+File.separator +prefManager.dirName, fileName)
 
         // In this sample, we read a PDF from the assets directory.
 //        val file = File(cacheDir, filename)

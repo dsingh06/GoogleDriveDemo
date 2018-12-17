@@ -42,10 +42,14 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 
     private val TAG = "My_LogMainActivity"
     private lateinit var mDriverServiceHelper: DriveServiceHelper
+   private  lateinit var prefManager:PrefManager
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.display_checklists)
+
+        prefManager = PrefManager(this)
 
         val toolbar: Toolbar = findViewById(R.id.my_toolbar)
 
@@ -111,7 +115,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 
         try {
             // Creating Input Stream
-            val file = File(context.getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + "awasrishabh", fileName)
+            val file = File(context.getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + prefManager.dirName, fileName)
 
             // Create a workbook using the File System
             val myWorkBook = WorkbookFactory.create(file)

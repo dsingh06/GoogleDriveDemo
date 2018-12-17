@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     private val PROFILE_ACTIVITY = 33
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     val isUserLoggedin: Boolean = false
+    private lateinit var prefManager: PrefManager
 
     private fun setButtons() {
         when (state) {
@@ -92,56 +93,46 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.thatapp.checklists.R.layout.activity_main)
+        prefManager = PrefManager(this)
+        Log.e("Login", "status is: " + prefManager.firstRun)
+
+        if (prefManager.firstRun) {
+            prefManager.firstRun = false
+            Log.e("Login", "status is: " + prefManager.firstRun)
+        }
+
+
+        if (!prefManager.loginStatus) {
+            requestSignIn()
+        }
+
 
         var gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
-
-        /*      val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-              val activeNetwork = cm.activeNetworkInfo
-              val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
-              if (isConnected) {
-               //   mDriverServiceHelper.checkLoginStatus()
-              } else {
-                  Toast.makeText(applicationContext, "No Internet Connection.\nPlease ensure internet connectivity for accessing seamless services", Toast.LENGTH_LONG).show()
-              }
-      */
         linkVarsToViews()
 
         //mDriverServiceHelper.checkLoginStatus()
         if (!isUserLoggedin) {
-            val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-            val activeNetwork = cm.activeNetworkInfo
-            val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
-            if (isConnected) {
-                requestSignIn()
-            } else {
-                Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            Log.e("login ", "" + isUserLoggedin)
+            requestSignIn()
         }
 
         login.setOnClickListener {
-
-            val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-            val activeNetwork = cm.activeNetworkInfo
-            val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
-            if (isConnected) {
-                requestSignIn()
-            } else {
-                Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_SHORT).show()
-            }
+            requestSignIn()
         }
         downloadAndSync.setOnClickListener {
 
-            openFilePicker()
-            //mDriverServiceHelper.createFilePickerIntent()
+            val account = GoogleSignIn.getLastSignedInAccount(this)
+
+            if (account != null) {
+                openFilePicker()
+            } else {
+                Toast.makeText(applicationContext, "Please Login to continue", Toast.LENGTH_SHORT).show()
+                requestSignIn()
+            }
+
 
         }
         myProfile.setOnClickListener {
@@ -155,12 +146,10 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         }
         imageView3.setOnClickListener {
             val intent = Intent(this, DisplayCheckListsActivity::class.java)
-            Log.e("clicked", " iv3")
             startActivity(intent)
 
         }
         view.setOnClickListener {
-            Log.e("clicked", " VIEW")
             val intent = Intent(this, DisplayCheckListsActivity::class.java)
             startActivity(intent)
         }
@@ -186,17 +175,29 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     }
 
     fun requestSignIn() {
-        Log.e("service", "Requesting sign-in")
-        val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestScopes(Scope(DriveScopes.DRIVE_FILE))
 
-                .build()
+        val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        val client = GoogleSignIn.getClient(this, signInOptions)
+        val activeNetwork = cm.activeNetworkInfo
+        val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
+        if (isConnected) {
 
-        // The result of the sign-in Intent is handled in onActivityResult.
-        startActivityForResult(client.signInIntent, REQUEST_CODE_SIGN_IN)
+            Log.e("service", "Requesting sign-in")
+            val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .requestScopes(Scope(DriveScopes.DRIVE))
+                    .build()
+
+            val client = GoogleSignIn.getClient(this, signInOptions)
+
+            // The result of the sign-in Intent is handled in onActivityResult.
+            startActivityForResult(client.signInIntent, REQUEST_CODE_SIGN_IN)
+
+        } else {
+            Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_SHORT).show()
+        }
+
+
     }
 
 
@@ -217,15 +218,25 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                             AndroidHttp.newCompatibleTransport(),
                             GsonFactory(),
                             credential)
-                            .setApplicationName("Checklist")
+                            .setApplicationName("Checklist App")
                             .build()
 
                     mDriverServiceHelper = DriveServiceHelper(googleDriveService, this, applicationContext)
+                    prefManager.loginEmail = googleAccount.email
+                    prefManager.loginStatus = true
+                    prefManager.userName = googleAccount.displayName
+//                    prefManager.dirName = googleAccount.email
 
+                    //  PrefManager.dirName = googleAccount.email.toString().split("@").get(0)
+                    prefManager.dirName = googleAccount.email.toString().split("@").get(0)
+                    Log.e("name", "  dir " + prefManager.dirName)
                     state = MainActivity.ButtonState.LOGGED_IN
                     setButtons()
                 }
-                .addOnFailureListener { exception -> Log.e(TAG, "Unable to sign in.", exception) }
+                .addOnFailureListener { exception ->
+                    Log.e(TAG, "Unable to sign in.", exception)
+                    prefManager.loginStatus = false
+                }
     }
 
 
@@ -253,14 +264,26 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     }
 
     private fun logoutUser() {
-        mGoogleSignInClient.signOut().addOnSuccessListener { Log.e("log", "out ") }.addOnCanceledListener { Log.e("log", "failed") }
+        mGoogleSignInClient.signOut().addOnSuccessListener {
+            Log.e("log", "out ")
+            prefManager.userName = ""
+            prefManager.companyName = ""
+            prefManager.dirName = "guest"
+            prefManager.jobTitle = ""
+        }.addOnCanceledListener { Log.e("log", "failed") }
     }
 
     override fun onStart() {
         super.onStart()
 
         val account = GoogleSignIn.getLastSignedInAccount(this)
-//        Log.e("acc", account!!.displayName)
+
+        if (account != null) {
+            //   prefManager.dirName = account.email.toString().split("@").get(0)
+            //  Log.e("name","  dir " + prefManager.dirName)
+        }
+
+//      if(account!=null)   Log.e("acc", account!!.displayName)
     }
 
     fun signIn() {
@@ -270,12 +293,12 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     }
 
     private fun openFilePicker() {
-        query()
+        //query()
 
 
         if (mDriverServiceHelper != null) {
             Log.e(TAG, "Opening file picker.")
-
+//mDriverServiceHelper.listing()
             val pickerIntent = mDriverServiceHelper.createFilePickerIntent()
 
             // The result of the SAF Intent is handled in onActivityResult.
@@ -306,16 +329,19 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                         Log.e("values", namePair.first)
 
 //                        mDriverServiceHelper.downloadFile("");
-                        writeToFile(namePair.first!!, namePair.second!!)
+//                          writeToFile(namePair.first!!, namePair.second!!)
                     }
 
-                    .addOnFailureListener({ exception -> Log.e(TAG, "Unable to open file from picker.", exception) })
+                    .addOnFailureListener({ exception ->
+                        Log.e(TAG, "Unable to open file from picker.", exception)
+                        requestSignIn()
+                    })
         }
     }
 
     fun writeToFile(fileName: String, data: String) {
         // Get the directory for the user's public pictures directory.
-        val path = File(getFilesDir().absolutePath + File.separator + "/downloads/" + File.separator + "rishabh")
+        val path = File(getFilesDir().absolutePath + File.separator + "/downloads/" + File.separator + prefManager.dirName)
 //        val path = java.io.File(+java.io.File.separator + "/downloads/")
 
         // Make sure the path directory exists.
@@ -341,36 +367,19 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
     }
 
-    fun query() {
+    fun startupCheck() {
         run({
             if (mDriverServiceHelper != null) {
                 Log.e(TAG, "Querying for files.")
-                // mDriverServiceHelper.queryA()
-//
-
-                mDriverServiceHelper.queryFiles()
-                        .addOnSuccessListener({ fileList ->
-                            val builder = StringBuilder()
-                            for (file in fileList.getFiles()) {
-                                builder.append(file.id).append("\t\t\t")
-                                builder.append(file.getName()).append("\n")
-                            }
-                            val fileNames = builder.toString()
-                            Log.e("file", fileNames)
-//
-//                            for (file in result.getFiles()) {
-//                                System.out.printf("Found file: %s (%s)\n",
-//                                        file.getName(), file.getId())
-//                            }
-                        })
-                        .addOnFailureListener({ exception -> Log.e(TAG, "Unable to query files.", exception) })
+                var abc = mDriverServiceHelper.driveCheck()
+                if (abc) {
+                    Log.e("status", "" + abc)
+                } else {
+                    Log.e("status", "" + abc)
+                }
             }
         })
-
     }
-
-
-
 }
 
 

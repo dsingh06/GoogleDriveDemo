@@ -44,9 +44,76 @@ class DriveUploader(private val fileName: java.io.File, private val context: Con
     private val mExecutor = Executors.newSingleThreadExecutor()
     private lateinit var mDriveService: Drive
     private lateinit var mGoogleSignInClient: GoogleSignInClient
-
+    var prefManager: PrefManager = PrefManager(context)
+    lateinit var temp: String
     fun createFile() {
         try {
+            val res = mDriveService.files().list().setCorpus("user").setSpaces("Drive")
+                    .setQ("mimeType='application/vnd.google-apps.folder' and trashed=false and name contains 'CheckList'")
+                    .execute()
+            for (file in res.files) {
+                Log.e("values usinhg 11 ", file.name + "   " + file.id)
+            }
+
+            Log.e("folder id", prefManager.rootFolderID)
+            val result = mDriveService.files().list().setSpaces("Drive")
+                    .setQ("mimeType='application/vnd.google-apps.folder' and trashed=false and sharedWithMe=true")
+                    .execute()
+
+            for (file in result.files) {
+                Log.e("1 Found file: ", "shared   " + file.name + "   " + file.id)
+
+                if (file.name.equals("CheckList App", true)) {
+                    Log.e("101 matched file: ", "shared   " + file.name + "   " + file.id)
+                    prefManager.rootFolderID = file.id
+                    Log.e("root folder id", prefManager.rootFolderID)
+                    Log.e("folder id", prefManager.folderID)
+
+                }
+
+//                mergeDriveFolder(file.id)
+            }
+
+
+            Log.e("folder id 2", prefManager.folderID)
+            val resultF = mDriveService.files().list().setSpaces("Drive")
+                    .setQ("mimeType = 'application/vnd.google-apps.folder' and '" + prefManager.rootFolderID.toString() + "' in parents")
+                    .execute()
+
+            var folderStatus = false
+
+            for (file in resultF.files) {
+                Log.e("ROOT  Folder list : ", "shared   " + file.name + "   " + file.id)
+
+                if (file.name.equals(prefManager.dirName, true)) {
+                    Log.e("ROOT Folder  Found: ", "shared   " + file.name + "   " + file.id)
+                    prefManager.folderID = file.id
+                    folderStatus = true
+                    Log.e("ROOT  root folder id", prefManager.rootFolderID)
+                    Log.e("ROOT  folder id", prefManager.folderID)
+                }
+
+//                mergeDriveFolder(file.id)
+            }
+            if (!folderStatus) {
+                val folderMetadata = File()
+                folderMetadata.name = prefManager.dirName
+
+                folderMetadata.mimeType = "application/vnd.google-apps.folder"
+                Log.e("create user", "folder")
+                folderMetadata.setParents(Collections.singletonList(prefManager.rootFolderID))
+                val googleFile = mDriveService.files().create(folderMetadata).execute()
+                        ?: throw IOException("Null result when requesting file creation.")
+
+                prefManager.folderID = googleFile.id
+
+                Log.e("create", "user folder success" + googleFile.id)
+
+
+            }
+
+//            saveFile("1PghjOHhWW5qVvCoOD6JQsOQpEF1a7imo")
+
             /*          val folderMetadata = File()
                       folderMetadata.name = "CheckList App"
 
@@ -61,28 +128,30 @@ class DriveUploader(private val fileName: java.io.File, private val context: Con
 
                       Log.e("create", "folder success" + googleFile.id)
           */
+
+
             var status = false
-            val request = mDriveService.files().list().setQ(
-                    "mimeType='application/vnd.google-apps.folder'").execute()
+            val request = mDriveService.files().list().setQ("mimeType='application/vnd.google-apps.folder' and trashed=false and '" + prefManager.rootFolderID + "' in parents").setSpaces("Drive").execute()
             for (file in request.getFiles()) {
-                Log.e("data ", "file: " + file.getName() + " " + file.getId())
-                if (file.getName().equals("CheckList App", ignoreCase = true)) {
+                Log.e("data ", "folders : " + file.getName() + "  " + file.getId())
+                if (file.getName().equals(prefManager.dirName, ignoreCase = true)) {
+                    prefManager.folderID = file.id
                     Log.e("matched ", "file: " + file.getName() + "    " + file.getId())
-                    saveFile(file.getId())
+                    saveFile(prefManager.folderID.toString())
+                    //      checkShared()
                     status = true
                     break
                 }
-
-
             }
 
             if (!status) {
 
                 val folderMetadata = File()
-                folderMetadata.name = "CheckList App"
+                folderMetadata.name = prefManager.dirName
 
 
                 folderMetadata.mimeType = "application/vnd.google-apps.folder"
+                folderMetadata.setParents(Collections.singletonList(prefManager.rootFolderID))
                 Log.e("create", "folder")
 
                 val googleFile = mDriveService.files().create(folderMetadata).execute()
@@ -93,34 +162,62 @@ class DriveUploader(private val fileName: java.io.File, private val context: Con
                 Log.e("create", "folder success" + googleFile.id)
 
                 var status = false
-                val request = mDriveService.files().list().setQ(
-                        "mimeType='application/vnd.google-apps.folder'").execute()
+                val request = mDriveService.files().list().setQ("mimeType='application/vnd.google-apps.folder' and trashed=false' and '" + prefManager.rootFolderID + "' in parents").setSpaces("Drive").execute()
                 for (file in request.getFiles()) {
-                    Log.e("data ", "file: " + file.getName() + " " + file.getId())
-                    if (file.getName().equals("CheckList App", ignoreCase = true)) {
+                    Log.e("data ", "folder : " + file.getName() + " " + file.getId())
+                    if (file.getName().equals(prefManager.dirName, ignoreCase = true)) {
+                        prefManager.folderID = file.id
                         Log.e("matched ", "file: " + file.getName() + "    " + file.getId())
                         saveFile(file.getId())
+//             checkShared()
                         status = true
                         break
                     }
-
                 }
             }
-
 
         } catch (e: Exception) {
             Log.e("create", "folder " + e.toString())
         }
     }
 
+    fun checkShared() {
+        var status = false
+        val request = mDriveService.files().list().setQ("mimeType='application/vnd.google-apps.folder'").setSpaces("Drive").execute()
+        for (file in request.getFiles()) {
+            Log.e("data ", "file: " + file.getName() + " " + file.getId())
+            if (file.getName().equals("CheckList App " + prefManager.dirName, ignoreCase = true)) {
+                prefManager.folderID = file.id
+                Log.e("matched ", "file: " + file.getName() + "    " + file.getId())
+                status = true
+                break
+            }
+        }
+    }
 
-    fun saveFile(folderId: String) {
+    fun saveFile(rootFolderId: String) {
 
         // Create a File containing any metadata changes.
 
-        val folderId = folderId
-        val fileMetadata = File()
+/*
+        val folderMetadata = File()
+        folderMetadata.name = prefManager.userName
 
+        folderMetadata.setParents(Collections.singletonList(rootFolderId))
+        folderMetadata.mimeType = "application/vnd.google-apps.folder"
+        Log.e("created", "user folder")
+
+        val googleFile = mDriveService.files().create(folderMetadata).execute()
+                ?: throw IOException("Null result when requesting file creation.")
+
+
+
+        Log.e("create", "folder success" + googleFile.id)
+
+*/
+        val folderId = rootFolderId
+
+        val fileMetadata = File()
 
         fileMetadata.setName(fileName.name)
         fileMetadata.setParents(Collections.singletonList(folderId))
@@ -130,6 +227,7 @@ class DriveUploader(private val fileName: java.io.File, private val context: Con
                 .setFields("id, parents")
                 .execute()
         Log.e("File ID: ", "  " + file.getId())
+
 /*
         val fileMetadata = File()
         fileMetadata.name = "checklists"
@@ -149,7 +247,6 @@ class DriveUploader(private val fileName: java.io.File, private val context: Con
         mDriveService.files().update(fileId, metadata, contentStream).execute()
 */
     }
-
 
     fun checkService() {
         val credential = GoogleAccountCredential.usingOAuth2(
@@ -173,10 +270,29 @@ class DriveUploader(private val fileName: java.io.File, private val context: Con
         } else {
             Log.e("login", "false")
         }
-
-
     }
 
+    fun mergeDriveFolder(folderId: String) {/*
+   // var fileId: String = "1sTWaJ_j7PkjzaBWtNc3IzovK5hQf21FbOw9yLeeLPNQ"
+ //   var folderId: String = "0BwwA4oUTeiV1TGRPeTVjaWRDY1E"
+    var file: FileList = mDriveService.files().list()
+            .setFields("parents")
+            .execute()
+    var previousParents: StringBuilder = StringBuilder()
+    for (parent in file.getParents())
+    {
+        previousParents.append(parent)
+        previousParents.append(',')
+    }
+
+    file = mDriveService.files().update(fileId, null)
+    .setAddParents(folderId)
+    .setRemoveParents(previousParents.toString())
+    .setFields("id, parents")
+    .execute()
+    )
+    */
+    }
 
     init {
         checkService()

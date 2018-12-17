@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/reportssettingsroot">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/reportssettingsroot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -13,13 +13,14 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimaryDark"
         android:elevation="4dp"
-        android:padding="0dp" />
+        android:padding="0dp"
+        app:titleTextColor="#fff" />
 
-    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android" >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -180,21 +181,21 @@
 
                 <ImageView
                     android:id="@+id/companyImageView"
-                    android:label = "Camera Button"
                     android:layout_width="match_parent"
                     android:layout_height="148dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
+                    android:label="Camera Button"
                     android:padding="8dp"
                     android:scaleType="centerInside"
                     app:layout_constraintBottom_toTopOf="@+id/textView7"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView6"/>
+                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
                 <TextView
                     android:id="@+id/textView6"
@@ -247,51 +248,60 @@
                 android:orientation="vertical">
 
                 <Switch
-                    android:padding="10dp"
                     android:id="@+id/switch1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:checked="true"
+                    android:padding="10dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
-                    android:checked="true"
                     android:text="Print site photo on front page" />
 
                 <Switch
-                    android:padding="10dp"
                     android:id="@+id/switch2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:checked="true"
+                    android:padding="10dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:text="Keep full resolution images in external folder" />
 
                 <Switch
-                    android:padding="10dp"
                     android:id="@+id/switch3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:checked="true"
+                    android:padding="10dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:text="Print Status Codes in final report" />
 
                 <Switch
-                    android:padding="10dp"
                     android:id="@+id/switch4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:checked="false"
+                    android:padding="10dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:text="Use square images" />
 
             </LinearLayout>
 
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/blue_rounded"
+                android:text="SAVE"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/text_size"
+                android:textColor="#fff"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

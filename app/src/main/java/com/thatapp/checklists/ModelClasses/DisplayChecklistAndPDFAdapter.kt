@@ -31,7 +31,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
     private val TAG = "MyDisplayAdapter"
     private lateinit var cacheFile: File
     private var file_name = ""
-
+    private lateinit var prefManager: PrefManager
     private lateinit var mPrivateRootDir: File
 
 
@@ -50,6 +50,8 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         // lateinit var requestFile: File
+
+        prefManager = PrefManager(context)
         var mResultIntent: Intent = Intent(".ACTION_RETURN_FILE")
         // Get the files/ subdirectory of internal storage
         mPrivateRootDir = context.filesDir
@@ -68,9 +70,9 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
             holder.ivShare.setOnClickListener {
 
-
+                prefManager = PrefManager(context)
                 file_name = downloaded[position].name
-                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh" + File.separator, downloaded[position].name)
+                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName + File.separator, downloaded[position].name)
 
                 val fileUri: Uri? = try {
                     FileProvider.getUriForFile(
@@ -100,7 +102,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
             holder.parentView.setOnClickListener {
                 file_name = downloaded[position].name
-                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh" + File.separator, downloaded[position].name)
+                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName + File.separator, downloaded[position].name)
 
                 val fileUri: Uri? = try {
                     FileProvider.getUriForFile(
@@ -121,6 +123,8 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                                        intent.setDataAndType(fileUri, "application/pdf")
                                        intent.putExtra(Intent.EXTRA_STREAM, fileUri)
                                        intent.putExtra(Intent.FLAG_ACTIVITY_CLEAR_TOP,true)*/
+
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                     context.startActivity(intent)
 
                 } catch (e: Exception) {
@@ -142,6 +146,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             holder.parentView.setOnClickListener {
                 val intent = Intent(context, DisplayQuestionsActivity::class.java)
                 intent.putExtra("fileName", downloaded[position].name)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 context.startActivity(intent)
             }
         }
@@ -176,17 +181,17 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         getting the directory where file is to be restored
 
          */
-
+        prefManager = PrefManager(context)
         var fileName = downloaded[position].name
         lateinit var dir1: File
         if (dir.equals("checklist")) {
-            dir1 = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator + "awasrishabh")
+            dir1 = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator + prefManager.dirName)
             Log.e("type", "checklist")
         } else if (dir.equals("report")) {
-            dir1 = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh")
+            dir1 = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName)
             Log.e("type", "report")
         }
-        var tempFile = File(context.filesDir.absolutePath + File.separator + "trash" + File.separator + "awasrishabh" + File.separator + fileName)
+        var tempFile = File(context.filesDir.absolutePath + File.separator + "trash" + File.separator + prefManager.dirName + File.separator + fileName)
 
         // checking if the directory exists
         if (dir1.isDirectory) {
@@ -214,14 +219,14 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         */
 
         try {
-
+            prefManager = PrefManager(context)
             lateinit var dir1: File
-            var dirTemp = File(context.filesDir.absolutePath + File.separator + "trash" + File.separator + "awasrishabh")
+            var dirTemp = File(context.filesDir.absolutePath + File.separator + "trash" + File.separator + prefManager.dirName)
             if (dir.equals("checklist")) {
-                dir1 = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator + "awasrishabh")
+                dir1 = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator + prefManager.dirName)
                 Log.e("type", "checklist")
             } else if (dir.equals("report")) {
-                dir1 = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + "awasrishabh")
+                dir1 = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName)
                 Log.e("type", "generated")
             }
 
