@@ -5,18 +5,18 @@ import android.arch.persistence.room.*
 
 @Dao
 interface DaoAccess {
+
     @Insert
-    fun insertTask(note: FileModel): Long
+    fun insert(file: FileModel)
 
-    @Query("SELECT * FROM files ORDER BY created_at desc")
-    fun fetchAllTasks(): LiveData<List<FileModel>>
 
-    @Query("SELECT * FROM files WHERE id =:taskId")
-    fun getTask(taskId: Int): LiveData<FileModel>
+    @Query("SELECT * FROM files")
+    fun getAll(): LiveData<FileModel>
 
-    @Update
-    fun updateTask(note: FileModel)
+    @Insert
+    fun insertAll(vararg files: FileModel)
 
     @Delete
-    fun deleteTask(note: FileModel)
+    fun delete(file: FileModel)
+
 }

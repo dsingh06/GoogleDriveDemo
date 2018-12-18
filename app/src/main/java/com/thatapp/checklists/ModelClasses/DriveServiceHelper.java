@@ -21,6 +21,7 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import com.google.api.services.drive.model.Permission;
+import com.google.api.services.drive.model.StartPageToken;
 import com.google.api.services.drive.model.TeamDrive;
 import com.google.api.services.drive.model.TeamDriveList;
 import com.thatapp.checklists.ViewClasses.MainActivity;
@@ -38,8 +39,15 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -71,10 +79,10 @@ public class DriveServiceHelper {
     /**
      * Creates a text file in the user's My Drive folder and returns its file ID.
      */
-    public Task<String> createFile(java.io.File file) {
+    public Task<String> uploadFile(java.io.File file) {
         return Tasks.call(mExecutor, () -> {
             File metadata = new File()
-                    .setParents(Collections.singletonList("root"))
+                    .setParents(Collections.singletonList(prefManager.getFolderID()))
                     .setMimeType("application/pdf")
                     .setName(file.getName());
 
@@ -164,11 +172,9 @@ public class DriveServiceHelper {
             OutputStream outputStream = new ByteArrayOutputStream();
             mDriveService.files().get(fileId)
                     .executeMediaAndDownloadTo(outputStream);
-            Log.e("file in download 121 ", fileName);
 
             FileOutputStream fOut = new FileOutputStream(des);
             fOut.write(((ByteArrayOutputStream) outputStream).toByteArray());
-            Log.e("file ", "12");
             fOut.close();
             Log.e("file download", "success");
 
@@ -191,6 +197,10 @@ public class DriveServiceHelper {
 
         boolean result = false;
 
+        if(prefManager.getDirName().length()>3){
+            driveSync();
+        }
+
         if (prefManager.getJobTitle().length() < 5) {
             return false;
         } else if (prefManager.getCompanyName().length() < 5) {
@@ -198,11 +208,149 @@ public class DriveServiceHelper {
         } else if (prefManager.getUserName().length() < 5) {
             return false;
         } else {
+
             return true;
         }
 
 
-       // return result;
+        // return result;
+    }
+
+    public void driveSync() throws IOException {
+
+        boolean result = false;
+        ArrayList<File> driveFileList = new ArrayList();
+        ArrayList<java.io.File> deviceFileList = new ArrayList();
+        java.io.File storageDir = context.getFilesDir();
+        prefManager = new PrefManager(context);
+        java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "generated" + java.io.File.separator + prefManager.getDirName());
+        java.io.File[] testD = filep.listFiles();
+        for (int i = 0; i < testD.length; i++) {
+            deviceFileList.add(testD[i]);
+        }
+
+//        Log.e("length device", " size in device  " + testD.length + "     " + deviceFileList.size());
+//
+        FileList request = mDriveService.files().list().setQ("mimeType='application/pdf' and trashed=false and '" + prefManager.getFolderID() + "' in parents").setOrderBy("name").setSpaces("Drive").execute();
+        for (File file : request.getFiles()) {
+            Log.e("data ", "report files  : " + file.getName() + "  " + file.getId());
+            driveFileList.add(file);
+        }
+        Log.e("length device", " size in drive  " + driveFileList.size() + "      device " + deviceFileList.size());
+
+        Set<String> hSet = new HashSet<>();
+
+        for (java.io.File x : deviceFileList) {
+            hSet.add(x.getName());
+        }
+
+        for (File x : driveFileList) {
+            hSet.add(x.getName());
+        }
+
+        Log.e("set ", "" + hSet.size());
+
+        for (File fName : driveFileList) {
+            for (java.io.File fdName : deviceFileList) {
+                if (fName.getName().equals(fdName.getName())) {
+                    Log.e("file name ", "matched  " + fName.getName() + "   " + fName.getId() + "     " + fdName);
+                    hSet.remove(fName.getName());
+                }
+            }
+        }
+
+//        Log.e("@@@ length device", " size in drive  " + driveFileList.size() + "      device " + deviceFileList.size());
+//        Log.e("set ", "" + hSet.size());
+
+        for (java.io.File fName : deviceFileList) {
+            for (File fdName : driveFileList) {
+                if (fName.getName().equals(fdName.getName())) {
+                    Log.e("file name ", "matched  " + fName.getName() + "     " + fdName);
+                    hSet.remove(fdName.getName());
+                }
+            }
+        }
+
+//        Log.e("## length device", " size in drive  " + driveFileList.size() + "      device " + deviceFileList.size());
+        Log.e("set ", "" + hSet.size());
+
+
+        Set<String> driveSet = new HashSet<>();
+        Set<String> deviceSet = new HashSet<>();
+
+        for (String vhSet : hSet) {
+            String fileData = vhSet;
+
+            Log.e("file to sync", fileData);
+            Collections.sort(deviceFileList);
+//            Collections.sort(driveFileList);
+
+            if (deviceFileList.size() > driveFileList.size()) {
+                for (int i = 0; i < deviceFileList.size(); i++) {
+//                    Log.e("file ", "1   " + deviceFileList.get(i).getName());
+
+                    if (fileData.equalsIgnoreCase(deviceFileList.get(i).getName())) {
+
+//                        Log.e("inside ", "upload  matched ");
+//                        java.io.File fileUpload = deviceFileList.get(i);
+//                        new DriveUploader(deviceFileList.get(i), context);
+                    } else {
+                        Log.e("inside ", "upload");
+                        driveSet.add(deviceFileList.get(i).getName());
+                        //                      java.io.File fileUpload = deviceFileList.get(i);
+//                        new DriveUploader(deviceFileList.get(i), context);
+                    }
+                }
+            } else if (driveFileList.size() > deviceFileList.size()) {
+
+                for (int i = 0; i < driveFileList.size(); i++) {
+//                    Log.e("file ", "2  " + driveFileList.get(i).getName());
+                    if (fileData.equalsIgnoreCase(driveFileList.get(i).getName())) {
+
+//                        Log.e("inside ", "download  matched");
+//                        File fileDownload = driveFileList.get(i);
+//                        downloadPdfFile(fileDownload.getId());
+                    } else {
+
+                        Log.e("inside ", "download");
+                        deviceSet.add(driveFileList.get(i).getName());
+                        //  File fileDownload = driveFileList.get(i);
+                        // downloadPdfFile(fileDownload.getId());
+                    }
+                }
+            }
+        }
+
+        for (int j = 0; j < driveSet.size(); j++) {
+            Log.e("inside ", "upload");
+            java.io.File fileUpload = deviceFileList.get(j);
+            new DriveUploader(fileUpload, context);
+        }
+
+
+        for (int k = 0; k < deviceSet.size(); k++) {
+            Log.e("inside ", "download");
+            File fileDownload = driveFileList.get(k);
+            downloadPdfFile(fileDownload.getId());
+        }
+
+
+
+
+
+
+      /*  for (int i = 0; i < driveFileList.size(); i++) {
+            for (int m = 0; m < deviceFileList.size(); m++) {
+                String fName = driveFileList.get(i).toString();
+                String fdName = deviceFileList.get(m).toString();
+                Log.e("name is ", "1  " + fName);
+                Log.e("name is ", "2  " + fdName);
+            }
+        }
+        Log.e("length device", " size in drive  " + driveFileList.size() + "      device " + deviceFileList.size());
+*/
+
+//        return result;
     }
 
 
@@ -258,18 +406,18 @@ public class DriveServiceHelper {
                     int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                     name = cursor.getString(nameIndex);
 
-                    Log.e("name", name);
+//                    Log.e("name", name);
 
                     FileList result = mDriveService.files().list().setSpaces("drive")
                             .setQ("mimeType='application/vnd.ms-excel'")
                             .execute();
 
-                    Log.e("size", " 111 " + result.getFiles().size());
+//                    Log.e("size", " 111 " + result.getFiles().size());
 
                     for (File file : result.getFiles()) {
-                        Log.e("values ", "file: " + file.getName() + "     " + file.getId());
+//                        Log.e("values ", "file: " + file.getName() + "     " + file.getId());
                         if (file.getName().equalsIgnoreCase(name)) {
-                            Log.e("file id found ", "file: " + file.getName() + "     " + file.getId());
+//                            Log.e("file id found ", "file: " + file.getName() + "     " + file.getId());
                             downloadFile(file.getId());
                         }
                     }
@@ -292,6 +440,37 @@ public class DriveServiceHelper {
             }
             return Pair.create(name, content);
         });
+    }
+
+    public void downloadPdfFile(String fileId) {
+        // Retrieve the metadata as a File object.
+        try {
+            File metadata = mDriveService.files().get(fileId).execute();
+            String fileName = metadata.getName();
+
+            java.io.File storageDir = context.getFilesDir();
+            prefManager = new PrefManager(context);
+            java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "generated" + java.io.File.separator + prefManager.getDirName());
+
+            java.io.File des = new java.io.File(filep.getAbsolutePath() + java.io.File.separator + fileName);
+
+            Boolean t = filep.mkdirs();
+//            Log.e("dir created", " " + t);
+
+            OutputStream outputStream = new ByteArrayOutputStream();
+            mDriveService.files().get(fileId)
+                    .executeMediaAndDownloadTo(outputStream);
+
+            FileOutputStream fOut = new FileOutputStream(des);
+            fOut.write(((ByteArrayOutputStream) outputStream).toByteArray());
+            fOut.close();
+            Log.e("file download", "success");
+
+            serviceListener.fileDownloaded(des, "abcd");
+        } catch (Exception e) {
+            Log.e("file download", e.toString());
+            serviceListener.handleError(e);
+        }
     }
 
 }

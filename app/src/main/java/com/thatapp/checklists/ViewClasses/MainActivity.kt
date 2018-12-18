@@ -1,6 +1,7 @@
 package com.thatapp.checklists.ViewClasses
 
 import android.app.Activity
+import android.arch.lifecycle.LiveData
 import android.content.Intent
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -26,6 +27,7 @@ import android.os.AsyncTask
 import android.os.Build
 import android.provider.DocumentsContract
 import android.support.annotation.NonNull
+import android.support.annotation.Nullable
 import android.support.v4.provider.DocumentFile
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -41,6 +43,7 @@ import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.FileList
 import com.thatapp.checklists.ModelClasses.*
 import java.io.*
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(), ServiceListener {
@@ -127,6 +130,8 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             val account = GoogleSignIn.getLastSignedInAccount(this)
 
             if (account != null) {
+                startupCheck()
+
                 openFilePicker()
             } else {
                 Toast.makeText(applicationContext, "Please Login to continue", Toast.LENGTH_SHORT).show()
@@ -231,6 +236,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                     prefManager.dirName = googleAccount.email.toString().split("@").get(0)
                     Log.e("name", "  dir " + prefManager.dirName)
                     state = MainActivity.ButtonState.LOGGED_IN
+                    startupCheck()
                     setButtons()
                 }
                 .addOnFailureListener { exception ->
@@ -367,19 +373,45 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
     }
 
+
     fun startupCheck() {
-        run({
-            if (mDriverServiceHelper != null) {
-                Log.e(TAG, "Querying for files.")
-                var abc = mDriverServiceHelper.driveCheck()
-                if (abc) {
-                    Log.e("status", "" + abc)
-                } else {
-                    Log.e("status", "" + abc)
-                }
-            }
-        })
+        if (mDriverServiceHelper != null) {
+            Log.e(TAG, "Querying for files.")
+//            var abc = mDriverServiceHelper.driveCheck()
+//            if (abc) {
+//                Log.e("status", "" + abc)
+                CheckDriveSync(mDriverServiceHelper).execute(this)
+//
+//            } else {
+//                Log.e("status", "" + abc)
+//                Toast.makeText(applicationContext, "Please Complete Your Profile Information", Toast.LENGTH_SHORT).show()
+//            }
+        }
     }
+
+
+    class CheckDriveSync(val driveServiceHelper: DriveServiceHelper) : AsyncTask<Context, Void, Boolean>() {
+
+        override fun doInBackground(vararg p0: Context): Boolean? {
+
+            try {
+                driveServiceHelper.driveCheck()
+            } catch (e: Exception) {
+                Log.e("create", "" + e.toString())
+            } // Tried with DriveUploadHelper before
+
+            return false
+        }
+
+
+        override fun onPostExecute(result: Boolean) {
+            super.onPostExecute(result)
+
+            Log.e("dsdfsdf", "res  " + result)
+        }
+    }
+
+
 }
 
 
