@@ -209,7 +209,7 @@ class DriveUploader(private val fileName: java.io.File, private val context: Con
         val file = mDriveService.files().create(fileMetadata, mediaContent)
                 .setFields("id, parents")
                 .execute()
-        Log.e("File ID: ", "  " + file.getId())
+        Log.e("NEW File ID: ", "  " + file.getId())
 
 /*
         val fileMetadata = File()

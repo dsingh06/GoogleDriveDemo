@@ -197,7 +197,14 @@ public class DriveServiceHelper {
 
         boolean result = false;
 
-        if(prefManager.getDirName().length()>3){
+        initFolders();
+        if (prefManager.getFirstRun()) {
+            prefManager.setFirstRun(false);
+            Log.e("Login", "status is: " + prefManager.getFirstRun());
+            initFolders();
+        }
+
+        if (prefManager.getDirName().length() > 3) {
             driveSync();
         }
 
@@ -214,6 +221,18 @@ public class DriveServiceHelper {
 
 
         // return result;
+    }
+
+    private void initFolders() {
+
+        java.io.File storageDir = context.getFilesDir();
+        prefManager = new PrefManager(context);
+        java.io.File fileD = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads" + java.io.File.separator + prefManager.getDirName());
+        Boolean d = fileD.mkdirs();
+        java.io.File fileR = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "generated" + java.io.File.separator + prefManager.getDirName());
+        Boolean g = fileR.mkdirs();
+
+        Log.e("dir created", " " + d + "    " + g);
     }
 
     public void driveSync() throws IOException {
@@ -280,10 +299,8 @@ public class DriveServiceHelper {
 
         for (String vhSet : hSet) {
             String fileData = vhSet;
-
             Log.e("file to sync", fileData);
             Collections.sort(deviceFileList);
-//            Collections.sort(driveFileList);
 
             if (deviceFileList.size() > driveFileList.size()) {
                 for (int i = 0; i < deviceFileList.size(); i++) {
@@ -321,23 +338,59 @@ public class DriveServiceHelper {
             }
         }
 
-        for (int j = 0; j < driveSet.size(); j++) {
-            Log.e("inside ", "upload");
-            java.io.File fileUpload = deviceFileList.get(j);
-            new DriveUploader(fileUpload, context);
+        while (driveSet.iterator().hasNext()) {
+//            Log.e("inside ", "upload");
+//            for (int i = 0; i < driveFileList.size(); i++) {
+//                java.io.File fileUpload = deviceFileList.get(i);
+//                if (deviceSet.iterator().next().equalsIgnoreCase(fileUpload.getName())) {
+//
+//
+//                    Log.e("inside ", "up " + fileUpload.getName());
+//                    new DriveUploader(fileUpload, context);
+//                } else {
+//                    Log.e("inside ", "up else" + fileUpload.getName());
+//                }
+//            }
+
+
+            String devFile = driveSet.iterator().next();
+//            Log.e("inside ", "download "+devFile);
+            for (int i = 0; i < deviceFileList.size(); i++) {
+                java.io.File fileUpload = deviceFileList.get(i);
+                if (devFile.equalsIgnoreCase(fileUpload.getName())) {
+//                if (deviceFileList.contains(devFile)) {
+                    Log.e("inside ", "upload " + fileUpload.getName() + "    " + devFile);
+                    //return;
+                } else {
+                    new DriveUploader(fileUpload, context);
+                    Log.e("inside ", "upload else  " + fileUpload.getName() + "    " + devFile);
+                    return;
+                }
+
+
+            }
+
         }
 
+        while (deviceSet.iterator().hasNext()) {
 
-        for (int k = 0; k < deviceSet.size(); k++) {
-            Log.e("inside ", "download");
-            File fileDownload = driveFileList.get(k);
-            downloadPdfFile(fileDownload.getId());
+            String devFile = deviceSet.iterator().next();
+//            Log.e("inside ", "download "+devFile);
+            for (int i = 0; i < driveFileList.size(); i++) {
+                File fileDownload = driveFileList.get(i);
+                if (devFile.equalsIgnoreCase(fileDownload.getName())) {
+//                if (driveFileList.contains(devFile)) {
+//                    Log.e("inside ", "download " + fileDownload.getName() + "    " + devFile);
+                   // return;
+                } else {
+                    downloadPdfFile(fileDownload.getId());
+                    Log.e("inside ", "download else  " + fileDownload.getName() + "    " + devFile);
+                     return;
+                }
+
+              //return;
+            }
         }
-
-
-
-
-
 
       /*  for (int i = 0; i < driveFileList.size(); i++) {
             for (int m = 0; m < deviceFileList.size(); m++) {

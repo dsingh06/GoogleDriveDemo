@@ -274,7 +274,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             Log.e("log", "out ")
             prefManager.userName = ""
             prefManager.companyName = ""
-            prefManager.dirName = "guest"
+            prefManager.dirName = ""
             prefManager.jobTitle = ""
         }.addOnCanceledListener { Log.e("log", "failed") }
     }
