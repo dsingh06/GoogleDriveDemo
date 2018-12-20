@@ -1,7 +1,11 @@
 package com.thatapp.checklists.ViewClasses
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
 import android.arch.lifecycle.LiveData
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -209,6 +213,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     /**
      * Handles the `result` of a completed sign-in activity initiated from [ ][.requestSignIn].
      */
+    @SuppressLint("ServiceCast")
     fun handleSignInResult(result: Intent) {
         GoogleSignIn.getSignedInAccountFromIntent(result)
                 .addOnSuccessListener { googleAccount ->
@@ -238,6 +243,15 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                     state = MainActivity.ButtonState.LOGGED_IN
                     startupCheck()
                     setButtons()
+
+
+                    val LOAD_ARTWORK_JOB_ID=101
+                    val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+                    jobScheduler.schedule(JobInfo.Builder(LOAD_ARTWORK_JOB_ID,
+                            ComponentName(this, DriveSyncService::class.java))
+                            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                            .build())
+
                 }
                 .addOnFailureListener { exception ->
                     Log.e(TAG, "Unable to sign in.", exception)
@@ -348,7 +362,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     fun writeToFile(fileName: String, data: String) {
         // Get the directory for the user's public pictures directory.
         val path = File(getFilesDir().absolutePath + File.separator + "/downloads/" + File.separator + prefManager.dirName)
-//        val path = java.io.File(+java.io.File.separator + "/downloads/")
+
 
         // Make sure the path directory exists.
         if (!path.exists()) {
@@ -377,15 +391,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     fun startupCheck() {
         if (mDriverServiceHelper != null) {
             Log.e(TAG, "Querying for files.")
-//            var abc = mDriverServiceHelper.driveCheck()
-//            if (abc) {
-//                Log.e("status", "" + abc)
                 CheckDriveSync(mDriverServiceHelper).execute(this)
-//
-//            } else {
-//                Log.e("status", "" + abc)
-//                Toast.makeText(applicationContext, "Please Complete Your Profile Information", Toast.LENGTH_SHORT).show()
-//            }
         }
     }
 
@@ -398,7 +404,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                 driveServiceHelper.driveCheck()
             } catch (e: Exception) {
                 Log.e("create", "" + e.toString())
-            } // Tried with DriveUploadHelper before
+            }
 
             return false
         }

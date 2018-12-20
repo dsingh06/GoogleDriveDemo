@@ -35,14 +35,6 @@ import com.itextpdf.text.Rectangle.*
 
 class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, val filename: String) {
 
-    /* val storageDir = context.getFilesDir().absolutePath
-     var fm = filename.replace("[", "").replace("]", "").split(".xls")
-     var timeStamp = SimpleDateFormat("dd/MMM/YYYY_HH:mm:ss").format(Date())
-     var fileNm = fm[0] + "_" + timeStamp + ".pdf"
-
-     var des = storageDir + "/" + fileNm
-     */
-
     var prefManager = PrefManager(context)
     val storageDir = context.getFilesDir()
     var fm = filename.replace("[", "").replace("]", "").split(".xls")
@@ -58,12 +50,13 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
     fun startPDFCreation() {
 
         var t = filep.mkdirs()
-        Log.e("sss", " " + t)
+//        Log.e("sss", " " + t)
 
         try {
             PdfWriter.getInstance(document, FileOutputStream(des))
         } catch (ex: Exception) {
             Log.e("eee", ex.toString())
+            return
         }
         document.pageSize = PageSize.A4
         document.isMarginMirroring = true
@@ -86,17 +79,6 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         document.add(paragraph5)
 
         var table = PdfPTable(5)
-        /*  table.setHorizontalAlignment(Element.ALIGN_RIGHT);
-          // table.setWidthPercentage(30f)
-          var white = Font()
-          white.setColor(BaseColor.WHITE)
-
-  //        var cell = PdfPCell(Phrase(" Outcome ", white))
-  //        cell.setBackgroundColor(BaseColor.BLACK);
-  //        cell.setBorderColor(BaseColor.GRAY);
-  //        cell.setBorderWidth(2f);
-  //        table.addCell(cell);
-  */
 
         var cellM = PdfPCell(Phrase("Table this (Continued)"))
         cellM.setColspan(5);
@@ -112,7 +94,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
         table = PdfPTable(3)
         table.horizontalAlignment = Element.ALIGN_RIGHT
-//       table.totalWidth=45f
+
         table.widthPercentage = 23f
         table.setWidths(floatArrayOf(1f, 1f, 1f))
 
@@ -149,13 +131,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
                 cell.colspan = 4
                 table.addCell(cell)
 
-                cell = PdfPCell(Phrase(" "))
-                //table.addCell(cell)
-                //  table.addCell(cell)
-
             } else {
-                // table = PdfPTable(3)
-
                 var cell = PdfPCell(Phrase(ques.serialNo))
                 cell.colspan = 1
                 table.addCell(cell)
@@ -165,8 +141,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
                 cell.colspan = 1
                 table.addCell(cell)
 
-
-//            table.addCell(ques.answer + " ")
+// Assigning drawable resource
                 var d: Drawable? = null
                 try {
                     //  if (ques.answer.equals("YES", true)) {
@@ -217,6 +192,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
                 } catch (ex: Exception) {
                     Log.e("exxx", "111   " + ex.toString())
+                    return
                 }
 
             }
@@ -262,20 +238,12 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
         table1.addCell(cell1)
 
-//        table.addCell( PdfPTable(table1))
-
-
         cell = PdfPCell(table1)
         cell.colspan = 5
         cell.rowspan = 2
         cell.setPadding(5f)
         cell.horizontalAlignment = Element.ALIGN_CENTER
         table.addCell(cell)
-/*
-        cell = PdfPCell(Phrase("Additional Notes \n" + "1. Get Keys \n" + "2. Lock gates \n" + "3. Do something "))
-        cell.colspan = 5
-        table.addCell(cell)
-*/
 
 
         var table2 = PdfPTable(4)
@@ -287,7 +255,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         cell.horizontalAlignment = Element.ALIGN_CENTER
         table2.addCell(cell)
 
-        cell = PdfPCell(Phrase("7878"))
+        cell = PdfPCell(Phrase("7878")) //this to take from user_input
         cell.colspan = 1
         cell.rowspan = 2
         cell.horizontalAlignment = Element.ALIGN_CENTER
@@ -315,28 +283,30 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         try {
             document.add(table)
 
-        document.close()
-        val fileRepository = FileRepository(context)
-        val fileName = fileNm
-        val dirName = prefManager.dirName
-        val createdBy = prefManager.userName
-        val createdAt=timeStamp
-        val modifiedAt=timeStamp
-        val syncStatus=false
-        val driveFolderId=prefManager.folderID
-        val rootFolderId=prefManager.rootFolderID
-        val fileId="abc"
+            document.close()
+            val fileRepository = FileRepository(context)
+            val fileName = fileNm
+            val dirName = prefManager.dirName
+            val createdBy = prefManager.userName
+            val createdAt = timeStamp
+            val modifiedAt = timeStamp
+            val syncStatus = false
+            val driveFolderId = prefManager.folderID
+            val rootFolderId = prefManager.rootFolderID
+            val fileId = "abc"
 
+            //for ROOM
             if (rootFolderId != null) {
-                fileRepository.insertTask(fileName, dirName!!, createdBy!!, createdAt, modifiedAt, driveFolderId!!, rootFolderId, fileId, syncStatus)
-                Log.e("entered ", "in db")
+           //     fileRepository.insertTask(fileName, dirName!!, createdBy!!, createdAt, modifiedAt, driveFolderId!!, rootFolderId, fileId, syncStatus)
+             //   Log.e("entered ", "in db")
             }
 
-        Log.e("answer ", "closed")
-    } catch (e: Exception) {
-        Log.e("exception ", e.toString())
+            Log.e("answer ", "closed")
+        } catch (e: Exception) {
+            Log.e("exception ", e.toString())
+            return
 
-    }
+        }
     }
 
 }

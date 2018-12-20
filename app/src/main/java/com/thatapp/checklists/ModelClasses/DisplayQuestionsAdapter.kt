@@ -27,10 +27,8 @@ class DisplayQuestionsAdapter(var questionItemList: List<QuestionItem>, var cont
         return UserViewHolder(inflatedView)
     }
 
-
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val quesItem = questionItemList[position]
-
         if (!quesItem.strHeading.equals("")) {
             holder.serialNo.setText(quesItem.serialNo)
             holder.headingLayout.setBackgroundColor(Color.parseColor("#BDBDBD"))
