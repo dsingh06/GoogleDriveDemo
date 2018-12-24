@@ -35,15 +35,6 @@ public class PrefManager(var context: Context) {
             editor.putString(KEY_COMPANY_NAME, strPath)
             editor.commit()
         }
-/*
-    var mobile: String?
-        get() = sharedPref.getString(KEY_MOBILE, null)
-        set(strPath) {
-            editor.putString(KEY_MOBILE, strPath)
-            editor.commit()
-        }
-*/
-
 
     var loginEmail: String?
         get() = sharedPref.getString(KEY_LOGIN_EMAIL, "na")
@@ -53,14 +44,14 @@ public class PrefManager(var context: Context) {
         }
 
     var userName: String?
-        get() = sharedPref.getString(KEY_USER_NAME, "")
+        get() = sharedPref.getString(KEY_USER_NAME, "na")
         set(userName) {
             editor.putString(KEY_USER_NAME, userName)
             editor.commit()
         }
 
     var jobTitle: String?
-        get() = sharedPref.getString(KEY_JOB_TITLE, "")
+        get() = sharedPref.getString(KEY_JOB_TITLE, "na")
         set(userName) {
             editor.putString(KEY_JOB_TITLE, userName)
             editor.commit()
@@ -104,14 +95,14 @@ public class PrefManager(var context: Context) {
 
     var appDownloadUrl: String?
         get() =
-            sharedPref.getString(KEY_APP_DOWNLOAD_URL, "https://play.google.com/store/apps/details?id=miscos.lawyerapp")
+            sharedPref.getString(KEY_APP_DOWNLOAD_URL, "https://play.google.com/store/apps/details?id=")
         set(date) {
             editor.putString(KEY_APP_DOWNLOAD_URL, date)
             editor.commit()
         }
 
     var dirName: String?
-        get() = sharedPref.getString(KEY_DIR_NAME, "guest")
+        get() = sharedPref.getString(KEY_DIR_NAME, "na")
         set(strDir) {
             editor.putString(KEY_DIR_NAME, strDir)
             editor.commit()

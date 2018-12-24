@@ -44,13 +44,12 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
     var des = filep.absolutePath + "/" + fileNm
 
-
     val document = Document()
 
     fun startPDFCreation() {
 
         var t = filep.mkdirs()
-//        Log.e("sss", " " + t)
+
 
         try {
             PdfWriter.getInstance(document, FileOutputStream(des))
@@ -64,7 +63,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
         document.open()
 
-        Log.e("name ", "is  " + prefManager.userName)
+//        Log.e("name ", "is  " + prefManager.userName)
 
         val paragraph1 = Paragraph("CheckList App")
         val paragraph2 = Paragraph("Job Title       " + prefManager.jobTitle.toString())

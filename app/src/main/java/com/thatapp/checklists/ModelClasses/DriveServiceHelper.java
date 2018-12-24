@@ -12,10 +12,10 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.api.client.http.ByteArrayContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -94,14 +94,8 @@ public class DriveServiceHelper {
      */
     public boolean driveCheck() throws IOException {
 
-        boolean result = false;
-
         initFolders();
-        if (prefManager.getFirstRun()) {
-            prefManager.setFirstRun(false);
-            Log.e("Login", "status is: " + prefManager.getFirstRun());
-            initFolders();
-        }
+        initDrive();
 
         if (prefManager.getDirName().length() > 3) {
             driveSync();
@@ -114,12 +108,8 @@ public class DriveServiceHelper {
         } else if (prefManager.getUserName().length() < 5) {
             return false;
         } else {
-
             return true;
         }
-
-
-        // return result;
     }
 
     private void initFolders() {
@@ -130,13 +120,45 @@ public class DriveServiceHelper {
         Boolean d = fileD.mkdirs();
         java.io.File fileR = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "generated" + java.io.File.separator + prefManager.getDirName());
         Boolean g = fileR.mkdirs();
-
-//        Log.e("dir created", " " + d + "    " + g);
     }
+
+    public void initDrive() throws IOException {
+
+        FileList result = mDriveService.files().list().setSpaces("Drive")
+                .setQ("mimeType='application/vnd.google-apps.folder' and trashed=false and sharedWithMe=true")
+                .execute();
+
+        for (File file : result.getFiles()) {
+
+            if (file.getName().equalsIgnoreCase("CheckList App")) {
+                prefManager.setRootFolderID(file.getId());
+}
+        }
+
+
+//        Log.e("folder id found", prefManager.getRootFolderID());
+
+        FileList resultF = mDriveService.files().list().setSpaces("Drive")
+                .setQ("mimeType = 'application/vnd.google-apps.folder' and '" + prefManager.getRootFolderID() + "' in parents")
+                .execute();
+
+        for (File file : resultF.getFiles()) {
+//                Log.e("ROOT  Folder list : ", "shared   " + file.name + "   " + file.id)
+
+            if (file.getName().equalsIgnoreCase(prefManager.getDirName())) {
+                Log.e("ROOT Folder  Found: ", "shared   " + file.getName() + "   " + file.getId());
+                prefManager.setFolderID(file.getId());
+                break;
+            }
+
+
+        }
+
+    }
+
 
     public void driveSync() throws IOException {
 
-        boolean result = false;
         ArrayList<File> driveFileList = new ArrayList();
         ArrayList<java.io.File> deviceFileList = new ArrayList();
         java.io.File storageDir = context.getFilesDir();
@@ -147,8 +169,6 @@ public class DriveServiceHelper {
             deviceFileList.add(testD[i]);
         }
 
-//        Log.e("length device", " size in device  " + testD.length + "     " + deviceFileList.size());
-//
         FileList request = mDriveService.files().list().setQ("mimeType='application/pdf' and trashed=false and '" + prefManager.getFolderID() + "' in parents").setOrderBy("name").setSpaces("Drive").execute();
         for (File file : request.getFiles()) {
 //            Log.e("data ", "report files  : " + file.getName() + "  " + file.getId());
@@ -177,9 +197,6 @@ public class DriveServiceHelper {
             }
         }
 
-//        Log.e("@@@ length device", " size in drive  " + driveFileList.size() + "      device " + deviceFileList.size());
-//        Log.e("set ", "" + hSet.size());
-
         for (java.io.File fName : deviceFileList) {
             for (File fdName : driveFileList) {
                 if (fName.getName().equals(fdName.getName())) {
@@ -191,10 +208,6 @@ public class DriveServiceHelper {
 
 //        Log.e("## length device", " size in drive  " + driveFileList.size() + "      device " + deviceFileList.size());
         Log.e("set ", "" + hSet.size());
-
-
-        Set<String> driveSet = new HashSet<>();
-        Set<String> deviceSet = new HashSet<>();
 
         Collections.sort(deviceFileList);
 
@@ -208,7 +221,7 @@ public class DriveServiceHelper {
                         Log.e("inside ", "up " + fileUpload.getName() + "     " + fileData);
                         new DriveUploader(fileUpload, context);
                     } else {
-                      //  Log.e("inside ", "up else " + fileUpload.getName() + "     " + fileData);
+                        //  Log.e("inside ", "up else " + fileUpload.getName() + "     " + fileData);
                     }
                 }
             } else if (driveFileList.size() > deviceFileList.size()) {
@@ -218,39 +231,12 @@ public class DriveServiceHelper {
                         Log.e("inside ", "download " + fileDownload.getName() + "     " + fileData);
                         downloadPdfFile(fileDownload.getId());
                     } else {
-                    //    Log.e("inside ", "up else " + fileDownload.getName() + "     " + fileData);
+                        //    Log.e("inside ", "up else " + fileDownload.getName() + "     " + fileData);
                     }
                 }
             }
         }
-        Log.e("files ","synced");
-    }
-
-
-    public void queryA() throws IOException, IllegalStateException {
-
-        FileList result = mDriveService.files().list().setCorpus("user").setSpaces("Drive")
-                .setQ("mimeType='application/vnd.google-apps.folder' and trashed=false and sharedWithMe=true and title='CheckList App'")
-                .execute();
-        for (File file : result.getFiles()) {
-            Log.e("values ", file.getName() + "   " + file.getId());
-        }
-
-    }
-
-    public void listing() throws IOException {
-
-        FileList result = mDriveService.files().list().setCorpus("user")
-                .setQ("sharedWithMe=true and mimeType='application/vnd.google-apps.folder'")
-                .execute();
-        Log.e("results", "  " + result.size());
-        Log.e("results", "  " + result.getKind());
-        Log.e("results", "  " + result.getFiles().toString());
-        List files = result.getFiles();
-        for (int i = 0; i < files.size(); i++) {
-            Log.e("Found file: ", "wewewe   " + files.get(i).toString() + "   ");
-        }
-
+        Log.e("files ", "synced");
     }
 
     /**
@@ -336,11 +322,10 @@ public class DriveServiceHelper {
             fOut.close();
             Log.e("file download", "success");
 
-           // serviceListener.fileDownloaded(des, "abcd");
+            // serviceListener.fileDownloaded(des, "abcd");
         } catch (Exception e) {
             Log.e("file download", e.toString());
             serviceListener.handleError(e);
         }
     }
-
 }

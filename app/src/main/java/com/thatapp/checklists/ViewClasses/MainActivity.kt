@@ -101,11 +101,11 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         super.onCreate(savedInstanceState)
         setContentView(com.thatapp.checklists.R.layout.activity_main)
         prefManager = PrefManager(this)
-        Log.e("Login", "status is: " + prefManager.firstRun)
+//        Log.e("Login", "status is: " + prefManager.firstRun)
 
         if (prefManager.firstRun) {
             prefManager.firstRun = false
-            Log.e("Login", "status is: " + prefManager.firstRun)
+//            Log.e("Login", "status is: " + prefManager.firstRun)
         }
 
 
@@ -121,7 +121,6 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
         linkVarsToViews()
 
-        //mDriverServiceHelper.checkLoginStatus()
         if (!isUserLoggedin) {
             requestSignIn()
         }
@@ -154,13 +153,23 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             setButtons()
         }
         imageView3.setOnClickListener {
-            val intent = Intent(this, DisplayCheckListsActivity::class.java)
-            startActivity(intent)
+            if (prefManager.jobTitle!!.length < 3 || prefManager.companyName!!.length < 3) {
+                Toast.makeText(applicationContext, "Please Complete Your Profile", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, ProfileActivity::class.java))
+            } else {
+                val intent = Intent(this, DisplayCheckListsActivity::class.java)
+                startActivity(intent)
 
+            }
         }
         view.setOnClickListener {
-            val intent = Intent(this, DisplayCheckListsActivity::class.java)
-            startActivity(intent)
+            if (prefManager.jobTitle!!.length < 3 || prefManager.companyName!!.length < 3) {
+                Toast.makeText(applicationContext, "Please Complete Your Profile", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, ProfileActivity::class.java))
+            } else {
+                val intent = Intent(this, DisplayCheckListsActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
@@ -244,14 +253,14 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                     startupCheck()
                     setButtons()
 
-
-                    val LOAD_ARTWORK_JOB_ID=101
-                    val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-                    jobScheduler.schedule(JobInfo.Builder(LOAD_ARTWORK_JOB_ID,
-                            ComponentName(this, DriveSyncService::class.java))
-                            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                            .build())
-
+                    if (prefManager.rootFolderID!!.length > 5) {
+                        val LOAD_ARTWORK_JOB_ID = 101
+                        val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+                        jobScheduler.schedule(JobInfo.Builder(LOAD_ARTWORK_JOB_ID,
+                                ComponentName(this, DriveSyncService::class.java))
+                                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                                .build())
+                    }
                 }
                 .addOnFailureListener { exception ->
                     Log.e(TAG, "Unable to sign in.", exception)
@@ -295,30 +304,12 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
     override fun onStart() {
         super.onStart()
-
         val account = GoogleSignIn.getLastSignedInAccount(this)
-
-        if (account != null) {
-            //   prefManager.dirName = account.email.toString().split("@").get(0)
-            //  Log.e("name","  dir " + prefManager.dirName)
-        }
-
-//      if(account!=null)   Log.e("acc", account!!.displayName)
     }
 
-    fun signIn() {
-
-        var signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
-        startActivityForResult(signInIntent, REQUEST_CODE_SIGN_IN)
-    }
 
     private fun openFilePicker() {
-        //query()
-
-
         if (mDriverServiceHelper != null) {
-            Log.e(TAG, "Opening file picker.")
-//mDriverServiceHelper.listing()
             val pickerIntent = mDriverServiceHelper.createFilePickerIntent()
 
             // The result of the SAF Intent is handled in onActivityResult.
@@ -328,99 +319,42 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
     private fun openFileFromFilePicker(uri: Uri) {
         if (mDriverServiceHelper != null) {
-
-            Log.e(TAG, "Opening " + uri.path!!)
-
             mDriverServiceHelper.openFileUsingStorageAccessFramework(contentResolver, uri)
-                    /*.addOnSuccessListener {
-                        Log.e("file", "success")
 
-
-                        var file: DocumentFile? = null
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
-                                file = DocumentFile.fromSingleUri(this, uri)
-                                if (file != null) {
-                                    //writeToFile()
-                                }
-                            }
-                    }*/
                     .addOnSuccessListener { namePair ->
-                        Log.e("values", namePair.first)
-
-//                        mDriverServiceHelper.downloadFile("");
-//                          writeToFile(namePair.first!!, namePair.second!!)
+                        //                        Log.e("values", namePair.first)
                     }
-
                     .addOnFailureListener({ exception ->
-                        Log.e(TAG, "Unable to open file from picker.", exception)
                         requestSignIn()
                     })
         }
     }
 
-    fun writeToFile(fileName: String, data: String) {
-        // Get the directory for the user's public pictures directory.
-        val path = File(getFilesDir().absolutePath + File.separator + "/downloads/" + File.separator + prefManager.dirName)
-
-
-        // Make sure the path directory exists.
-        if (!path.exists()) {
-            // Make it, if it doesn't exit
-            val t = path.mkdirs()
-            Log.e("path", path.getPath() + "   " + t)
-        }
-        val file = java.io.File(path, fileName)
-        // Save your stream, don't forget to flush() it before closing it.
-        try {
-            file.createNewFile()
-            val fOut = FileOutputStream(file)
-            val myOutWriter = PrintWriter(fOut)
-            myOutWriter.append(data)
-            myOutWriter.close()
-            fOut.flush()
-            fOut.close()
-        } catch (e: IOException) {
-            Log.e("Exception", "File write failed: " + e.toString())
-        }
-
-
-    }
-
-
     fun startupCheck() {
         if (mDriverServiceHelper != null) {
-            Log.e(TAG, "Querying for files.")
-                CheckDriveSync(mDriverServiceHelper).execute(this)
+//            Log.e(TAG, "Querying for files.")
+            CheckDriveSync(mDriverServiceHelper).execute(this)
+            if (prefManager.jobTitle!!.length < 3 || prefManager.companyName!!.length < 3) {
+                Toast.makeText(applicationContext, "Please Complete Your Profile", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, ProfileActivity::class.java))
+            }
         }
     }
-
 
     class CheckDriveSync(val driveServiceHelper: DriveServiceHelper) : AsyncTask<Context, Void, Boolean>() {
 
         override fun doInBackground(vararg p0: Context): Boolean? {
-
             try {
                 driveServiceHelper.driveCheck()
             } catch (e: Exception) {
-                Log.e("create", "" + e.toString())
+                Log.e("Main-- driveCheck", "" + e.toString())
             }
-
             return false
         }
 
-
         override fun onPostExecute(result: Boolean) {
             super.onPostExecute(result)
-
-            Log.e("dsdfsdf", "res  " + result)
+//            Log.e("Main-- onPEx", "res  " + result)
         }
     }
-
-
 }
-
-
-
-
-

@@ -45,25 +45,13 @@ import java.util.HashMap
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 class DriveSyncService : JobService() {
     lateinit var pref: PrefManager
-    internal var count = 0
 
     override fun onCreate() {
         super.onCreate()
         pref = PrefManager(applicationContext)
-
-        Log.e(TAG, "Service created")
-        //schedule();
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.e(TAG, "Service destroyed")
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        // scheduleJob()
-
-        Log.e(TAG, "inside onStartCommand")
         return Service.START_NOT_STICKY
     }
 
@@ -74,102 +62,10 @@ class DriveSyncService : JobService() {
 
     override fun onStopJob(params: JobParameters): Boolean {
         // Stop tracking these job parameters, as we've 'finished' executing.
-        Log.e(TAG, "on stop job: " + params.jobId)
+//        Log.e(TAG, "on stop job: " + params.jobId)
 
         // Return false to drop the job.
         return false
-    }
-
-
-    private fun sendUpdate() {
-        //todo location updates
-        val strReq = object : StringRequest(Request.Method.POST,
-                "url", Response.Listener { response ->
-            try {
-                val jsonArray = JSONArray(response)
-                val jsonObject = jsonArray.getJSONObject(0)
-
-                val error_code = jsonObject.getInt("error_code")
-                Log.e("error code", " $error_code")
-                if (error_code == 100) {
-                    val dataArray = jsonObject.getJSONArray("data")
-                    //oldSize = dataArray.length();
-                    try {
-                        val b = Bundle()
-                        val intent = Intent()
-                        // intent.action = MY_ACTION
-                        intent.putExtra("dataFor", "home")
-                        intent.putExtra("oldSize", dataArray.length())
-                        //                            b.putSerializable("data",dataArray.toString());
-                        //                            intent.putExtras(b);
-                        intent.putExtra("data", dataArray.toString())
-                        sendBroadcast(intent)
-
-
-                    } catch (ex: Exception) {
-                        Log.e("Broadcast 1", " $ex")
-                    }
-
-                    //                        showCancelHolidaysListView(cancelHolidayArray);
-
-                    //                        showCancelHolidaysListView();
-                } else if (error_code == 101) {
-                    // Toast.makeText(getActivity(), getResources().getString(R.string.error_code_101), Toast.LENGTH_SHORT).show();
-                } else if (error_code == 102) {
-                    //  Toast.makeText(getActivity(), getResources().getString(R.string.error_code_102), Toast.LENGTH_SHORT).show();
-                } else if (error_code == 103) {
-                    //  Toast.makeText(getActivity(), getResources().getString(R.string.error_code_103), Toast.LENGTH_SHORT).show();
-                } else if (error_code == 104) {
-                    //   Toast.makeText(getActivity(), getResources().getString(R.string.error_code_104), Toast.LENGTH_SHORT).show();
-                } else {
-                    //  Toast.makeText(getActivity(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
-                }
-
-            } catch (ex: JSONException) {
-
-                //  Toast.makeText(getActivity(), "Error occurred please try again", Toast.LENGTH_SHORT).show();
-                Log.e("Json Exception", " " + ex.toString())
-
-            }
-        }, Response.ErrorListener { error ->
-            // progressDialog.dismiss();
-            // Log.d("ERROR RESPONSE  - ", error.toString());
-
-            Log.e("RESPONSE  - ", error.toString())
-            if (error is NoConnectionError) {
-                //    Toast.makeText(getActivity(), getResources().getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
-                //showResponse(getResources().getString(R.string.no_internet), "Warning", 0);
-            } else if (error is NetworkError) {
-                // showResponse(getResources().getString(R.string.no_internet), "Warning", 0);
-                //  Toast.makeText(getActivity(), getResources().getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
-            } else if (error is TimeoutError) {
-                //  showResponse(getResources().getString(R.string.timeout_error), "Warning", 0);
-                //    Toast.makeText(getActivity(), getResources().getString(R.string.timeout_error), Toast.LENGTH_SHORT).show();
-            } else if (error is ServerError) {
-                //showResponse(getResources().getString(R.string.serverResponseTimeOut), "Warning", 0);
-                //    Toast.makeText(getActivity(), getResources().getString(R.string.serverResponseTimeOut), Toast.LENGTH_SHORT).show();
-            } else if (error is ParseError) {
-                //showResponse("Unable to get response , Please try again", "Warning", 0);
-                //  Toast.makeText(getActivity(), "Unable to get response , Please try again", Toast.LENGTH_SHORT).show();
-            } else {
-                // showResponse(getResources().getString(R.string.serverResponseTimeOut), "Warning", 0);
-                //  Toast.makeText(getActivity(), "Server not responding please try again", Toast.LENGTH_SHORT).show();
-            }
-        }
-        ) {
-            override fun getParams(): Map<String, String> {
-                val params = HashMap<String, String>()
-                params["loc"] = "update"
-                Log.e("Params ", " " + params.toString())
-                return params
-            }
-        }
-
-        val requestQueue = Volley.newRequestQueue(applicationContext)
-        requestQueue.add(strReq)
-        requestQueue.cancelAll(strReq)
-        strReq.setShouldCache(false)
-        strReq.retryPolicy = DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
     }
 
     fun scheduleJob() {
@@ -177,17 +73,17 @@ class DriveSyncService : JobService() {
         val builder = JobInfo.Builder(1,
                 ComponentName(packageName,
                         DriveSyncService::class.java.name))
-        builder.setMinimumLatency((30 * 1000).toLong())
+        builder.setMinimumLatency((60 * 5 * 1000).toLong())
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
 
 
         val mJobScheduler: JobScheduler
         mJobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         if (mJobScheduler.schedule(builder.build()) == JobScheduler.RESULT_FAILURE) {
-            Log.e("error", " calling service from service")
+//            Log.e("error", " calling service from service")
         } else {
             driveSync()
-            Log.e("Success ", " calling service from service ")
+//            Log.e("Success ", " calling service from service ")
         }
     }
 
@@ -207,7 +103,9 @@ class DriveSyncService : JobService() {
                     .build()
 
             mDriveService = DriveSyncHelper(driveService, this)
-            CheckDriveFileSync(mDriveService).execute(this)       }
+
+            CheckDriveFileSync(mDriveService).execute(this)
+        }
 
     }
 
@@ -222,15 +120,13 @@ class DriveSyncService : JobService() {
                         this, setOf(DriveScopes.DRIVE))
                 credential.selectedAccount = account.account
                 var driveService = Drive.Builder(
-                                AndroidHttp.newCompatibleTransport(),
-                                GsonFactory(),
-                                credential)
-                                .setApplicationName("Checklist")
-                                .build()
+                        AndroidHttp.newCompatibleTransport(),
+                        GsonFactory(),
+                        credential)
+                        .setApplicationName("Checklist")
+                        .build()
 
                 mDriveService = DriveSyncHelper(driveService, this)
-//CheckDriveFileSync(mDriveService).execute(this)
-//                mDriveService.driveSync()
             } else {
 
                 val credential = GoogleAccountCredential.usingOAuth2(
@@ -260,17 +156,16 @@ class DriveSyncService : JobService() {
         }
     }
 
-
     companion object {
         private val TAG = DriveSyncService::class.java.simpleName
         lateinit var mDriveService: DriveSyncHelper
     }
+
     class CheckDriveFileSync(val driveServiceHelper: DriveSyncHelper) : AsyncTask<Context, Void, Boolean>() {
 
         override fun doInBackground(vararg p0: Context): Boolean? {
 
             try {
-
                 driveServiceHelper.driveSync()
             } catch (e: Exception) {
                 Log.e("create", "" + e.toString())
