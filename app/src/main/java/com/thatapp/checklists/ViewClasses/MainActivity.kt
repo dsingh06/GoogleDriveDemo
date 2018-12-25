@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     private val REQUEST_CODE_OPEN_DOCUMENT = 2
 
 
-    public lateinit var mDriverServiceHelper: DriveServiceHelper
+    lateinit var mDriverServiceHelper: DriveServiceHelper
     private var state = ButtonState.LOGGED_OUT
 
     lateinit var downloadAndSync: ConstraintLayout

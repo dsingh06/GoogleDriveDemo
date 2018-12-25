@@ -38,6 +38,7 @@ class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.Recy
         val toolbar: Toolbar = findViewById(R.id.my_toolbar)
         coordinatorLayout = findViewById(R.id.coordinatorLayout)
         toolbar.setTitle("Generated Reports")
+        toolbar.setNavigationIcon(R.drawable.ic_back)
         setSupportActionBar(toolbar)
 
         loadAllGeneratedFiles()

@@ -63,8 +63,6 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
         document.open()
 
-//        Log.e("name ", "is  " + prefManager.userName)
-
         val paragraph1 = Paragraph("CheckList App")
         val paragraph2 = Paragraph("Job Title       " + prefManager.jobTitle.toString())
         val paragraph3 = Paragraph("Company         " + prefManager.companyName.toString())
@@ -77,21 +75,8 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         document.add(paragraph4)
         document.add(paragraph5)
 
-        var table = PdfPTable(5)
-
-        var cellM = PdfPCell(Phrase("Table this (Continued)"))
-        cellM.setColspan(5);
-        table.addCell(cellM);
-        cellM = PdfPCell(Phrase("Continue on next page"))
-        cellM.setColspan(5);
-        table.addCell(cellM);
-        table.setHeaderRows(2);
-        table.setFooterRows(1);
-        table.setSkipFirstHeader(true);
-        table.setSkipLastFooter(true);
-
-
-        table = PdfPTable(3)
+		//FIRST SECTION
+        var table = PdfPTable(3)
         table.horizontalAlignment = Element.ALIGN_RIGHT
 
         table.widthPercentage = 23f
@@ -99,15 +84,25 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
         var cellTwo = PdfPCell(Phrase("Yes"))
         cellTwo.colspan = 1
+		cellTwo.backgroundColor = BaseColor.GREEN
+		cellTwo.setPadding(10f)
+        cellTwo.horizontalAlignment = Element.ALIGN_CENTER
         table.addCell(cellTwo)
 
         cellTwo = PdfPCell(Phrase("No"))
         cellTwo.colspan = 1
-        table.addCell(cellTwo)
+		cellTwo.backgroundColor = BaseColor.RED
+		cellTwo.horizontalAlignment = Element.ALIGN_CENTER
+		cellTwo.setPadding(10f)
+		table.addCell(cellTwo)
 
-        cellTwo = PdfPCell(Phrase("NA"))
+        cellTwo = PdfPCell(Phrase("N/A"))
         cellTwo.colspan = 1
-        table.addCell(cellTwo)
+		cellTwo.horizontalAlignment = Element.ALIGN_CENTER
+		cellTwo.setPadding(10f)
+		table.addCell(cellTwo)
+
+
         document.add(table)
 
         table = PdfPTable(5)
@@ -122,54 +117,50 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
             if (ques.strHeading.length > 3) {
 
                 var cell = PdfPCell(Phrase(ques.serialNo))
-                cell.backgroundColor = BaseColor(45, 35, 94, 1)
-                table.addCell(cell)
+				setPadding(cell,10f,5f,10f)
+				cell.backgroundColor = BaseColor(220, 220, 220)
+				cell.verticalAlignment = Element.ALIGN_MIDDLE
+				cell.horizontalAlignment = Element.ALIGN_LEFT
+				table.addCell(cell)
 
                 cell = PdfPCell(Phrase(ques.strHeading))
-
+				setPadding(cell,10f,5f,10f)
+				cell.backgroundColor = BaseColor(220, 220, 220)
+				cell.verticalAlignment = Element.ALIGN_CENTER
                 cell.colspan = 4
                 table.addCell(cell)
 
             } else {
                 var cell = PdfPCell(Phrase(ques.serialNo))
+				cell.horizontalAlignment = Element.ALIGN_CENTER
+				cell.verticalAlignment = Element.ALIGN_MIDDLE
                 cell.colspan = 1
                 table.addCell(cell)
 
-
                 cell = PdfPCell(Phrase(ques.strQuestion))
+				setPadding(cell,5f,10f,5f,5f)
+				cell.horizontalAlignment = Element.ALIGN_LEFT
+				cell.verticalAlignment = Element.ALIGN_MIDDLE
                 cell.colspan = 1
                 table.addCell(cell)
 
 // Assigning drawable resource
                 var d: Drawable? = null
                 try {
-                    //  if (ques.answer.equals("YES", true)) {
                     d = ContextCompat.getDrawable(context, com.thatapp.checklists.R.drawable.ic_yes)
-                    /* } else if (ques.answer.equals("NO", true)) {
-                         d = ContextCompat.getDrawable(context, com.thatapp.checklists.R.drawable.multiply)
-                     } else if (ques.answer.equals("--", true)) {
-                         d = ContextCompat.getDrawable(context, com.thatapp.checklists.R.drawable.blank)
-                     }
- */
                     val bitDw = d as BitmapDrawable
                     val bmp = bitDw.bitmap
                     val stream = ByteArrayOutputStream()
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
                     val image = Image.getInstance(stream.toByteArray())
+					image.scaleAbsolute(15f,18f)
 
                     cell = PdfPCell(image)
                     cell.colspan = 1
-                    cell.rowspan = 1
-                    cell.setPadding(5f)
-                    cell.fixedHeight = 25f
-                    cell.calculatedHeight = 0.1f
+                    cell.setPadding(3f)
 
-
-                    cell.setUseAscender(true)
-                    cell.setUseDescender(true)
-
-                    cell.horizontalAlignment = Element.ALIGN_CENTER
-                    //  cell.verticalAlignment = Element.ALIGN_CENTER
+					cell.horizontalAlignment = Element.ALIGN_CENTER
+					cell.verticalAlignment = Element.ALIGN_MIDDLE
 
                     if (ques.answer.equals("YES", true)) {
                         table.addCell(cell)
@@ -185,8 +176,14 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
                         table.addCell("")
                         table.addCell("")
-                        table.addCell(cell)
-                    }
+                        table.addCell("")
+
+					} else {
+
+						table.addCell("")
+						table.addCell("")
+						table.addCell(cell)
+					}
 
 
                 } catch (ex: Exception) {
@@ -308,4 +305,16 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         }
     }
 
+	private fun setPadding(cell: PdfPCell, topPadding: Float, leftPadding: Float, bottomPadding: Float, rightPadding: Float) {
+		cell.paddingBottom = bottomPadding
+		cell.paddingTop = topPadding
+		cell.paddingLeft = leftPadding
+		cell.paddingRight = rightPadding
+	}
+
+	private fun setPadding(cell: PdfPCell, topPadding: Float, leftPadding: Float, bottomPadding: Float) {
+		cell.paddingBottom = bottomPadding
+		cell.paddingTop = topPadding
+		cell.paddingLeft = leftPadding
+	}
 }

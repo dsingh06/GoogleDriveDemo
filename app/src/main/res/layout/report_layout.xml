@@ -63,10 +63,12 @@
 
         <TextView
             android:id="@+id/tvFileName"
-            android:layout_width="77dp"
+            android:layout_width="0dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_toEndOf="@+id/ivFileImage"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
@@ -74,20 +76,23 @@
             android:maxLines="1"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/tvDateTime"
+            app:layout_constraintEnd_toStartOf="@+id/ivShare"
             app:layout_constraintStart_toEndOf="@+id/ivFileImage"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvDateTime"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvFileName"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:layout_toEndOf="@+id/ivFileImage"
             android:hint="hint"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ivShare"
             app:layout_constraintStart_toEndOf="@+id/ivFileImage"
             app:layout_constraintTop_toBottomOf="@+id/tvFileName" />
 
@@ -103,12 +108,14 @@
             android:id="@+id/ivShare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:layout_marginStart="70dp"
-            android:src="@drawable/ic_action_share"
-            app:layout_constraintBottom_toBottomOf="@id/tvDateTime"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/gmail"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/tvDateTime"
-            app:layout_constraintStart_toStartOf="parent" /> </android.support.constraint.ConstraintLayout>
+            app:layout_constraintTop_toTopOf="parent" />
+        <!--android:src="@drawable/ic_action_share"-->
+
+    </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

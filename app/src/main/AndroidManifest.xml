@@ -21,7 +21,8 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".ViewClasses.ProfileActivity"
-            android:parentActivityName=".ViewClasses.MainActivity" />
+            android:parentActivityName=".ViewClasses.MainActivity"
+            android:windowSoftInputMode="stateHidden"/>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -34,11 +35,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ViewClasses.DisplayQuestionsActivity" android:windowSoftInputMode="stateHidden"/>
 
-        <activity android:name=".ViewClasses.DisplayCheckListsActivity" />
-        <activity android:name=".ViewClasses.DisplayReportsActivity" />
-        <activity    android:name=".ViewClasses.ViewPdfActivity"/>
+        <activity android:name=".ViewClasses.DisplayQuestionsActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:parentActivityName=".ViewClasses.DisplayCheckListsActivity"/>
+        <activity android:name=".ViewClasses.DisplayCheckListsActivity"
+            android:parentActivityName=".ViewClasses.MainActivity"/>
+        <activity android:name=".ViewClasses.DisplayReportsActivity"
+            android:parentActivityName=".ViewClasses.DisplayCheckListsActivity"/>
+        <activity    android:name=".ViewClasses.ViewPdfActivity"
+            android:parentActivityName=".ViewClasses.DisplayReportsActivity"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"

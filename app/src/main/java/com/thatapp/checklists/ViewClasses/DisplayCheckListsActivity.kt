@@ -39,6 +39,7 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
         val toolbar: Toolbar = findViewById(R.id.my_toolbar)
         coordinatorLayout = findViewById(R.id.coordinatorLayout)
         toolbar.setTitle("Checklists")
+        toolbar.setNavigationIcon(R.drawable.ic_back)
         setSupportActionBar(toolbar)
 
         loadAllDownloadedFiles()
