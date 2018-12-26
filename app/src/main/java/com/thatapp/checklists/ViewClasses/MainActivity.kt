@@ -83,23 +83,15 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         super.onCreate(savedInstanceState)
         setContentView(com.thatapp.checklists.R.layout.activity_main)
         prefManager = PrefManager(this)
-//        Log.e("Login", "status is: " + prefManager.firstRun)
 
-        if (prefManager.firstRun) {
-            prefManager.firstRun = false
-//            Log.e("Login", "status is: " + prefManager.firstRun)
-        }
+        if (prefManager.firstRun) prefManager.firstRun = false
+//        if (!prefManager.loginStatus) requestSignIn()
 
 
-        if (!prefManager.loginStatus) {
-            requestSignIn()
-        }
-
-
-        var gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build()
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+//        var gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestEmail()
+//                .build()
+//
 
         linkVarsToViews()
 
@@ -110,13 +102,13 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         login.setOnClickListener {
             requestSignIn()
         }
+
         downloadAndSync.setOnClickListener {
 
             val account = GoogleSignIn.getLastSignedInAccount(this)
 
             if (account != null) {
                 startupCheck()
-
                 openFilePicker()
             } else {
                 Toast.makeText(applicationContext, "Please Login to continue", Toast.LENGTH_SHORT).show()
@@ -175,7 +167,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         if (isNetworkConnected()) {
 //            Log.e("service", "Requesting sign-in")
             val signInOptions = getSignInOptions()
-
+			mGoogleSignInClient = GoogleSignIn.getClient(this, signInOptions)
             val client = GoogleSignIn.getClient(this, signInOptions)
 
             // The result of the sign-in Intent is handled in onActivityResult.
@@ -346,7 +338,6 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 				logout.visibility = View.INVISIBLE
 
 			}
-
 			else -> {
 				status.text = (getString(R.string.status_logged_in) + " as "+"'"+ prefManager.loginEmail.toString().substringBefore("@")+"'")
 				//start.isEnabled = true

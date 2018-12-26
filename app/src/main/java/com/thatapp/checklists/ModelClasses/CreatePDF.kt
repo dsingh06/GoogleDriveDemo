@@ -33,7 +33,7 @@ import com.itextpdf.text.Font.BOLDITALIC
 import com.itextpdf.text.Rectangle.*
 
 
-class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, val filename: String) {
+class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, val filename: String, val additionalDetails: String) {
 
     var prefManager = PrefManager(context)
     val storageDir = context.getFilesDir()
@@ -111,6 +111,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
         table.widthPercentage = 100f
         table.setWidths(floatArrayOf(0.4f, 2.6f, 0.3f, 0.3f, 0.3f))
+		table.keepTogether = true
         // table.isLockedWidth = true
         for (aw in questions) {
             val ques: QuestionItem = aw
@@ -195,7 +196,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
         }
 
-        var cell = PdfPCell(Phrase("Additional Notes \n" + "1. Get Keys \n" + "2. Lock gates \n" + "3. Do something "))
+        var cell = PdfPCell(Phrase("Additional Notes: \n" +additionalDetails))
         cell.colspan = 5
         cell.setPadding(5f)
 

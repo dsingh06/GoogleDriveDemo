@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.File
 import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
+import android.widget.EditText
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.drive.Drive.getDriveResourceClient
 import com.google.android.gms.drive.DriveFolder
@@ -44,6 +45,9 @@ class DisplayQuestionsActivity : AppCompatActivity() {
     private lateinit var mDriverServiceHelper: DriveServiceHelper
    private  lateinit var prefManager:PrefManager
 
+    lateinit var additionalDetails: EditText
+    lateinit var toolbar: Toolbar
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +55,8 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 
         prefManager = PrefManager(this)
 
-        val toolbar: Toolbar = findViewById(R.id.my_toolbar)
+        toolbar= findViewById(R.id.my_toolbar)
+        additionalDetails= findViewById(R.id.additionalDetails)
 
         val intent: Intent = intent
         val filename: String = intent.getStringExtra("fileName")
@@ -94,7 +99,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
                         })
                         .setNegativeButton("Skip ALL", { _, _ ->
                             Snackbar.make(btnSubmit, "Creating PDF...", Snackbar.LENGTH_LONG).show()
-                            CreatePdf(questions, filename).execute(this)
+                            CreatePdf(questions, filename, additionalDetails.text.toString()).execute(this)
                         })
 //						.setNeutralButton("Email Report",{ dialog, _ ->
 //
@@ -103,7 +108,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
                         .show()
             } else {
                 Snackbar.make(btnSubmit, "Creating PDF...", Snackbar.LENGTH_LONG).show()
-                CreatePdf(questions, filename).execute(this)
+                CreatePdf(questions, filename,additionalDetails.text.toString()).execute(this)
             }
         }
 
@@ -173,10 +178,10 @@ class DisplayQuestionsActivity : AppCompatActivity() {
         }
     }
 
-    class CreatePdf(val questions: ArrayList<QuestionItem>, val fileName: String) : AsyncTask<Context, Void, Context>() {
+    class CreatePdf(val questions: ArrayList<QuestionItem>, val fileName: String, val additionalDetails:String) : AsyncTask<Context, Void, Context>() {
         lateinit var pdfCreationObject: CreatePDF
         override fun doInBackground(vararg p0: Context): Context {
-            pdfCreationObject = CreatePDF(questions, p0.get(0), fileName)
+            pdfCreationObject = CreatePDF(questions, p0.get(0), fileName, additionalDetails)
           try {
               pdfCreationObject.startPDFCreation()
           }catch (e:Exception){

@@ -170,7 +170,7 @@ public class DriveSyncHelper {
                 for (File fileDownload : driveFileList) {
                     if (vhSet.equalsIgnoreCase(fileDownload.getName())) {
 //                        Log.e("inside ", "download " + fileDownload.getName() + "     " + fileData);
-                        downloadPdfFile(fileDownload.getId());
+//                        downloadPdfFile(fileDownload.getId());
                     } else {
                         //    Log.e("inside ", "up else " + fileDownload.getName() + "     " + fileData);
                     }
