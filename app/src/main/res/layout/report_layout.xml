@@ -104,6 +104,7 @@
             android:layout_toRightOf="@id/ivFileImage"
             android:textColor="@color/colorAccent"
             android:textStyle="bold" /-->
+
         <ImageView
             android:id="@+id/ivShare"
             android:layout_width="wrap_content"
@@ -111,7 +112,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:src="@drawable/gmail"
+            android:src="@drawable/ic_action_share"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

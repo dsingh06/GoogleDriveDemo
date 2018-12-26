@@ -224,7 +224,7 @@ public class DriveServiceHelper {
                         //  Log.e("inside ", "up else " + fileUpload.getName() + "     " + fileData);
                     }
                 }
-            } else if (driveFileList.size() > deviceFileList.size()) {
+            } /*else if (driveFileList.size() > deviceFileList.size()) {
 
                 for (File fileDownload : driveFileList) {
                     if (vhSet.equalsIgnoreCase(fileDownload.getName())) {
@@ -234,7 +234,7 @@ public class DriveServiceHelper {
                         //    Log.e("inside ", "up else " + fileDownload.getName() + "     " + fileData);
                     }
                 }
-            }
+            }*/
         }
         Log.e("files ", "synced");
     }

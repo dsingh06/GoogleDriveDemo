@@ -167,7 +167,6 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         position refers to the item position in adapter
         dir refers to the corresponding file type
         getting the directory where file is to be restored
-
          */
         prefManager = PrefManager(context)
         var fileName = downloaded[position].name
@@ -192,6 +191,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             }
             downloaded.removeAt(position)
             notifyItemRemoved(position)
+            notifyDataSetChanged()
             Log.e("File ", "Deleted ")
         } else {
 //            Log.e("children", "not found")
