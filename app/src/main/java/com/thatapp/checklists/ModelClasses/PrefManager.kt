@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 
 public class PrefManager(var context: Context) {
+
     private val sharedPref: SharedPreferences
     private val editor: SharedPreferences.Editor
 
@@ -134,5 +135,4 @@ public class PrefManager(var context: Context) {
         val KEY_FIRST_RUN = "first_run"
         public var KEY_JOB_TITLE = "job_title"
     }
-
 }

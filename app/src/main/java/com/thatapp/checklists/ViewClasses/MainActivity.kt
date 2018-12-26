@@ -63,39 +63,21 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     private val REQUEST_CODE_OPEN_DOCUMENT = 2
 
 
-    lateinit var mDriverServiceHelper: DriveServiceHelper
+    lateinit private var mDriverServiceHelper: DriveServiceHelper
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
+
+
     private var state = ButtonState.LOGGED_OUT
 
     lateinit var downloadAndSync: ConstraintLayout
     lateinit var myProfile: ConstraintLayout
 
     private val PROFILE_ACTIVITY = 33
-    private lateinit var mGoogleSignInClient: GoogleSignInClient
-    val isUserLoggedin: Boolean = false
+
+    private val isUserLoggedin: Boolean = false
+
     private lateinit var prefManager: PrefManager
 
-    private fun setButtons() {
-        when (state) {
-            ButtonState.LOGGED_OUT -> {
-                status.text = getString(R.string.status_logged_out)
-                //start.isEnabled = false
-                logout.isEnabled = false
-                login.isEnabled = true
-                login.visibility = View.VISIBLE
-                logout.visibility = View.INVISIBLE
-
-            }
-
-            else -> {
-                status.text = getString(R.string.status_logged_in)
-                //start.isEnabled = true
-                logout.isEnabled = true
-                login.isEnabled = false
-                login.visibility = View.INVISIBLE
-                logout.visibility = View.VISIBLE
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,8 +122,6 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                 Toast.makeText(applicationContext, "Please Login to continue", Toast.LENGTH_SHORT).show()
                 requestSignIn()
             }
-
-
         }
         myProfile.setOnClickListener {
             startActivityForResult(Intent(this, ProfileActivity::class.java), PROFILE_ACTIVITY)
@@ -183,7 +163,6 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             REQUEST_CODE_OPEN_DOCUMENT -> if (resultCode == Activity.RESULT_OK && resultData != null) {
                 val uri = resultData.data
                 if (uri != null) {
-
                     openFileFromFilePicker(uri)
                 }
             }
@@ -193,18 +172,9 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     }
 
     fun requestSignIn() {
-
-        val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        val activeNetwork = cm.activeNetworkInfo
-        val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
-        if (isConnected) {
-
-            Log.e("service", "Requesting sign-in")
-            val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestEmail()
-                    .requestScopes(Scope(DriveScopes.DRIVE))
-                    .build()
+        if (isNetworkConnected()) {
+//            Log.e("service", "Requesting sign-in")
+            val signInOptions = getSignInOptions()
 
             val client = GoogleSignIn.getClient(this, signInOptions)
 
@@ -214,12 +184,23 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         } else {
             Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_SHORT).show()
         }
-
-
     }
 
+	private fun getSignInOptions(): GoogleSignInOptions {
+		return GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+				.requestEmail()
+				.requestScopes(Scope(DriveScopes.DRIVE))
+				.build()
+	}
 
-    /**
+	private fun isNetworkConnected(): Boolean {
+		val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+		val activeNetwork = cm.activeNetworkInfo
+		return (activeNetwork != null && activeNetwork.isConnectedOrConnecting)
+	}
+
+
+	/**
      * Handles the `result` of a completed sign-in activity initiated from [ ][.requestSignIn].
      */
     @SuppressLint("ServiceCast")
@@ -243,7 +224,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                     mDriverServiceHelper = DriveServiceHelper(googleDriveService, this, applicationContext)
                     prefManager.loginEmail = googleAccount.email
                     prefManager.loginStatus = true
-                    prefManager.userName = googleAccount.displayName
+//                    prefManager.userName = googleAccount.displayName
 //                    prefManager.dirName = googleAccount.email
 
                     //  PrefManager.dirName = googleAccount.email.toString().split("@").get(0)
@@ -295,10 +276,10 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     private fun logoutUser() {
         mGoogleSignInClient.signOut().addOnSuccessListener {
             Log.e("log", "out ")
-            prefManager.userName = ""
-            prefManager.companyName = ""
+//            prefManager.userName = ""
+//            prefManager.companyName = ""
             prefManager.dirName = ""
-            prefManager.jobTitle = ""
+//            prefManager.jobTitle = ""
         }.addOnCanceledListener { Log.e("log", "failed") }
     }
 
@@ -334,10 +315,10 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         if (mDriverServiceHelper != null) {
 //            Log.e(TAG, "Querying for files.")
             CheckDriveSync(mDriverServiceHelper).execute(this)
-            if (prefManager.jobTitle!!.length < 3 || prefManager.companyName!!.length < 3) {
-                Toast.makeText(applicationContext, "Please Complete Your Profile", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, ProfileActivity::class.java))
-            }
+//            if (prefManager.jobTitle!!.length < 3 || prefManager.companyName!!.length < 3) {
+//                Toast.makeText(applicationContext, "Please Complete Your Profile", Toast.LENGTH_SHORT).show()
+//                startActivity(Intent(this, ProfileActivity::class.java))
+//            }
         }
     }
 
@@ -351,10 +332,29 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             }
             return false
         }
-
-        override fun onPostExecute(result: Boolean) {
-            super.onPostExecute(result)
-//            Log.e("Main-- onPEx", "res  " + result)
-        }
     }
+
+
+	private fun setButtons() {
+		when (state) {
+			ButtonState.LOGGED_OUT -> {
+				status.text = getString(R.string.status_logged_out)
+				//start.isEnabled = false
+				logout.isEnabled = false
+				login.isEnabled = true
+				login.visibility = View.VISIBLE
+				logout.visibility = View.INVISIBLE
+
+			}
+
+			else -> {
+				status.text = (getString(R.string.status_logged_in) + " as "+"'"+ prefManager.loginEmail.toString().substringBefore("@")+"'")
+				//start.isEnabled = true
+				logout.isEnabled = true
+				login.isEnabled = false
+				login.visibility = View.INVISIBLE
+				logout.visibility = View.VISIBLE
+			}
+		}
+	}
 }

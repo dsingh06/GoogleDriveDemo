@@ -26,7 +26,6 @@ class ProfileActivity : AppCompatActivity() {
         actionBarObject = supportActionBar!!
         actionBarObject.setDisplayHomeAsUpEnabled(true)
         actionBarObject.title = "My Profile"
-
         actionBarObject.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
 
         prefManager = PrefManager(this)
@@ -35,7 +34,7 @@ class ProfileActivity : AppCompatActivity() {
         etjobtitle.setText(prefManager.jobTitle)
 
 
-        btnSave.setOnClickListener(View.OnClickListener {
+        btnSave.setOnClickListener{
             var name = etyourname.text.toString()
             var companyName = etcompanyname.text.toString()
             var jobTitle = etjobtitle.text.toString()
@@ -56,8 +55,6 @@ class ProfileActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Profile Saved", Toast.LENGTH_SHORT).show()
                 finish()
             }
-        })
-
-//
+        }
     }
 }
