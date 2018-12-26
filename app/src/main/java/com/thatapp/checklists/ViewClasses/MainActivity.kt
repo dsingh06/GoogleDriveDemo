@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         when (state) {
             ButtonState.LOGGED_OUT -> {
                 status.text = getString(R.string.status_logged_out)
-                start.isEnabled = false
+                //start.isEnabled = false
                 logout.isEnabled = false
                 login.isEnabled = true
                 login.visibility = View.VISIBLE
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
             else -> {
                 status.text = getString(R.string.status_logged_in)
-                start.isEnabled = true
+                //start.isEnabled = true
                 logout.isEnabled = true
                 login.isEnabled = false
                 login.visibility = View.INVISIBLE

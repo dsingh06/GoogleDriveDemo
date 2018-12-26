@@ -1,5 +1,6 @@
 package com.thatapp.checklists.ModelClasses
 
+import android.app.Activity
 import android.support.v7.widget.RecyclerView
 
 import android.content.Context
@@ -10,6 +11,7 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import com.thatapp.checklists.R
+import com.thatapp.checklists.ViewClasses.DisplayCheckListsActivity
 import com.thatapp.checklists.ViewClasses.DisplayQuestionsActivity
 import com.thatapp.checklists.ViewClasses.ViewPdfActivity
 import kotlinx.android.synthetic.main.checklist_layout.view.*
@@ -132,10 +134,11 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                 val intent = Intent(context, DisplayQuestionsActivity::class.java)
                 intent.putExtra("fileName", downloaded[position].name)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                context.startActivity(intent)
+                (context as DisplayCheckListsActivity).startActivityForResult(intent,13)
             }
         }
     }
+
 
     private fun convertLongToTime(time: Long): String {
         val date = Date(time)

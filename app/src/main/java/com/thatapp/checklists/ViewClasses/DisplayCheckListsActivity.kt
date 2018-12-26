@@ -132,4 +132,11 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
         }
         return super.onOptionsItemSelected(item)
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode==13) {
+            val intent = Intent(this, DisplayReportsActivity::class.java)
+            startActivity(intent)
+        }
+    }
 }
