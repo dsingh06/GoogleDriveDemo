@@ -43,9 +43,10 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 
     private val TAG = "My_LogMainActivity"
     private lateinit var mDriverServiceHelper: DriveServiceHelper
-   private  lateinit var prefManager:PrefManager
+    private lateinit var prefManager: PrefManager
 
     lateinit var additionalDetails: EditText
+    lateinit var workOrder: EditText
     lateinit var toolbar: Toolbar
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -55,8 +56,9 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 
         prefManager = PrefManager(this)
 
-        toolbar= findViewById(R.id.my_toolbar)
-        additionalDetails= findViewById(R.id.additionalDetails)
+        toolbar = findViewById(R.id.my_toolbar)
+        additionalDetails = findViewById(R.id.additionalDetails)
+        workOrder = findViewById(R.id.etWorkOrder)
 
         val intent: Intent = intent
         val filename: String = intent.getStringExtra("fileName")
@@ -99,7 +101,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
                         })
                         .setNegativeButton("Skip ALL", { _, _ ->
                             Snackbar.make(btnSubmit, "Creating PDF...", Snackbar.LENGTH_LONG).show()
-                            CreatePdf(questions, filename, additionalDetails.text.toString()).execute(this)
+                            CreatePdf(questions, filename, additionalDetails.text.toString(), workOrder.text.toString()).execute(this)
                         })
 //						.setNeutralButton("Email Report",{ dialog, _ ->
 //
@@ -108,7 +110,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
                         .show()
             } else {
                 Snackbar.make(btnSubmit, "Creating PDF...", Snackbar.LENGTH_LONG).show()
-                CreatePdf(questions, filename,additionalDetails.text.toString()).execute(this)
+                CreatePdf(questions, filename, additionalDetails.text.toString(),workOrder.text.toString()).execute(this)
             }
         }
 
@@ -178,17 +180,17 @@ class DisplayQuestionsActivity : AppCompatActivity() {
         }
     }
 
-    class CreatePdf(val questions: ArrayList<QuestionItem>, val fileName: String, val additionalDetails:String) : AsyncTask<Context, Void, Context>() {
+    class CreatePdf(val questions: ArrayList<QuestionItem>, val fileName: String, val additionalDetails: String, val workOrderNum: String) : AsyncTask<Context, Void, Context>() {
         lateinit var pdfCreationObject: CreatePDF
         override fun doInBackground(vararg p0: Context): Context {
-            pdfCreationObject = CreatePDF(questions, p0.get(0), fileName, additionalDetails)
-          try {
-              pdfCreationObject.startPDFCreation()
-          }catch (e:Exception){
-              Log.e("create",""+e.toString())
-          } // Tried with DriveUploadHelper before
+            pdfCreationObject = CreatePDF(questions, p0.get(0), fileName, additionalDetails, workOrderNum)
+            try {
+                pdfCreationObject.startPDFCreation()
+            } catch (e: Exception) {
+                Log.e("create", "" + e.toString())
+            } // Tried with DriveUploadHelper before
             //val obj = DriveUploader(File(pdfCreationObject.des), p0[0])
-           val obj = DriveUploader(File(pdfCreationObject.des), p0[0])
+            val obj = DriveUploader(File(pdfCreationObject.des), p0[0])
             return p0[0]
         }
 
@@ -219,4 +221,4 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 
     }
 
- }
+}

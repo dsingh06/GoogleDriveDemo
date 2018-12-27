@@ -49,8 +49,6 @@ public class DriveSyncHelper {
         prefManager = new PrefManager(context);
     }
 
-
-
     private void initFolders() {
 
         java.io.File storageDir = context.getFilesDir();
@@ -101,7 +99,6 @@ public class DriveSyncHelper {
 
         if (prefManager.getFolderID().length() < 2) {
             initDrive();
-
         }
 
         ArrayList<File> driveFileList = new ArrayList();
