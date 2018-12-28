@@ -68,7 +68,7 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
                 val str = name.substring(lastIndex)
 
                 // match path name extension
-                if (str == ".xls") {
+                if (str == ".xls"  || str == ".xlsx") {
                     return@FilenameFilter true
                 }
             }

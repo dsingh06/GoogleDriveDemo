@@ -132,7 +132,7 @@ public class DriveServiceHelper {
 
             if (file.getName().equalsIgnoreCase("CheckList App")) {
                 prefManager.setRootFolderID(file.getId());
-}
+            }
         }
 
 
@@ -243,10 +243,27 @@ public class DriveServiceHelper {
      * Returns an {@link Intent} for opening the Storage Access Framework file picker.
      */
     public Intent createFilePickerIntent() {
+/*
+{"application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .doc & .docx
+                        "application/vnd.ms-powerpoint","application/vnd.openxmlformats-officedocument.presentationml.presentation", // .ppt & .pptx
+                        "application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
+                        "text/plain",
+                        "application/pdf",
+                        "application/zip"};
 
+ */
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("application/vnd.ms-excel");
+        intent.setType("*/*");
+        String[] mimeTypes =
+                {
+                        "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
+                };
+
+
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        // intent.setType("application/vnd.ms-excel");
+//        intent.setType("application/x-msexcel");
         return intent;
     }
 
@@ -266,7 +283,7 @@ public class DriveServiceHelper {
                     name = cursor.getString(nameIndex);
 
                     FileList result = mDriveService.files().list().setSpaces("drive")
-                            .setQ("mimeType='application/vnd.ms-excel'")
+//                            .setQ("mimeType='application/vnd.ms-excel'")
                             .execute();
 
 

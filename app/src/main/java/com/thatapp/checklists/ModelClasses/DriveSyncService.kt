@@ -73,7 +73,7 @@ class DriveSyncService : JobService() {
         val builder = JobInfo.Builder(1,
                 ComponentName(packageName,
                         DriveSyncService::class.java.name))
-        builder.setMinimumLatency((60 * 5 * 1000).toLong())
+        builder.setMinimumLatency((60 * 2 * 1000).toLong())
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
 
 

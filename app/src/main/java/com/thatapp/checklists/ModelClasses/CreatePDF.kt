@@ -53,7 +53,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         try {
             writer = PdfWriter.getInstance(document, FileOutputStream(des))
 			writer.setPageEvent(HeaderFooterPageEvent())
-		} catch (ex: Exception) {
+		} catch (ex:Exception) {
             Log.e("eee", ex.toString())
             return
         }

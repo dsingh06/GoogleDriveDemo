@@ -73,7 +73,7 @@ public class DriveSyncHelper {
         }
 
 
-        Log.e("folder id found", prefManager.getRootFolderID());
+//        Log.e("folder id found", prefManager.getRootFolderID());
 
         FileList resultF = mDriveService.files().list().setSpaces("Drive")
                 .setQ("mimeType = 'application/vnd.google-apps.folder' and '" + prefManager.getRootFolderID() + "' in parents")
@@ -83,7 +83,7 @@ public class DriveSyncHelper {
 //                Log.e("ROOT  Folder list : ", "shared   " + file.name + "   " + file.id)
 
             if (file.getName().equalsIgnoreCase(prefManager.getDirName())) {
-                Log.e("ROOT Folder  Found: ", "shared   " + file.getName() + "   " + file.getId());
+//                Log.e("ROOT Folder  Found: ", "shared   " + file.getName() + "   " + file.getId());
                 prefManager.setFolderID(file.getId());
                 break;
             }
@@ -116,7 +116,7 @@ public class DriveSyncHelper {
 //            Log.e("data ", "report files  : " + file.getName() + "  " + file.getId());
             driveFileList.add(file);
         }
-        Log.e("length device", " size in drive  " + driveFileList.size() + "      device " + deviceFileList.size());
+//        Log.e("length device", " size in drive  " + driveFileList.size() + "      device " + deviceFileList.size());
 
         Set<String> hSet = new HashSet<>();
 
@@ -151,7 +151,7 @@ public class DriveSyncHelper {
 
         for (String vhSet : hSet) {
             String fileData = vhSet;
-            Log.e("file to sync", fileData);
+//            Log.e("file to sync", fileData);
 
             if (deviceFileList.size() > driveFileList.size()) {
                 for (java.io.File fileUpload : deviceFileList) {
