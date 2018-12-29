@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
-import android.arch.lifecycle.LiveData
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
@@ -13,41 +12,27 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import com.google.android.gms.common.data.DataBuffer
-import com.google.android.gms.drive.DriveResource
-import com.google.android.gms.drive.MetadataBuffer
-import com.google.android.gms.drive.query.Filters
-import com.google.android.gms.drive.query.Query
-import com.google.android.gms.drive.query.SearchableField
-import com.google.android.gms.tasks.Task
 import com.thatapp.checklists.R
 import kotlinx.android.synthetic.main.activity_main.*
-import android.net.NetworkInfo
-import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.content.Context
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.AsyncTask
-import android.os.Build
-import android.provider.DocumentsContract
-import android.support.annotation.NonNull
-import android.support.annotation.Nullable
-import android.support.v4.provider.DocumentFile
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.Scope
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
-import com.google.api.services.drive.model.FileList
 import com.thatapp.checklists.ModelClasses.*
 import java.io.*
-import java.util.*
 
 
 class MainActivity : AppCompatActivity(), ServiceListener {
@@ -63,13 +48,20 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     private val REQUEST_CODE_OPEN_DOCUMENT = 2
 
 
-    lateinit private var mDriverServiceHelper: DriveServiceHelper
-    private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private var mDriverServiceHelper: DriveServiceHelper?=null
+    private var mSignedInAccount: GoogleSignInAccount?=null
+    private var mGoogleSignInClient: GoogleSignInClient?=null
+    private var mGoogleSignInOptions: GoogleSignInOptions?=null
+
+	companion object {
+		val toastSuccessBackground = Color.parseColor("#228B22")
+		val toastFailureBackground = Color.parseColor("#B22222")
+	}
 
 
     private var state = ButtonState.LOGGED_OUT
 
-    lateinit var downloadAndSync: ConstraintLayout
+    lateinit var checklistsOnline: ConstraintLayout
     lateinit var myProfile: ConstraintLayout
 
     private val PROFILE_ACTIVITY = 33
@@ -84,46 +76,40 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         setContentView(com.thatapp.checklists.R.layout.activity_main)
         prefManager = PrefManager(this)
 
-        if (prefManager.firstRun) prefManager.firstRun = false
-//        if (!prefManager.loginStatus) requestSignIn()
-
-
-//        var gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestEmail()
-//                .build()
-//
+        if (prefManager.firstRun) prefManager.firstRun = false //app running first time
 
         linkVarsToViews()
 
-        if (!isUserLoggedin) {
-            requestSignIn()
+        login.setOnClickListener {requestSignIn()} // Login button
+
+
+        checklistsOnline.setOnClickListener {
+			if (!isNetworkConnected()) {
+				showSnack(toastFailureBackground,"NO INTERNET",Snackbar.LENGTH_SHORT)
+			} else {
+				if (mSignedInAccount != null) {
+					startupCheck()
+					openFilePicker()
+				} else {
+					requestSignIn()
+				}
+			}
         }
 
-        login.setOnClickListener {
-            requestSignIn()
-        }
-
-        downloadAndSync.setOnClickListener {
-
-            val account = GoogleSignIn.getLastSignedInAccount(this)
-
-            if (account != null) {
-                startupCheck()
-                openFilePicker()
-            } else {
-                Toast.makeText(applicationContext, "Please Login to continue", Toast.LENGTH_SHORT).show()
-                requestSignIn()
-            }
-        }
         myProfile.setOnClickListener {
             startActivityForResult(Intent(this, ProfileActivity::class.java), PROFILE_ACTIVITY)
         }
 
         logout.setOnClickListener {
-            logoutUser()
-            state = ButtonState.LOGGED_OUT
-            setButtons()
+			if (!isNetworkConnected()) {
+				showSnack(toastFailureBackground,"NO INTERNET",Snackbar.LENGTH_SHORT)
+			}else {
+				logoutUser()
+				state = ButtonState.LOGGED_OUT
+				setButtons()
+			}
         }
+
         imageView3.setOnClickListener {
             if (prefManager.jobTitle!!.length < 3 || prefManager.companyName!!.length < 3) {
                 Toast.makeText(applicationContext, "Please Complete Your Profile", Toast.LENGTH_SHORT).show()
@@ -144,6 +130,21 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             }
         }
     }
+
+
+	override fun onResume() {
+		super.onResume()
+
+		mSignedInAccount = GoogleSignIn.getLastSignedInAccount(this)
+		if (mSignedInAccount===null) {
+			state = ButtonState.LOGGED_OUT
+			requestSignIn()
+		} else {
+			state = ButtonState.LOGGED_IN
+			initialistDriveHelper(mSignedInAccount!!)
+		}
+		setButtons()
+	}
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
@@ -174,15 +175,16 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             startActivityForResult(client.signInIntent, REQUEST_CODE_SIGN_IN)
 
         } else {
-            Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_SHORT).show()
-        }
+			showSnack(toastFailureBackground, "NO INTERNET", Snackbar.LENGTH_LONG)
+		}
     }
 
 	private fun getSignInOptions(): GoogleSignInOptions {
-		return GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+		mGoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 				.requestEmail()
 				.requestScopes(Scope(DriveScopes.DRIVE))
 				.build()
+		return mGoogleSignInOptions!!
 	}
 
 	private fun isNetworkConnected(): Boolean {
@@ -199,21 +201,8 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     fun handleSignInResult(result: Intent) {
         GoogleSignIn.getSignedInAccountFromIntent(result)
                 .addOnSuccessListener { googleAccount ->
-                    Log.e(TAG, "Signed in as " + googleAccount.email!!)
-
                     // Use the authenticated account to sign in to the Drive service.
-                    val credential = GoogleAccountCredential.usingOAuth2(
-                            this, setOf(DriveScopes.DRIVE_FILE))
-                    credential.selectedAccount = googleAccount.account
-
-                    val googleDriveService = Drive.Builder(
-                            AndroidHttp.newCompatibleTransport(),
-                            GsonFactory(),
-                            credential)
-                            .setApplicationName("Checklist App")
-                            .build()
-
-                    mDriverServiceHelper = DriveServiceHelper(googleDriveService, this, applicationContext)
+                    initialistDriveHelper(googleAccount)
                     prefManager.loginEmail = googleAccount.email
                     prefManager.loginStatus = true
 //                    prefManager.userName = googleAccount.displayName
@@ -236,14 +225,29 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.e(TAG, "Unable to sign in.", exception)
+					showSnack(toastFailureBackground,exception.toString(),Snackbar.LENGTH_LONG)
                     prefManager.loginStatus = false
                 }
     }
 
+	private fun initialistDriveHelper(googleAccount:GoogleSignInAccount) {
+		val credential = GoogleAccountCredential.usingOAuth2(
+				this, setOf(DriveScopes.DRIVE_FILE))
+		credential.selectedAccount = googleAccount.account
 
-    private fun linkVarsToViews() {
-        downloadAndSync = findViewById(R.id.downloadAndSyncLayout)
+		val googleDriveService = Drive.Builder(
+				AndroidHttp.newCompatibleTransport(),
+				GsonFactory(),
+				credential)
+				.setApplicationName("Checklist App")
+				.build()
+
+		mDriverServiceHelper = DriveServiceHelper(googleDriveService, this, applicationContext)
+	}
+
+
+	private fun linkVarsToViews() {
+        checklistsOnline = findViewById(R.id.downloadAndSyncLayout)
         myProfile = findViewById(R.id.myProfileLayout)
     }
 
@@ -252,80 +256,69 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     }
 
     override fun fileDownloaded(file: File, fileName: String) {
-        Snackbar.make(main_layout, "File download complete", Snackbar.LENGTH_LONG).show()
+		showSnack(toastSuccessBackground,"File download complete", Snackbar.LENGTH_LONG)
     }
 
     override fun cancelled() {
-        Snackbar.make(main_layout, R.string.status_user_cancelled, Snackbar.LENGTH_LONG).show()
+        showSnack(toastFailureBackground, "User cancelled", Snackbar.LENGTH_LONG)
     }
 
     override fun handleError(exception: Exception) {
         if (exception.message === "Sign-in failed.") setButtons()
         val errorMessage = getString(R.string.status_error, exception.message)
-        Snackbar.make(main_layout, errorMessage, Snackbar.LENGTH_LONG).show()
+        val snack = Snackbar.make(main_layout, errorMessage, Snackbar.LENGTH_LONG)
+		val view = snack.view
+		view.setBackgroundColor(toastFailureBackground)
+		snack.show()
     }
 
     private fun logoutUser() {
-        mGoogleSignInClient.signOut().addOnSuccessListener {
-            Log.e("log", "out ")
-//            prefManager.userName = ""
-//            prefManager.companyName = ""
-            prefManager.dirName = ""
-//            prefManager.jobTitle = ""
-        }.addOnCanceledListener { Log.e("log", "failed") }
+			mGoogleSignInClient?.signOut()?.addOnSuccessListener {
+				showSnack(toastSuccessBackground, "Logout success!", Snackbar.LENGTH_SHORT)
+				prefManager.dirName = ""
+				state = ButtonState.LOGGED_OUT
+				setButtons()
+			}?.addOnCanceledListener {
+				showSnack(toastFailureBackground, "Logout cancelled!", Snackbar.LENGTH_SHORT)
+			}?.addOnFailureListener {
+				showSnack(toastFailureBackground, "Failed to logout. Check internet!", Snackbar.LENGTH_LONG)
+			}
     }
 
-    override fun onStart() {
-        super.onStart()
-        val account = GoogleSignIn.getLastSignedInAccount(this)
-    }
+	private fun showSnack(backgroundColor:Int, message: String, length:Int) {
+		val snack = Snackbar.make(main_layout,message,length)
+		val view = snack.getView()
+		view.getBackground().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_IN)
+//		toast.setGravity(Gravity.BOTTOM,0,0)
+		snack.show()
+	}
 
-
-    private fun openFilePicker() {
+	private fun openFilePicker() {
         if (mDriverServiceHelper != null) {
-            val pickerIntent = mDriverServiceHelper.createFilePickerIntent()
-
+            val pickerIntent = mDriverServiceHelper?.createFilePickerIntent()
             // The result of the SAF Intent is handled in onActivityResult.
-            startActivityForResult(pickerIntent, REQUEST_CODE_OPEN_DOCUMENT)
+            if (pickerIntent!=null) startActivityForResult(pickerIntent, REQUEST_CODE_OPEN_DOCUMENT)
         }
     }
 
     private fun openFileFromFilePicker(uri: Uri) {
         if (mDriverServiceHelper != null) {
-            mDriverServiceHelper.openFileUsingStorageAccessFramework(contentResolver, uri)
+            mDriverServiceHelper?.openFileUsingStorageAccessFramework(contentResolver, uri)
 
-                    .addOnSuccessListener { namePair ->
+                    ?.addOnSuccessListener { namePair ->
                         //                        Log.e("values", namePair.first)
                     }
-                    .addOnFailureListener({ exception ->
+                    ?.addOnFailureListener({ exception ->
                         requestSignIn()
                     })
         }
     }
 
-    fun startupCheck() {
+    private fun startupCheck() {
         if (mDriverServiceHelper != null) {
-//            Log.e(TAG, "Querying for files.")
-            CheckDriveSync(mDriverServiceHelper).execute(this)
-//            if (prefManager.jobTitle!!.length < 3 || prefManager.companyName!!.length < 3) {
-//                Toast.makeText(applicationContext, "Please Complete Your Profile", Toast.LENGTH_SHORT).show()
-//                startActivity(Intent(this, ProfileActivity::class.java))
-//            }
+            CheckDriveSync(mDriverServiceHelper!!).execute(this)
         }
     }
-
-    class CheckDriveSync(val driveServiceHelper: DriveServiceHelper) : AsyncTask<Context, Void, Boolean>() {
-
-        override fun doInBackground(vararg p0: Context): Boolean? {
-            try {
-                driveServiceHelper.driveCheck()
-            } catch (e: Exception) {
-                Log.e("Main-- driveCheck", "" + e.toString())
-            }
-            return false
-        }
-    }
-
 
 	private fun setButtons() {
 		when (state) {
@@ -339,7 +332,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
 			}
 			else -> {
-				status.text = (getString(R.string.status_logged_in) + " as "+"'"+ prefManager.loginEmail.toString().substringBefore("@")+"'")
+				status.text = ("Last logged in as "+"'"+ prefManager.loginEmail.toString().substringBefore("@")+"'")
 				//start.isEnabled = true
 				logout.isEnabled = true
 				login.isEnabled = false
@@ -348,4 +341,16 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 			}
 		}
 	}
+
+	class CheckDriveSync(val driveServiceHelper: DriveServiceHelper) : AsyncTask<Context, Void, Boolean>() {
+
+        override fun doInBackground(vararg p0: Context): Boolean? {
+            try {
+                driveServiceHelper.driveCheck()
+            } catch (e: Exception) {
+                Log.e("Main-- driveCheck", "" + e.toString())
+            }
+            return false
+        }
+    }
 }

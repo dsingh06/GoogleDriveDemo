@@ -1,7 +1,6 @@
 package com.thatapp.checklists.ModelClasses
 
 import android.content.Context
-import android.os.Environment
 import android.util.Log
 import java.io.FileOutputStream
 
@@ -12,22 +11,16 @@ import java.util.*
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import java.io.ByteArrayOutputStream
-import java.io.IOException
-import android.provider.MediaStore.Images.Media.getBitmap
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.res.ResourcesCompat
-import com.google.common.reflect.Reflection.getPackageName
 import com.itextpdf.text.*
 import com.itextpdf.text.Paragraph
 import com.itextpdf.text.pdf.*
 import com.thatapp.checklists.R
 
 import com.itextpdf.text.pdf.PdfPageEventHelper;
-import com.itextpdf.text.pdf.PdfWriter;
-import org.apache.poi.ss.usermodel.FontFamily
+import com.itextpdf.text.pdf.PdfWriter
 
 
 class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, val filename: String, val additionalDetails: String,val workOrderNumber: String) : PdfPageEventHelper() {
@@ -47,9 +40,6 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
     fun startPDFCreation() {
 
-        var t = filep.mkdirs()
-
-
         try {
             writer = PdfWriter.getInstance(document, FileOutputStream(des))
 			writer.setPageEvent(HeaderFooterPageEvent())
@@ -60,7 +50,6 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         document.pageSize = PageSize.A4
 		document.setMargins(15f, 15f, 15f, 55f)
         document.open()
-
 
         var table = PdfPTable(2) // two columns
         table.setWidths(floatArrayOf(1f, 1f)) // of equal width
@@ -160,7 +149,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
                 cell.verticalAlignment = Element.ALIGN_MIDDLE
                 table.addCell(cell)
 
-// Assigning drawable resource
+				// Assigning drawable resource
                 var d: Drawable? = null
                 Log.e("excel ","ans   "+ques.answer)
 
@@ -174,7 +163,6 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
                     image.scaleAbsolute(15f, 18f)
 
                     cell = PdfPCell(image)
-//                    cell.setPadding(3f)
 
                     cell.horizontalAlignment = Element.ALIGN_CENTER
                     cell.verticalAlignment = Element.ALIGN_MIDDLE
@@ -212,12 +200,11 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
         }
 
-        var cell = PdfPCell(Phrase("Additional Notes: \n" + additionalDetails))
+		var cell = PdfPCell(Phrase("Additional Notes: \n" + additionalDetails))
         cell.colspan = 5
         cell.setPadding(5f)
 
         table.addCell(cell)
-
 
         var table1 = PdfPTable(4)
         table1.setWidths(floatArrayOf(2f, 2f, 2f, 3f))
@@ -285,19 +272,17 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         cell.horizontalAlignment = Element.ALIGN_CENTER
         table2.addCell(cell)
 
-//        table.addCell(PdfPCell(table2))
-
         cell = PdfPCell(table2)
         cell.colspan = 5
         cell.rowspan = 2
         cell.setPadding(5f)
         cell.horizontalAlignment = Element.ALIGN_CENTER
         table.addCell(cell)
+
         try {
             document.add(table)
-
             document.close()
-            val fileRepository = FileRepository(context)
+         /*   val fileRepository = FileRepository(context)
             val fileName = fileNm
             val dirName = prefManager.dirName
             val createdBy = prefManager.userName
@@ -315,10 +300,10 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
             }
 
             Log.e("answer ", "closed")
+*/
         } catch (e: Exception) {
             Log.e("exception ", e.toString())
             return
-
         }
     }
 
@@ -336,28 +321,6 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
     }
 
 
-
-//    override fun onEndPage(writer:PdfWriter, document:Document) {
-//        val cb = writer.getDirectContent()
-//        val header = Phrase("CheckList App",Font(Font.FontFamily.HELVETICA,16f))
-//        val footer =   Phrase("Developed By UX Technologies", Font(Font.FontFamily.HELVETICA,12f))
-//
-//        ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
-//                header,
-//                (document.right() - document.left()) / 2 + document.leftMargin(),
-//                document.top() + 5, 0f)
-//
-//        ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
-//                footer,
-//                (document.right() - document.left()) / 2 + document.leftMargin(),
-//                document.bottom() - 8, 0f)
-//
-//
-//
-//    }
-
-
-
 	inner class HeaderFooterPageEvent : PdfPageEventHelper() {
 		lateinit var total: PdfTemplate
 
@@ -368,38 +331,35 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
 
 		override fun onStartPage(writer: PdfWriter, document: Document) {
-//			headerText(writer,document)
-//			headerSitePicture(writer,document)
 
 			if (document.pageNumber>1){
-			//FIRST SECTION
-			val table = PdfPTable(3)
-			table.horizontalAlignment = Element.ALIGN_RIGHT
-			table.widthPercentage = 23f
-			table.setWidths(floatArrayOf(1f, 1f, 1f))
+				//FIRST SECTION
+				val table = PdfPTable(3)
+				table.horizontalAlignment = Element.ALIGN_RIGHT
+				table.widthPercentage = 23f
+				table.setWidths(floatArrayOf(1f, 1f, 1f))
 
-			var cellTwo = PdfPCell(Phrase("Yes"))
-			cellTwo.backgroundColor = BaseColor.GREEN
-			cellTwo.setPadding(5f)
-			cellTwo.horizontalAlignment = Element.ALIGN_CENTER
-			table.addCell(cellTwo)
+				var cellTwo = PdfPCell(Phrase("Yes"))
+				cellTwo.backgroundColor = BaseColor.GREEN
+				cellTwo.setPadding(5f)
+				cellTwo.horizontalAlignment = Element.ALIGN_CENTER
+				table.addCell(cellTwo)
 
-			cellTwo = PdfPCell(Phrase("No"))
-			cellTwo.backgroundColor = BaseColor.RED
-			cellTwo.horizontalAlignment = Element.ALIGN_CENTER
-			cellTwo.setPadding(5f)
-			table.addCell(cellTwo)
+				cellTwo = PdfPCell(Phrase("No"))
+				cellTwo.backgroundColor = BaseColor.RED
+				cellTwo.horizontalAlignment = Element.ALIGN_CENTER
+				cellTwo.setPadding(5f)
+				table.addCell(cellTwo)
 
-			cellTwo = PdfPCell(Phrase("N/A"))
-			cellTwo.horizontalAlignment = Element.ALIGN_CENTER
-			cellTwo.setPadding(5f)
-			table.addCell(cellTwo)
+				cellTwo = PdfPCell(Phrase("N/A"))
+				cellTwo.horizontalAlignment = Element.ALIGN_CENTER
+				cellTwo.setPadding(5f)
+				table.addCell(cellTwo)
 
-			document.add(table)
+				document.add(table)
+			}
 		}
 
-
-		}
 /*		private fun headerSitePicture(writer: PdfWriter, document: Document) {
 //			if (document.pageNumber>1) {
 //				if (GlobalSiteRecords.profileList!!.size>0) {
@@ -452,8 +412,9 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 //			}
 		}
 */
+
 		override fun onEndPage(writer: PdfWriter, document: Document) {
-			if (true){//c{
+			if (true) {
 				val table = PdfPTable(2)
 				try{
 					table.setTotalWidth(floatArrayOf(24f,2f))
@@ -471,17 +432,17 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
 				}
 
-					if (iconImage==null) {
-						val i = BitmapFactory.decodeResource(context.resources, R.drawable.cloudcheck)
-						val stream = ByteArrayOutputStream()
-						i.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-						iconImage = Image.getInstance(stream.toByteArray())
-						iconImage!!.scaleToFit(40f, 40f)
-					}
-					iconImage!!.setAbsolutePosition(15f,15f)
-					document.add(iconImage)
-					ColumnText.showTextAligned(writer.directContent, Element.ALIGN_LEFT, Phrase("CHECKLIST"),15f+40+5,40f,0f)
-					ColumnText.showTextAligned(writer.directContent, Element.ALIGN_LEFT, Phrase("(on Android)"),15f+40+5,25f,0f)
+				if (iconImage==null) {
+					val i = BitmapFactory.decodeResource(context.resources, R.drawable.cloudcheck)
+					val stream = ByteArrayOutputStream()
+					i.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+					iconImage = Image.getInstance(stream.toByteArray())
+					iconImage!!.scaleToFit(40f, 40f)
+				}
+				iconImage!!.setAbsolutePosition(15f,15f)
+				document.add(iconImage)
+				ColumnText.showTextAligned(writer.directContent, Element.ALIGN_LEFT, Phrase("CHECKLIST"),15f+40+5,40f,0f)
+				ColumnText.showTextAligned(writer.directContent, Element.ALIGN_LEFT, Phrase("(on Android)"),15f+40+5,25f,0f)
 			}
 		}
 

@@ -27,6 +27,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
 import com.thatapp.checklists.ModelClasses.PrefManager
 import com.thatapp.checklists.R
 import java.io.File
@@ -161,8 +162,10 @@ lateinit var prefManager:PrefManager
         }
         fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
         // This is the PdfRenderer we use to render the PDF.
-        pdfRenderer = PdfRenderer(fileDescriptor)
-        currentPage = pdfRenderer.openPage(INITIAL_PAGE_INDEX)
+
+		pdfRenderer = PdfRenderer(fileDescriptor)
+		currentPage = pdfRenderer.openPage(INITIAL_PAGE_INDEX)
+
     }
 
     /**

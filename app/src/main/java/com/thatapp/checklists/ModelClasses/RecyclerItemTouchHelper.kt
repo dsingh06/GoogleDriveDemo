@@ -1,9 +1,8 @@
-package com.thatapp.checklists.ViewClasses
+package com.thatapp.checklists.ModelClasses
 
 import android.graphics.Canvas
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import com.thatapp.checklists.ModelClasses.DisplayChecklistAndPDFAdapter
 
 /**
  * Created by rishabh on 29/01/18.
