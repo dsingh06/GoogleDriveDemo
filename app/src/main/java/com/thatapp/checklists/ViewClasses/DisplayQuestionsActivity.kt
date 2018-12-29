@@ -3,6 +3,7 @@ package com.thatapp.checklists.ViewClasses
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.os.*
 import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
@@ -33,6 +34,7 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.thatapp.checklists.ModelClasses.*
+import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastSuccessBackground
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -55,8 +57,6 @@ class DisplayQuestionsActivity : AppCompatActivity() {
         setContentView(R.layout.display_checklists)
 
         prefManager = PrefManager(this)
-
-        toolbar = findViewById(R.id.my_toolbar)
         additionalDetails = findViewById(R.id.additionalDetails)
         workOrder = findViewById(R.id.etWorkOrder)
 
@@ -64,10 +64,13 @@ class DisplayQuestionsActivity : AppCompatActivity() {
         val filename: String = intent.getStringExtra("fileName")
         Log.e("file name is ", "@   " + filename)
 
-        toolbar.setTitle(filename)
-        setSupportActionBar(toolbar)
+		toolbar = findViewById(R.id.my_toolbar)
+		toolbar.setTitle(filename)
+		toolbar.setNavigationIcon(R.drawable.ic_back)
+		setSupportActionBar(toolbar)
 
-        tvdateTime.setText(SimpleDateFormat("dd/MM/yyyy    HH:mm").format(Date()))
+
+		tvdateTime.setText(SimpleDateFormat("dd/MM/yyyy    HH:mm").format(Date()))
         val newCalendar = Calendar.getInstance();
         val siteDatePickerDialog = DatePickerDialog(this, R.style.MyDatePickerDialogTheme, DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
             val newDate = Calendar.getInstance();
@@ -100,7 +103,13 @@ class DisplayQuestionsActivity : AppCompatActivity() {
                             uncheckedQuestionArray.clear()
                         })
                         .setNegativeButton("Skip ALL", { _, _ ->
-                            Snackbar.make(btnSubmit, "Creating PDF...", Snackbar.LENGTH_LONG).show()
+							val snack  = Snackbar.make(btnSubmit, "Creating PDF...", Snackbar.LENGTH_LONG)
+							val view = snack.view
+							view.getBackground().setColorFilter(toastSuccessBackground, PorterDuff.Mode.SRC_IN)
+							snack.show()
+							btnSubmit.isEnabled = false
+							btnSubmit.isClickable = false
+							btnSubmit.text = "Creating PDf..."
                             CreatePdf(questions, filename, additionalDetails.text.toString(), workOrder.text.toString()).execute(this)
                         })
 //						.setNeutralButton("Email Report",{ dialog, _ ->
@@ -109,7 +118,13 @@ class DisplayQuestionsActivity : AppCompatActivity() {
                         .setIcon(R.drawable.ic_alert)
                         .show()
             } else {
-                Snackbar.make(btnSubmit, "Creating PDF...", Snackbar.LENGTH_LONG).show()
+                val snack  = Snackbar.make(btnSubmit, "Creating PDF...", Snackbar.LENGTH_LONG)
+                val view = snack.view
+                view.getBackground().setColorFilter(toastSuccessBackground, PorterDuff.Mode.SRC_IN)
+                snack.show()
+				btnSubmit.isEnabled = false
+				btnSubmit.isClickable = false
+				btnSubmit.text = "Creating PDf..."
                 CreatePdf(questions, filename, additionalDetails.text.toString(),workOrder.text.toString()).execute(this)
             }
         }
@@ -171,7 +186,13 @@ class DisplayQuestionsActivity : AppCompatActivity() {
         return
     }
 
-    private fun goBackMethod() = finish()
+    private fun goBackMethod() {
+		val toast  = Toast.makeText(this, "PDF Created", Toast.LENGTH_LONG)
+		val view = toast.view
+		view.getBackground().setColorFilter(toastSuccessBackground, PorterDuff.Mode.SRC_IN)
+		toast.show()
+		finish()
+    }
 
     fun hideSoftKeyboard() {
         if (currentFocus != null) {
@@ -187,7 +208,6 @@ class DisplayQuestionsActivity : AppCompatActivity() {
             try {
                 pdfCreationObject.startPDFCreation()
             } catch (e: Exception) {
-                Log.e("create", "" + e.toString())
             } // Tried with DriveUploadHelper before
             //val obj = DriveUploader(File(pdfCreationObject.des), p0[0])
             val obj = DriveUploader(File(pdfCreationObject.des), p0[0])
@@ -196,7 +216,6 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 
         override fun onPostExecute(result: Context) {
             super.onPostExecute(result)
-            Toast.makeText(result, "PDF created", Toast.LENGTH_SHORT).show()
             (result as DisplayQuestionsActivity).goBackMethod()
         }
     }
@@ -217,8 +236,6 @@ class DisplayQuestionsActivity : AppCompatActivity() {
                 .build()
 
         mDriverServiceHelper = DriveServiceHelper(googleDriveService, this, applicationContext)
-
-
     }
 
 }

@@ -21,8 +21,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.thatapp.checklists.ModelClasses.PrefManager
-
-import okio.Okio
+import com.thatapp.checklists.ModelClasses.RecyclerItemTouchHelper
 
 
 class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {

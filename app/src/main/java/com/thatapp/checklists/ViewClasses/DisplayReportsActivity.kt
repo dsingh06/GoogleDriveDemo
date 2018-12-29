@@ -17,10 +17,8 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
 import android.view.View
 import android.widget.Toast
-import com.google.android.gms.drive.Drive
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
 import com.thatapp.checklists.ModelClasses.PrefManager
+import com.thatapp.checklists.ModelClasses.RecyclerItemTouchHelper
 
 
 class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {

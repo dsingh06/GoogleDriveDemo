@@ -31,7 +31,7 @@ public class PrefManager(var context: Context) {
         }
 
     var companyName: String?
-        get() = sharedPref.getString(KEY_COMPANY_NAME, "na")
+        get() = sharedPref.getString(KEY_COMPANY_NAME, "")
         set(strPath) {
             editor.putString(KEY_COMPANY_NAME, strPath)
             editor.commit()
@@ -52,7 +52,7 @@ public class PrefManager(var context: Context) {
         }
 
     var jobTitle: String?
-        get() = sharedPref.getString(KEY_JOB_TITLE, "na")
+        get() = sharedPref.getString(KEY_JOB_TITLE, "")
         set(userName) {
             editor.putString(KEY_JOB_TITLE, userName)
             editor.commit()
