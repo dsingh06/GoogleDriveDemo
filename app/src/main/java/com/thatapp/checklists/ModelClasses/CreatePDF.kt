@@ -162,6 +162,8 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
 // Assigning drawable resource
                 var d: Drawable? = null
+                Log.e("excel ","ans   "+ques.answer)
+
                 try {
                     d = ContextCompat.getDrawable(context, com.thatapp.checklists.R.drawable.ic_yes)
                     val bitDw = d as BitmapDrawable
@@ -191,7 +193,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
                         table.addCell("")
                         table.addCell("")
-                        table.addCell("")
+                        table.addCell(cell)
 
                     } else {
 
