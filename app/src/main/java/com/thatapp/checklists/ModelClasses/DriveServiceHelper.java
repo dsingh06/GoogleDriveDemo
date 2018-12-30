@@ -250,16 +250,13 @@ public class DriveServiceHelper {
                         "text/plain",
                         "application/pdf",
                         "application/zip"};
-
  */
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
-        String[] mimeTypes =
-                {
-                        "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
+        String[] mimeTypes = {
+                        "application/vnd.ms-excel"//, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
                 };
-
 
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         // intent.setType("application/vnd.ms-excel");

@@ -26,6 +26,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 import java.io.*
 import java.nio.channels.FileChannel
+import android.support.v4.content.ContextCompat.startActivity
+
+
 
 
 class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context: Context, val type: String) : RecyclerView.Adapter<DisplayChecklistAndPDFAdapter.UserViewHolder>() {
@@ -91,7 +94,8 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                     intent.action = Intent.ACTION_SEND
                     intent.putExtra(Intent.EXTRA_STREAM, fileUri)
                     intent.type = "application/pdf"
-                    context.startActivity(intent)
+                    context.startActivity(Intent.createChooser(intent,"Share report via..."))
+
                 } catch (e: Exception) {
                     Log.e("inn err", e.toString())
                 }

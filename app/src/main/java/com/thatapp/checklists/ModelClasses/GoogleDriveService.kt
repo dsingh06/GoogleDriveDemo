@@ -244,8 +244,6 @@ class GoogleDriveService(private val activity: Activity, private val config: Goo
             openTask.continueWith { task ->
                 ActivityCompat.startIntentSenderForResult(activity, task.result!!, REQUEST_CODE_OPEN_ITEM,
                         null, 0, 0, 0, null)
-
-
             }
         }
     }
