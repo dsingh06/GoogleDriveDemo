@@ -72,34 +72,6 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             Log.e(TAG, timeCreated[0] + " " + timeCreated[1])
             holder.ivShare.setVisibility(View.VISIBLE)
 
-            holder.ivShare.setOnClickListener {
-
-                prefManager = PrefManager(context)
-                file_name = downloaded[position].name
-                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName + File.separator, downloaded[position].name)
-
-                val fileUri: Uri? = try {
-                    FileProvider.getUriForFile(
-                            context,
-                            "com.thatapp.checklists.provider",
-                            requestFile)
-
-                } catch (e: Exception) {
-                    Log.e("File Selector",
-                            "The selected file can't be shared: $requestFile")
-                    null
-                }
-                try {
-                    val intent = Intent()
-                    intent.action = Intent.ACTION_SEND
-                    intent.putExtra(Intent.EXTRA_STREAM, fileUri)
-                    intent.type = "application/pdf"
-                    context.startActivity(Intent.createChooser(intent,"Share report via..."))
-
-                } catch (e: Exception) {
-                    Log.e("inn err", e.toString())
-                }
-            }
 
             holder.parentView.setOnClickListener {
                 file_name = downloaded[position].name
@@ -129,6 +101,41 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             holder.fileName.text = downloaded[position].name.substringBefore(".")
             holder.updateDateTime.text = "Updated: ".plus(convertLongToTime(downloaded[position].lastModified()))
         }
+
+		holder.ivShare.setOnClickListener {
+
+			prefManager = PrefManager(context)
+			file_name = downloaded[position].name
+
+			val requestFile:File
+			val intent = Intent()
+			if (downloaded[position].name.contains(".pdf")) {
+				intent.type = "application/pdf"
+				requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName + File.separator, downloaded[position].name)
+			} else{
+				intent.type = "application/vnd.ms-excel"
+				requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName + File.separator, downloaded[position].name)
+			}
+			val fileUri: Uri? = try {
+				FileProvider.getUriForFile(
+						context,
+						"com.thatapp.checklists.provider",
+						requestFile)
+
+			} catch (e: Exception) {
+				Log.e("File Selector",
+						"The selected file can't be shared: $requestFile")
+				null
+			}
+			try {
+				intent.action = Intent.ACTION_SEND
+				intent.putExtra(Intent.EXTRA_STREAM, fileUri)
+				context.startActivity(Intent.createChooser(intent,"Share report via..."))
+
+			} catch (e: Exception) {
+				Log.e("inn err", e.toString())
+			}
+		}
 
 
 

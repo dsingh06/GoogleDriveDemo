@@ -280,25 +280,6 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         try {
             document.add(table)
             document.close()
-         /*   val fileRepository = FileRepository(context)
-            val fileName = fileNm
-            val dirName = prefManager.dirName
-            val createdBy = prefManager.userName
-            val createdAt = timeStamp
-            val modifiedAt = timeStamp
-            val syncStatus = false
-            val driveFolderId = prefManager.folderID
-            val rootFolderId = prefManager.rootFolderID
-            val fileId = "abc"
-
-            //for ROOM
-            if (rootFolderId != null) {
-                //     fileRepository.insertTask(fileName, dirName!!, createdBy!!, createdAt, modifiedAt, driveFolderId!!, rootFolderId, fileId, syncStatus)
-                //   Log.e("entered ", "in db")
-            }
-
-            Log.e("answer ", "closed")
-*/
         } catch (e: Exception) {
             Log.e("exception ", e.toString())
             return
