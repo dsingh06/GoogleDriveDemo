@@ -102,20 +102,6 @@
             android:textColor="@color/colorAccent"
             android:textStyle="bold" /-->
 
-        <ImageView
-            android:id="@+id/ivShare"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginStart="70dp"
-            android:src="@drawable/ic_action_share"
-            app:layout_constraintBottom_toBottomOf="@id/tvDateTime"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/tvDateTime"
-            app:layout_constraintStart_toStartOf="parent" />
-
         <TextView
             android:id="@+id/textView13"
             android:layout_width="wrap_content"
