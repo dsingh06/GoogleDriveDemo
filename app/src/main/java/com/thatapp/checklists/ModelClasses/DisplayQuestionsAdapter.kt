@@ -5,6 +5,7 @@ import android.widget.TextView
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
 import android.util.Log
@@ -31,8 +32,18 @@ class DisplayQuestionsAdapter(var questionItemList: List<QuestionItem>, var cont
         val quesItem = questionItemList[position]
         if (!quesItem.strHeading.equals("")) {
             holder.serialNo.setText(quesItem.serialNo)
-            holder.headingLayout.setBackgroundColor(Color.parseColor("#BDBDBD"))
-            holder.heading.setText(quesItem.strHeading)
+            holder.serialNo.textSize = 16f
+            holder.serialNo.setTypeface(null,Typeface.BOLD)
+            holder.serialNo.setTextColor(Color.parseColor("#FFFFFF"))
+
+            holder.headingLayout.setBackgroundColor(Color.parseColor("#303F9F"))
+
+			holder.heading.setText(quesItem.strHeading)
+            holder.heading.textSize = 16f
+            holder.heading.setTypeface(null,Typeface.BOLD)
+			holder.heading.setTextColor(Color.parseColor("#FFFFFF"))
+
+
             holder.question.setText("")
             holder.btnLayout.setVisibility(View.GONE)
         } else {

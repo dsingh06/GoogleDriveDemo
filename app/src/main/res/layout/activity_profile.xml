@@ -33,6 +33,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorDivideBar"
                 android:paddingLeft="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:text="User"
                 android:textColor="@color/colorPrimaryDark" />
 
@@ -229,8 +231,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/colorDivideBar"
-                    android:paddingLeft="8dp"
-                    android:text="Report Settings"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingStart="8dp"
+                    android:text="Signature"
                     android:textColor="@color/colorPrimaryDark"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -239,59 +243,14 @@
 
             </android.support.constraint.ConstraintLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:orientation="vertical">
 
-                <Switch
-                    android:id="@+id/switch1"
+
+                <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:padding="10dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:text="Print site photo on front page" />
-
-                <Switch
-                    android:id="@+id/switch2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:padding="10dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:text="Keep full resolution images in external folder" />
-
-                <Switch
-                    android:id="@+id/switch3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:padding="10dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:text="Print Status Codes in final report" />
-
-                <Switch
-                    android:id="@+id/switch4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:checked="false"
-                    android:padding="10dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:text="Use square images" />
-
-            </LinearLayout>
+                    android:layout_height="100dp"
+                    android:pointerIcon="arrow"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_signature"/>
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btnSave"
