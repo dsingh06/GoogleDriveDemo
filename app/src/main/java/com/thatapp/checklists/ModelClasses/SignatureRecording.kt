@@ -31,84 +31,86 @@ import android.util.Log
 
 class SignatureRecording : AppCompatActivity() {
 
-	private val TAG = "ImageMarkupp"
-	lateinit var imageView:CustomImageview
+    private val TAG = "ImageMarkupp"
+    lateinit var imageView: CustomImageview
+    lateinit var prefManager: PrefManager
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_signature_recording)
+
+        init()
+
+        save.setOnClickListener {
+            finish()
+        }
+
+        clear.setOnClickListener {
+            imageView.removeAllDrawings()
+            imageView.setColorFilter(Color.WHITE)
+        }
+
+        save.setOnClickListener {
+            createImageAndSave()
+            finish()
+        }
+
+        val sign = File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + prefManager.dirName + File.separator + "signature.png")
+        if (sign.exists()) {
+            val bmp = BitmapFactory.decodeFile(sign.toString())
+            imageView.setImageBitmap(bmp)
+        }
+    }
 
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_signature_recording)
+    private fun createImageAndSave() {
 
-		init()
+        val bmp = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), Bitmap.Config.ARGB_8888)
+        val c = Canvas(bmp)
+        val drawable = imageView.background
+        if (drawable != null)
+        //has background drawable, then draw it on the canvas
+            drawable.draw(c);
+        else
+        //does not have background drawable, then draw white background on the canvas
+            c.drawColor(Color.WHITE);
+        // draw the view on the canvas
+        imageView.draw(c)
 
-		save.setOnClickListener {
-			finish()
-		}
+        val destination: File = getDestinationFile()
+        saveFile(bmp, destination)
+    }
 
-		clear.setOnClickListener {
-			imageView.removeAllDrawings()
-			imageView.setColorFilter(Color.WHITE)
-		}
-
-		save.setOnClickListener {
-			createImageAndSave()
-			finish()
-		}
-
-		val sign = File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + "signature.png")
-		if(sign.exists()){
-			val bmp = BitmapFactory.decodeFile(sign.toString())
-			imageView.setImageBitmap(bmp)
-		}
-	}
-
-
-	private fun createImageAndSave(){
-
-		val bmp = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), Bitmap.Config.ARGB_8888)
-		val c = Canvas(bmp)
-		val drawable = imageView.background
-		if (drawable!=null)
-		//has background drawable, then draw it on the canvas
-			drawable.draw(c);
-		else
-		//does not have background drawable, then draw white background on the canvas
-			c.drawColor(Color.WHITE);
-		// draw the view on the canvas
-		imageView.draw(c)
-
-		val destination:File = getDestinationFile()
-		saveFile(bmp,destination)
-	}
-
-	private fun saveFile(bmp:Bitmap,destination:File) {
-		try {
-			FileOutputStream(destination).use({ out ->
-				bmp.compress(Bitmap.CompressFormat.PNG, 100, out)
-			})
-			val t = Toast.makeText(this,"Signature saved",Toast.LENGTH_LONG)
-			val v = t.view
-			v.getBackground().setColorFilter(toastSuccessBackground, PorterDuff.Mode.SRC_IN)
-			t.show()
-		} catch (e: IOException) {
-			//e.printStackTrace()
-			val t = Toast.makeText(this,"Error saving file",Toast.LENGTH_LONG)
-			val v = t.view
-			v.getBackground().setColorFilter(toastFailureBackground, PorterDuff.Mode.SRC_IN)
-			t.show()
-		}
-	}
+    private fun saveFile(bmp: Bitmap, destination: File) {
+        try {
+            FileOutputStream(destination).use({ out ->
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, out)
+            })
+            val t = Toast.makeText(this, "Signature saved", Toast.LENGTH_LONG)
+            val v = t.view
+            v.getBackground().setColorFilter(toastSuccessBackground, PorterDuff.Mode.SRC_IN)
+            t.show()
+        } catch (e: IOException) {
+            //e.printStackTrace()
+            val t = Toast.makeText(this, "Error saving file", Toast.LENGTH_LONG)
+            val v = t.view
+            v.getBackground().setColorFilter(toastFailureBackground, PorterDuff.Mode.SRC_IN)
+            t.show()
+        }
+    }
 
 
-	private fun getDestinationFile():File {
-		val f = File(getFilesDir().getAbsolutePath() + File.separator + "downloads")
-		if (!f.exists()) f.mkdirs()
-		return (File(getFilesDir().getAbsolutePath() + File.separator + "downloads","signature.png"))
-	}
+    private fun getDestinationFile(): File {
+        val f = File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + prefManager.dirName)
+        if (!f.exists()) f.mkdirs()
+        return (File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + prefManager.dirName, "signature.png"))
+    }
 
 
-	private fun init() {
-		imageView = findViewById(R.id.imageView7)
-	}
+    private fun init() {
+
+        prefManager = PrefManager(this)
+        imageView = findViewById(R.id.imageView7)
+    }
 
 }

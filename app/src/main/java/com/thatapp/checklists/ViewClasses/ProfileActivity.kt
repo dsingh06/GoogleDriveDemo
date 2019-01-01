@@ -69,7 +69,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
 	private fun setSignatureInImageview() {
-		val sign = File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + "signature.png")
+		val sign = File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator +prefManager.dirName+File.separator +  "signature.png")
 		if(sign.exists()){
 			val bmp = BitmapFactory.decodeFile(sign.toString())
 			signature.setImageBitmap(bmp)
