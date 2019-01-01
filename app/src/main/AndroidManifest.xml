@@ -3,12 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.thatapp.checklists">
 
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
@@ -19,32 +17,38 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ModelClasses.SignatureRecording"></activity>
         <activity
             android:name=".ViewClasses.ProfileActivity"
             android:parentActivityName=".ViewClasses.MainActivity"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".ViewClasses.MainActivity" android:screenOrientation="portrait">
+        <activity
+            android:name=".ViewClasses.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ViewClasses.DisplayQuestionsActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".ViewClasses.DisplayCheckListsActivity"/>
-        <activity android:name=".ViewClasses.DisplayCheckListsActivity"
-            android:parentActivityName=".ViewClasses.MainActivity"/>
-        <activity android:name=".ViewClasses.DisplayReportsActivity"
-            android:parentActivityName=".ViewClasses.DisplayCheckListsActivity"/>
-        <activity    android:name=".ViewClasses.ViewPdfActivity"
-            android:parentActivityName=".ViewClasses.DisplayReportsActivity"/>
+        <activity
+            android:name=".ViewClasses.DisplayQuestionsActivity"
+            android:parentActivityName=".ViewClasses.DisplayCheckListsActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".ViewClasses.DisplayCheckListsActivity"
+            android:parentActivityName=".ViewClasses.MainActivity" />
+        <activity
+            android:name=".ViewClasses.DisplayReportsActivity"
+            android:parentActivityName=".ViewClasses.DisplayCheckListsActivity" />
+        <activity
+            android:name=".ViewClasses.ViewPdfActivity"
+            android:parentActivityName=".ViewClasses.DisplayReportsActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -56,9 +60,10 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
-        <service android:name=".ModelClasses.DriveSyncService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
+        <service
+            android:name=".ModelClasses.DriveSyncService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

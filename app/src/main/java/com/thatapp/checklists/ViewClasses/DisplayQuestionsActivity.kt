@@ -64,7 +64,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 
         val intent: Intent = intent
         val filename: String = intent.getStringExtra("fileName")
-        Log.e("file name is ", "@   " + filename)
+//        Log.e("file name is ", "@   " + filename)
 
 		toolbar = findViewById(R.id.my_toolbar)
 		toolbar.setTitle(filename)

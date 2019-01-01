@@ -45,7 +45,7 @@ public class PrefManager(var context: Context) {
         }
 
     var userName: String?
-        get() = sharedPref.getString(KEY_USER_NAME, "na")
+        get() = sharedPref.getString(KEY_USER_NAME, "")
         set(userName) {
             editor.putString(KEY_USER_NAME, userName)
             editor.commit()
