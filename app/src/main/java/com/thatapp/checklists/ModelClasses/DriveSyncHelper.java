@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -53,7 +54,7 @@ public class DriveSyncHelper {
 
         java.io.File storageDir = context.getFilesDir();
         prefManager = new PrefManager(context);
-        java.io.File fileD = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads" + java.io.File.separator + prefManager.getDirName());
+        java.io.File fileD = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads");// + java.io.File.separator + prefManager.getDirName());
         Boolean d = fileD.mkdirs();
         java.io.File fileR = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "generated" + java.io.File.separator + prefManager.getDirName());
         Boolean g = fileR.mkdirs();
@@ -101,21 +102,31 @@ public class DriveSyncHelper {
             initDrive();
         }
 
-        ArrayList<File> driveFileList = new ArrayList();
-        ArrayList<java.io.File> deviceFileList = new ArrayList();
+
         java.io.File storageDir = context.getFilesDir();
         prefManager = new PrefManager(context);
         java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "generated" + java.io.File.separator + prefManager.getDirName());
         java.io.File[] testD = filep.listFiles();
-        for (int i = 0; i < testD.length; i++) {
-            deviceFileList.add(testD[i]);
-        }
+//        for (int i = 0; i < testD.length; i++) {
+//            deviceFileList.add(testD[i]);
+//        }
 
-        FileList request = mDriveService.files().list().setQ("mimeType='application/pdf' and trashed=false and '" + prefManager.getFolderID() + "' in parents").setOrderBy("name").setSpaces("Drive").execute();
-        for (File file : request.getFiles()) {
+        ArrayList<java.io.File> deviceFileList = new ArrayList<>(Arrays.asList(testD));
+        FileList request = mDriveService.files().list()
+                .setQ("mimeType='application/pdf' and trashed=false and '" + prefManager.getFolderID() + "' in parents")
+                .setOrderBy("name")
+                .setSpaces("Drive")
+                .execute();
+        ArrayList<File> driveFileList = new ArrayList<>(request.getFiles());
+
+
+
+
+
+        //        for (File file : request.getFiles()) {
 //            Log.e("data ", "report files  : " + file.getName() + "  " + file.getId());
-            driveFileList.add(file);
-        }
+///            driveFileList.add(file);
+//        }
 //        Log.e("length device", " size in drive  " + driveFileList.size() + "      device " + deviceFileList.size());
 
         Set<String> hSet = new HashSet<>();

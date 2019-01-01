@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.DocumentsContract;
 import android.provider.OpenableColumns;
 import android.support.v4.util.Pair;
 import android.util.Log;
@@ -42,6 +44,7 @@ public class DriveServiceHelper {
     private Context context;
     ServiceListener serviceListener;
     PrefManager prefManager;
+    private Boolean isFileFromDrive = false;
 
     public DriveServiceHelper(Drive driveService, Activity activity, Context context) {
         this.mDriveService = driveService;
@@ -51,7 +54,7 @@ public class DriveServiceHelper {
         prefManager = new PrefManager(activity);
     }
 
-    public void downloadFile(String fileId) {
+    private void downloadFile(String fileId) {
         // Retrieve the metadata as a File object.
         try {
 
@@ -60,13 +63,12 @@ public class DriveServiceHelper {
 
             java.io.File storageDir = context.getFilesDir();
             prefManager = new PrefManager(context);
-            java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads" + java.io.File.separator + prefManager.getDirName());
+            java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads");// + java.io.File.separator + prefManager.getDirName());
 
             java.io.File des = new java.io.File(filep.getAbsolutePath() + java.io.File.separator + fileName);
 
             Boolean t = filep.mkdirs();
             Log.e("dir created", " " + t);
-
 
             OutputStream outputStream = new ByteArrayOutputStream();
             mDriveService.files().get(fileId)
@@ -76,7 +78,6 @@ public class DriveServiceHelper {
             fOut.write(((ByteArrayOutputStream) outputStream).toByteArray());
             fOut.close();
             Log.e("file download", "success");
-
             serviceListener.fileDownloaded(des, "abcd");
         } catch (Exception e) {
             Log.e("file download", e.toString());
@@ -84,6 +85,40 @@ public class DriveServiceHelper {
         }
     }
 
+    private void downloadFileTrial(Uri uri,ContentResolver contentResolver) {
+        // Retrieve the metadata as a File object.
+        try (Cursor cursor = contentResolver.query(uri, null, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                String fileName = cursor.getString(nameIndex);
+
+//                    Log.e("Display_name: ",name);
+//                    Log.e("Authority URI: ",uri.getAuthority());
+//                    Log.e("URI: ",uri.toString());
+
+                InputStream in = contentResolver.openInputStream(uri);
+                java.io.File storageDir = context.getFilesDir();
+                prefManager = new PrefManager(context);
+                java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads");
+                java.io.File des = new java.io.File(filep.getAbsolutePath() + java.io.File.separator + fileName);
+
+                des.setWritable(true,false);
+
+                OutputStream outputStream = new FileOutputStream(des);
+                byte buffer[] = new byte[1024];
+                int length = 0;
+                while((length=in.read(buffer)) > 0) {
+                    outputStream.write(buffer,0,length);
+                }
+                outputStream.close();
+                in.close();
+//                Log.e("file download", "success");
+                serviceListener.fileDownloaded(des, "abcd");
+            }
+        } catch(Exception e){
+                serviceListener.handleError(e);
+            }
+    }
     /**
      * Returns a {@link FileList} containing all the visible files in the user's My Drive.
      *
@@ -116,7 +151,7 @@ public class DriveServiceHelper {
 
         java.io.File storageDir = context.getFilesDir();
         prefManager = new PrefManager(context);
-        java.io.File fileD = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads" + java.io.File.separator + prefManager.getDirName());
+        java.io.File fileD = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads" );//+ java.io.File.separator + prefManager.getDirName());
         Boolean d = fileD.mkdirs();
         java.io.File fileR = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "generated" + java.io.File.separator + prefManager.getDirName());
         Boolean g = fileR.mkdirs();
@@ -250,16 +285,13 @@ public class DriveServiceHelper {
                         "text/plain",
                         "application/pdf",
                         "application/zip"};
-
  */
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.addCategory(Intent.CATEGORY_OPENABLE); // to avoid receiving virtual files
         intent.setType("*/*");
-        String[] mimeTypes =
-                {
-                        "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
+        String[] mimeTypes = {
+                        "application/vnd.ms-excel"//, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
                 };
-
 
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         // intent.setType("application/vnd.ms-excel");
@@ -276,46 +308,54 @@ public class DriveServiceHelper {
         return Tasks.call(mExecutor, () -> {
             // Retrieve the document's display name from its metadata.
             String name = "";
+            downloadFileTrial(uri,contentResolver);
 
-            try (Cursor cursor = contentResolver.query(uri, null, null, null, null)) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    name = cursor.getString(nameIndex);
+//            try (Cursor cursor = contentResolver.query(uri, null, null, null, null)) {
+//                if (cursor != null && cursor.moveToFirst()) {
+//                    int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+//                    name = cursor.getString(nameIndex);
+//
+//                    Log.e("Display_name: ",name);
+//                    Log.e("Authority URI: ",uri.getAuthority());
+//                    Log.e("URI: ",uri.toString());
+//
+//                    FileList result = mDriveService.files().list().setSpaces("drive")
+//                            .setQ("mimeType='application/vnd.ms-excel'") // todo I uncommented so only excel file list is downloaded?
+//                            .execute();
+//
+//                    for (File file : result.getFiles()) {
+////                        Log.e("values ", "file: " + file.getName() + "     " + file.getId());
+//                        if (file.getName().equalsIgnoreCase(name)) {
+////                            Log.e("file id found ", "file: " + file.getName() + "     " + file.getId());
+//                            downloadFile(file.getId());
+//                            break;
+//                        }
+//                    }
+//                } else {
+//                    throw new IOException("Empty cursor returned for file.");
+//                }
+//            }
 
-                    FileList result = mDriveService.files().list().setSpaces("drive")
-//                            .setQ("mimeType='application/vnd.ms-excel'")
-                            .execute();
-
-
-                    for (File file : result.getFiles()) {
-//                        Log.e("values ", "file: " + file.getName() + "     " + file.getId());
-                        if (file.getName().equalsIgnoreCase(name)) {
-//                            Log.e("file id found ", "file: " + file.getName() + "     " + file.getId());
-                            downloadFile(file.getId());
-                        }
-                    }
-                } else {
-                    throw new IOException("Empty cursor returned for file.");
-                }
-            }
-
-            // Read the document's contents as a String.
-            String content;
-            try (InputStream is = contentResolver.openInputStream(uri);
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-                StringBuilder stringBuilder = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    stringBuilder.append(line);
-                }
-                content = stringBuilder.toString();
-                Log.e("con", content);
-            }
-            return Pair.create(name, content);
+//            // Read the document's contents as a String.
+//            String content;
+//            try (InputStream is = contentResolver.openInputStream(uri);
+//                 BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+//                StringBuilder stringBuilder = new StringBuilder();
+//                String line;
+//                while ((line = reader.readLine()) != null) {
+//                    stringBuilder.append(line);
+//                }
+//                content = stringBuilder.toString();
+//                Log.e("con", content);
+//            }
+//            return Pair.create(name, content); //todo what's this doing?
+            return Pair.create("", ""); //todo what's this doing?
         });
     }
 
-    public void downloadPdfFile(String fileId) {
+
+
+/*    public void downloadPdfFile(String fileId) {
         // Retrieve the metadata as a File object.
         try {
             File metadata = mDriveService.files().get(fileId).execute();
@@ -345,4 +385,6 @@ public class DriveServiceHelper {
             serviceListener.handleError(e);
         }
     }
+*/
+
 }

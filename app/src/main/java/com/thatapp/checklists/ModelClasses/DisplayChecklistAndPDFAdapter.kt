@@ -26,6 +26,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 import java.io.*
 import java.nio.channels.FileChannel
+import android.support.v4.content.ContextCompat.startActivity
+
+
 
 
 class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context: Context, val type: String) : RecyclerView.Adapter<DisplayChecklistAndPDFAdapter.UserViewHolder>() {
@@ -53,9 +56,8 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         // lateinit var requestFile: File
 
         prefManager = PrefManager(context)
-        var mResultIntent: Intent = Intent(".ACTION_RETURN_FILE")
-        // Get the files/ subdirectory of internal storage
         mPrivateRootDir = context.filesDir
+
         if (downloaded[position].name.contains(".pdf")) {
             val name: String = downloaded[position].name.substringBefore(":")
             Log.e(TAG, name)
@@ -69,33 +71,6 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             Log.e(TAG, timeCreated[0] + " " + timeCreated[1])
             holder.ivShare.setVisibility(View.VISIBLE)
 
-            holder.ivShare.setOnClickListener {
-
-                prefManager = PrefManager(context)
-                file_name = downloaded[position].name
-                val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName + File.separator, downloaded[position].name)
-
-                val fileUri: Uri? = try {
-                    FileProvider.getUriForFile(
-                            context,
-                            "com.thatapp.checklists.provider",
-                            requestFile)
-
-                } catch (e: Exception) {
-                    Log.e("File Selector",
-                            "The selected file can't be shared: $requestFile")
-                    null
-                }
-                try {
-                    val intent = Intent()
-                    intent.action = Intent.ACTION_SEND
-                    intent.putExtra(Intent.EXTRA_STREAM, fileUri)
-                    intent.type = "application/pdf"
-                    context.startActivity(intent)
-                } catch (e: Exception) {
-                    Log.e("inn err", e.toString())
-                }
-            }
 
             holder.parentView.setOnClickListener {
                 file_name = downloaded[position].name
@@ -126,6 +101,40 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             holder.updateDateTime.text = "Updated: ".plus(convertLongToTime(downloaded[position].lastModified()))
         }
 
+		holder.ivShare.setOnClickListener {
+			prefManager = PrefManager(context)
+			file_name = downloaded[position].name
+
+			val requestFile:File
+			val intent = Intent()
+			if (downloaded[position].name.contains(".pdf")) {
+				intent.type = "application/pdf"
+				requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName + File.separator, downloaded[position].name)
+			} else{
+				intent.type = "application/vnd.ms-excel"
+				requestFile = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator, downloaded[position].name)
+			}
+			val fileUri: Uri? = try {
+				FileProvider.getUriForFile(
+						context,
+						"com.thatapp.checklists.provider",
+						requestFile)
+
+			} catch (e: Exception) {
+				Log.e("File Selector",
+						"The selected file can't be shared: $requestFile")
+				null
+			}
+			try {
+				intent.action = Intent.ACTION_SEND
+				intent.putExtra(Intent.EXTRA_STREAM, fileUri)
+				context.startActivity(Intent.createChooser(intent,"Share file via..."))
+
+			} catch (e: Exception) {
+				Log.e("inn err", e.toString())
+			}
+		}
+
 
 
         if (type.equals("xls")) {
@@ -147,7 +156,6 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
     }
 
     class UserViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var imageView: ImageView = view.ivFileImage
         var fileName: TextView = view.tvFileName
         var updateDateTime: TextView = view.tvDateTime
         var ivShare: ImageView = view.ivShare
@@ -172,7 +180,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         var fileName = downloaded[position].name
         lateinit var dir1: File
         if (dir.equals("checklist")) {
-            dir1 = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator + prefManager.dirName)
+            dir1 = File(context.filesDir.absolutePath + File.separator + "downloads")// + File.separator + prefManager.dirName)
             Log.e("type", "checklist")
         } else if (dir.equals("report")) {
             dir1 = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName)

@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.text.Layout
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -24,6 +25,7 @@ import java.io.File
 import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.LinearLayout
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.drive.Drive.getDriveResourceClient
 import com.google.android.gms.drive.DriveFolder
@@ -62,7 +64,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 
         val intent: Intent = intent
         val filename: String = intent.getStringExtra("fileName")
-        Log.e("file name is ", "@   " + filename)
+//        Log.e("file name is ", "@   " + filename)
 
 		toolbar = findViewById(R.id.my_toolbar)
 		toolbar.setTitle(filename)
@@ -103,28 +105,13 @@ class DisplayQuestionsActivity : AppCompatActivity() {
                             uncheckedQuestionArray.clear()
                         })
                         .setNegativeButton("Skip ALL", { _, _ ->
-							val snack  = Snackbar.make(btnSubmit, "Creating PDF...", Snackbar.LENGTH_LONG)
-							val view = snack.view
-							view.getBackground().setColorFilter(toastSuccessBackground, PorterDuff.Mode.SRC_IN)
-							snack.show()
-							btnSubmit.isEnabled = false
-							btnSubmit.isClickable = false
-							btnSubmit.text = "Creating PDf..."
+							showInfo()
                             CreatePdf(questions, filename, additionalDetails.text.toString(), workOrder.text.toString()).execute(this)
                         })
-//						.setNeutralButton("Email Report",{ dialog, _ ->
-//
-//						})
                         .setIcon(R.drawable.ic_alert)
                         .show()
             } else {
-                val snack  = Snackbar.make(btnSubmit, "Creating PDF...", Snackbar.LENGTH_LONG)
-                val view = snack.view
-                view.getBackground().setColorFilter(toastSuccessBackground, PorterDuff.Mode.SRC_IN)
-                snack.show()
-				btnSubmit.isEnabled = false
-				btnSubmit.isClickable = false
-				btnSubmit.text = "Creating PDf..."
+				showInfo()
                 CreatePdf(questions, filename, additionalDetails.text.toString(),workOrder.text.toString()).execute(this)
             }
         }
@@ -132,12 +119,24 @@ class DisplayQuestionsActivity : AppCompatActivity() {
         loadQuestionsArray(this, filename)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+	private fun showInfo() {
+//							val snack  = Snackbar.make(btnSubmit, "Creating PDF...", Snackbar.LENGTH_LONG)
+//							val view = snack.view
+//							view.getBackground().setColorFilter(toastSuccessBackground, PorterDuff.Mode.SRC_IN)
+//							snack.show()
+		btnSubmit.isEnabled = false
+		btnSubmit.isClickable = false
+		btnSubmit.setBackgroundColor(toastSuccessBackground)
+		btnSubmit.text = "Creating PDf......please wait"
+
+	}
+
+	@RequiresApi(Build.VERSION_CODES.M)
     private fun loadQuestionsArray(context: Context, fileName: String) {
 
         try {
             // Creating Input Stream
-            val file = File(context.getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + prefManager.dirName, fileName)
+            val file = File(context.getFilesDir().getAbsolutePath() + File.separator + "downloads",fileName)// + File.separator + prefManager.dirName, fileName)
 
             // Create a workbook using the File System
             val myWorkBook = WorkbookFactory.create(file)
@@ -145,7 +144,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
             // Get the first sheet from workbook
             val mySheet = myWorkBook.getSheetAt(0)
             val rowIter = mySheet.rowIterator()
-
+            rowIter.next()
             var questionsItem: QuestionItem
             var heading = 0
             var question = 0

@@ -45,6 +45,8 @@ import java.util.HashMap
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 class DriveSyncService : JobService() {
     lateinit var pref: PrefManager
+    lateinit var mDriveService: DriveSyncHelper
+
 
     override fun onCreate() {
         super.onCreate()
@@ -158,7 +160,6 @@ class DriveSyncService : JobService() {
 
     companion object {
         private val TAG = DriveSyncService::class.java.simpleName
-        lateinit var mDriveService: DriveSyncHelper
     }
 
     class CheckDriveFileSync(val driveServiceHelper: DriveSyncHelper) : AsyncTask<Context, Void, Boolean>() {
@@ -173,13 +174,5 @@ class DriveSyncService : JobService() {
 
             return false
         }
-
-
-        override fun onPostExecute(result: Boolean) {
-            super.onPostExecute(result)
-
-            Log.e("postExecute", "res  " + result)
-        }
     }
-
 }

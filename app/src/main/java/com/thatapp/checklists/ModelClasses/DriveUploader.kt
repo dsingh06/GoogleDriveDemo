@@ -24,7 +24,6 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import com.google.api.services.drive.model.FileList
-import com.thatapp.checklists.ModelClasses.GoogleDriveService.Companion.REQUEST_CODE_SIGN_IN
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
@@ -46,6 +45,7 @@ class DriveUploader(private val fileName: java.io.File, private val context: Con
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     var prefManager: PrefManager = PrefManager(context)
     lateinit var temp: String
+
     fun createFile() {
         try {
 

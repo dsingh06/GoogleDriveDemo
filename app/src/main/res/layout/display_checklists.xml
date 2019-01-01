@@ -29,9 +29,10 @@
                         android:layout_height="wrap_content"
                         android:background="@color/colorAccent"
                         android:gravity="center"
+                        android:padding="8dp"
                         android:text="Checklist Details"
-                        android:textSize="14sp"
-                        android:textStyle="italic" />
+                        android:textSize="16sp"
+                        android:textStyle="bold|italic" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -72,9 +73,10 @@
                         android:layout_height="wrap_content"
                         android:background="@color/colorAccent"
                         android:gravity="center"
+                        android:padding="8dp"
                         android:text="Questions"
-                        android:textSize="14sp"
-                        android:textStyle="italic" />
+                        android:textSize="16sp"
+                        android:textStyle="bold|italic" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rc"
