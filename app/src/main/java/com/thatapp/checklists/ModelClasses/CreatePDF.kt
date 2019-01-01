@@ -177,18 +177,19 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
                         table.addCell(cell)
                         table.addCell("")
 
-                    } else if (ques.answer.equals("--", true)) {
+                    } else {//if (ques.answer.equals("--", true)) {
 
                         table.addCell("")
                         table.addCell("")
                         table.addCell(cell)
 
-                    } else {
-
-                        table.addCell("")
-                        table.addCell("")
-                        table.addCell(cell)
                     }
+//                    else {
+//
+//                        table.addCell("")
+//                        table.addCell("")
+//                        table.addCell(cell)
+//                    }
 
 
                 } catch (ex: Exception) {
@@ -209,6 +210,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         var table1 = PdfPTable(4)
         table1.setWidths(floatArrayOf(2f, 2f, 2f, 3f))
 
+
         var cell1 = PdfPCell(Phrase("Operator Name \n"))
         cell1.colspan = 1
         cell1.rowspan = 2
@@ -217,7 +219,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
         table1.addCell(cell1)
 
-        cell1 = PdfPCell(Phrase("Vicky Singh"))
+        cell1 = PdfPCell(Phrase(prefManager.userName))
         cell1.colspan = 1
         cell1.rowspan = 2
         cell1.setPadding(5f)
