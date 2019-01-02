@@ -207,7 +207,8 @@ class ProfileActivity : AppCompatActivity() {
             if (imgFile.exists()) {
                 Log.e("inside", "capture   " + this.imagePath.toString())
 
-                imageView.setImageURI(Uri.fromFile(imgFile))
+                imageView.setImageURI(Uri.fromFile(imgFile)) // TODO WILL THIS NOT THROW AN OUT OF MEMORY EXCEPTION?
+
 //                showToast(toastSuccessBackground, "Logo Saved", Toast.LENGTH_SHORT)
             }
 

@@ -67,27 +67,6 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         table.keepTogether = true
         table.addCell(topCell)
 
-
-        //Need to add company logo/picture from profile here
-        /*      var logo: Drawable? = null
-              try {
-                  logo = ContextCompat.getDrawable(context, com.thatapp.checklists.R.drawable.cloudcheck)
-                  val bitDw = logo as BitmapDrawable
-                  val bmp = bitDw.bitmap
-                  val stream = ByteArrayOutputStream()
-                  bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                  val image = Image.getInstance(stream.toByteArray())
-                  image.scaleToFit(50f, 50f)
-                  image.alignment = Element.ALIGN_RIGHT
-                  topCell = PdfPCell(image)
-                  topCell.horizontalAlignment = PdfPCell.ALIGN_RIGHT
-                  topCell.verticalAlignment = PdfPCell.ALIGN_MIDDLE
-                  table.addCell(topCell).setBorder(PdfPCell.NO_BORDER)
-              } catch (ex: Exception) {
-
-              }
-      */
-
         try { // TODO what if no image is there
             val logo = storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + "companylogo.png"
             val img = BitmapFactory.decodeFile(logo)
