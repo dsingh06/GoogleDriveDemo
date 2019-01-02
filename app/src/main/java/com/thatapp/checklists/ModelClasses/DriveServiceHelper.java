@@ -92,10 +92,6 @@ public class DriveServiceHelper {
                 int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                 String fileName = cursor.getString(nameIndex);
 
-//                    Log.e("Display_name: ",name);
-//                    Log.e("Authority URI: ",uri.getAuthority());
-//                    Log.e("URI: ",uri.toString());
-
                 InputStream in = contentResolver.openInputStream(uri);
                 java.io.File storageDir = context.getFilesDir();
                 prefManager = new PrefManager(context);
@@ -112,7 +108,6 @@ public class DriveServiceHelper {
                 }
                 outputStream.close();
                 in.close();
-//                Log.e("file download", "success");
                 serviceListener.fileDownloaded(des, "abcd");
             }
         } catch(Exception e){
