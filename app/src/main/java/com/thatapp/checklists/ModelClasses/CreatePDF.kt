@@ -67,23 +67,41 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         table.keepTogether = true
         table.addCell(topCell)
 
+
         //Need to add company logo/picture from profile here
-        var logo: Drawable? = null
+        /*      var logo: Drawable? = null
+              try {
+                  logo = ContextCompat.getDrawable(context, com.thatapp.checklists.R.drawable.cloudcheck)
+                  val bitDw = logo as BitmapDrawable
+                  val bmp = bitDw.bitmap
+                  val stream = ByteArrayOutputStream()
+                  bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                  val image = Image.getInstance(stream.toByteArray())
+                  image.scaleToFit(50f, 50f)
+                  image.alignment = Element.ALIGN_RIGHT
+                  topCell = PdfPCell(image)
+                  topCell.horizontalAlignment = PdfPCell.ALIGN_RIGHT
+                  topCell.verticalAlignment = PdfPCell.ALIGN_MIDDLE
+                  table.addCell(topCell).setBorder(PdfPCell.NO_BORDER)
+              } catch (ex: Exception) {
+
+              }
+      */
+
         try {
-            logo = ContextCompat.getDrawable(context, com.thatapp.checklists.R.drawable.cloudcheck)
-            val bitDw = logo as BitmapDrawable
-            val bmp = bitDw.bitmap
-            val stream = ByteArrayOutputStream()
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            val image = Image.getInstance(stream.toByteArray())
-            image.scaleToFit(50f, 50f)
-            image.alignment = Element.ALIGN_RIGHT
-            topCell = PdfPCell(image)
-            topCell.horizontalAlignment = PdfPCell.ALIGN_RIGHT
-            topCell.verticalAlignment = PdfPCell.ALIGN_MIDDLE
+            var sign = storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + "companylogo.png"
+
+            val img = Image.getInstance(sign)
+            img.scaleAbsolute(125f, 125f)
+            topCell = PdfPCell(img)
+            topCell.colspan = 2
+            topCell.rowspan = 2
+            topCell.horizontalAlignment = Element.ALIGN_RIGHT
+            topCell.setPadding(5f)
+
             table.addCell(topCell).setBorder(PdfPCell.NO_BORDER)
         } catch (ex: Exception) {
-
+            Log.e("not ", ex.toString())
         }
 
         document.add(table)
@@ -215,7 +233,8 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         cell1.colspan = 1
         cell1.rowspan = 2
         cell1.setPadding(5f)
-        cell1.horizontalAlignment = Element.ALIGN_CENTER
+        cell1.horizontalAlignment = Element.ALIGN_LEFT
+//        cell1.verticalAlignment = Element.ALIGN_CENTER
 
         table1.addCell(cell1)
 
@@ -224,12 +243,13 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         cell1.rowspan = 2
         cell1.setPadding(5f)
         cell1.horizontalAlignment = Element.ALIGN_CENTER
+//        cell1.verticalAlignment = Element.ALIGN_CENTER
         table1.addCell(cell1)
 
         cell1 = PdfPCell(Phrase("Signature"))
         cell1.colspan = 1
         cell1.rowspan = 2
-        cell1.horizontalAlignment = Element.ALIGN_CENTER
+        cell1.horizontalAlignment = Element.ALIGN_LEFT
         cell1.setPadding(5f)
         table1.addCell(cell1)
 
@@ -237,11 +257,12 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
             var sign = storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + prefManager.dirName + File.separator + "signature.png"
 
             val img = Image.getInstance(sign)
-            img.scaleAbsolute(100f, 50f)
+            img.scaleAbsolute(100f, 20f)
             cell1 = PdfPCell(img)
             cell1.colspan = 1
-            cell1.rowspan = 2
+            cell1.rowspan = 1
             cell1.horizontalAlignment = Element.ALIGN_CENTER
+//            cell1.verticalAlignment = Element.ALIGN_CENTER
             cell1.setPadding(5f)
 
             table1.addCell(cell1)
@@ -254,6 +275,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         cell.rowspan = 2
         cell.setPadding(5f)
         cell.horizontalAlignment = Element.ALIGN_CENTER
+//        cell1.verticalAlignment = Element.ALIGN_CENTER
         table.addCell(cell)
 
 
@@ -263,7 +285,8 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         cell.colspan = 1
         cell.rowspan = 2
         cell.setPadding(5f)
-        cell.horizontalAlignment = Element.ALIGN_CENTER
+        cell.horizontalAlignment = Element.ALIGN_LEFT
+        cell1.verticalAlignment = Element.ALIGN_CENTER
         table2.addCell(cell)
 
         cell = PdfPCell(Phrase(workOrderNumber)) //this to take from user_input
@@ -275,12 +298,15 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         cell = PdfPCell(Phrase("Date"))
         cell.colspan = 1
         cell.rowspan = 2
+        cell.horizontalAlignment = Element.ALIGN_LEFT
+        cell1.verticalAlignment = Element.ALIGN_CENTER
         table2.addCell(cell)
 
         cell = PdfPCell(Phrase(timeStamp))
         cell.colspan = 1
         cell.rowspan = 2
         cell.horizontalAlignment = Element.ALIGN_CENTER
+        cell1.verticalAlignment = Element.ALIGN_CENTER
         table2.addCell(cell)
 
         cell = PdfPCell(table2)
@@ -288,6 +314,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         cell.rowspan = 2
         cell.setPadding(5f)
         cell.horizontalAlignment = Element.ALIGN_CENTER
+
         table.addCell(cell)
 
         try {

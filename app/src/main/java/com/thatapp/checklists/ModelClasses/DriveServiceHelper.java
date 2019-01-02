@@ -99,7 +99,7 @@ public class DriveServiceHelper {
                 InputStream in = contentResolver.openInputStream(uri);
                 java.io.File storageDir = context.getFilesDir();
                 prefManager = new PrefManager(context);
-                java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads"+java.io.File.separator+ prefManager.getDirName());
+                java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads");
                 java.io.File des = new java.io.File(filep.getAbsolutePath() + java.io.File.separator + fileName);
 
                 des.setWritable(true,false);

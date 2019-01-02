@@ -112,7 +112,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 				requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName + File.separator, downloaded[position].name)
 			} else{
 				intent.type = "application/vnd.ms-excel"
-				requestFile = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator, downloaded[position].name)
+				requestFile = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator + prefManager.dirName, downloaded[position].name)
 			}
 			val fileUri: Uri? = try {
 				FileProvider.getUriForFile(
