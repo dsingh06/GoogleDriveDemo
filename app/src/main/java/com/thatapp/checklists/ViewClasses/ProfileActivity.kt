@@ -1,12 +1,17 @@
 package com.thatapp.checklists.ViewClasses
 
+import android.Manifest
+import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.graphics.PorterDuff
+import android.media.ExifInterface
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
@@ -15,6 +20,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.support.v7.app.ActionBar
@@ -50,6 +56,7 @@ class ProfileActivity : AppCompatActivity() {
     private val SIGNATURE_CODE = 131
     private val REQUEST_IMAGE_CAPTURE = 101
     private val REQUEST_IMAGE_PICK = 102
+    private val REQUEST_PERMISSIONS = 102
     lateinit var imagePath: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,6 +105,8 @@ class ProfileActivity : AppCompatActivity() {
         logoLayout.setOnClickListener {
             menuPop(companyImageView)
         }
+
+		checkPermissions()
     }
 
 
@@ -136,14 +145,14 @@ class ProfileActivity : AppCompatActivity() {
             // Setonclick Listener to the menu items
             when (item.itemId) {
                 R.id.takePhoto -> { // Do below if this is clicked
-                    if (checkPermissions(this)) {
+                    if (checkPermissions()) {
                         sendTakePictureIntent()
                     } else {
                         showAlert(this)
                     }
                 }
                 R.id.choosePhoto -> {
-                    if (checkPermissions(this)) {
+                    if (checkPermissions()) {
                         sendIntentChoosePicture()
                     } else {
                         showAlert(this)
@@ -170,14 +179,6 @@ class ProfileActivity : AppCompatActivity() {
                 })
                 .setIcon(R.drawable.checklist)
                 .show()
-    }
-
-    fun checkPermissions(context: Context): Boolean { //To Check
-        var bool = false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            bool = ContextCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-        }
-        return bool
     }
 
     private fun sendIntentChoosePicture() {
@@ -207,7 +208,7 @@ class ProfileActivity : AppCompatActivity() {
                 Log.e("inside", "capture   " + this.imagePath.toString())
 
                 imageView.setImageURI(Uri.fromFile(imgFile))
-                showToast(toastFailureBackground, "Logo Saved", Toast.LENGTH_SHORT)
+//                showToast(toastSuccessBackground, "Logo Saved", Toast.LENGTH_SHORT)
             }
 
         } else if (requestCode == REQUEST_IMAGE_PICK && resultCode == AppCompatActivity.RESULT_OK && data != null) {
@@ -216,13 +217,12 @@ class ProfileActivity : AppCompatActivity() {
                 try {
                     val bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri)
                     val path = saveImage(bitmap)
-                    showToast(toastFailureBackground, "Logo Saved", Toast.LENGTH_SHORT)
+                    showToast(toastSuccessBackground, "Logo Saved", Toast.LENGTH_SHORT)
                     imageView.setImageBitmap(bitmap)
                 } catch (e: IOException) {
                     e.printStackTrace()
                     Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show()
                 }
-
             } catch (e: Exception) {
                 val a = Toast.makeText(this, "Error reading file, please try a different file!", Toast.LENGTH_SHORT)
                 a.setGravity(Gravity.FILL_HORIZONTAL, 0, 0)
@@ -235,7 +235,7 @@ class ProfileActivity : AppCompatActivity() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         cameraIntent.putExtra(MediaStore.EXTRA_FINISH_ON_COMPLETION, true)
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            val pictureFile: File
+            var pictureFile: File?=null
             try {
                 pictureFile = getPictureFile()
             } catch (ex: IOException) {
@@ -279,11 +279,76 @@ class ProfileActivity : AppCompatActivity() {
             val fo = FileOutputStream(f)
             fo.write(bytes.toByteArray())
             fo.close()
-            Log.e("TAG", "Logo Saved " + f.getAbsolutePath())
+//            Log.e("TAG", "Logo Saved " + f.getAbsolutePath())
             return f.getAbsolutePath()
         } catch (e1: IOException) {
             e1.printStackTrace()
         }
         return ""
     }
+
+    private fun checkPermissions():Boolean
+   {
+       val currentAPIVersion = Build.VERSION.SDK_INT
+       if(currentAPIVersion>=android.os.Build.VERSION_CODES.M) {
+           if ((ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) + ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)) != PackageManager.PERMISSION_GRANTED) {
+               if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) ) {
+                   val alertBuilder = AlertDialog.Builder(this);
+                   alertBuilder.setCancelable(true);
+                   alertBuilder.setTitle("Permission necessary");
+                   alertBuilder.setMessage("Camera and storage permissions are necessary to take pictures and save them !!");
+                   alertBuilder.setPositiveButton(android.R.string.yes, {_,_->
+					   ActivityCompat.requestPermissions(this,  arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSIONS);
+				   })
+                   val alert = alertBuilder.create();
+                   alert.show();
+               } else {
+                   ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSIONS)
+               }
+               return false;
+           } else {
+               return true;
+           }
+       } else {
+           return true;
+       }
+   }
+
+
+   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+       if (requestCode==REQUEST_PERMISSIONS) {
+               if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+				   true
+               } else {
+                   false
+               }
+       }
+   }
+
+	private fun getExifData(filePath:String):Matrix { //TODO image rotation based on orientation
+		//      check the rotation of the image and display it properly
+		val exif: ExifInterface
+		val matrix = Matrix()
+		try {
+			exif = ExifInterface(filePath)
+
+			val orientation = exif.getAttributeInt(
+					ExifInterface.TAG_ORIENTATION, 0)
+			//Log.d("EXIF", "Exif: $orientation")
+
+			if (orientation == 6) {
+				matrix.postRotate(90f)
+				//Log.d("EXIF", "Exif: $orientation")
+			} else if (orientation == 3) {
+				matrix.postRotate(180f)
+				//Log.d("EXIF", "Exif: $orientation")
+			} else if (orientation == 8) {
+				matrix.postRotate(270f)
+				//Log.d("EXIF", "Exif: $orientation")
+			}
+		} catch (e:Exception){
+			showToast(toastFailureBackground,"Error rotating file",Toast.LENGTH_SHORT)
+		}
+		return matrix
+	}
 }

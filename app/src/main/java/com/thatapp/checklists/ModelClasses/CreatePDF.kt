@@ -88,12 +88,19 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
               }
       */
 
-        try {
-            var sign = storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + "companylogo.png"
+        try { // TODO what if no image is there
+            val logo = storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + "companylogo.png"
+            val img = BitmapFactory.decodeFile(logo)
 
-            val img = Image.getInstance(sign)
-            img.scaleAbsolute(125f, 125f)
-            topCell = PdfPCell(img)
+			val newImage = getResizedBitmap(img,125)
+
+			val stream = ByteArrayOutputStream()
+			newImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+			val bitmapData = stream.toByteArray();
+			val image =  Image.getInstance(bitmapData)
+
+            image.scaleAbsolute(125f, 125f)
+            topCell = PdfPCell(image)
             topCell.colspan = 2
             topCell.rowspan = 2
             topCell.horizontalAlignment = Element.ALIGN_RIGHT
@@ -229,12 +236,12 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         table1.setWidths(floatArrayOf(2f, 2f, 2f, 3f))
 
 
-        var cell1 = PdfPCell(Phrase("Operator Name \n"))
+        var cell1 = PdfPCell(Phrase("Name \n"))
         cell1.colspan = 1
         cell1.rowspan = 2
         cell1.setPadding(5f)
-        cell1.horizontalAlignment = Element.ALIGN_LEFT
-//        cell1.verticalAlignment = Element.ALIGN_CENTER
+        cell1.horizontalAlignment = Element.ALIGN_RIGHT
+        cell1.verticalAlignment = Element.ALIGN_CENTER
 
         table1.addCell(cell1)
 
@@ -242,14 +249,15 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         cell1.colspan = 1
         cell1.rowspan = 2
         cell1.setPadding(5f)
-        cell1.horizontalAlignment = Element.ALIGN_CENTER
-//        cell1.verticalAlignment = Element.ALIGN_CENTER
+        cell1.horizontalAlignment = Element.ALIGN_LEFT
+        cell1.verticalAlignment = Element.ALIGN_CENTER
         table1.addCell(cell1)
 
         cell1 = PdfPCell(Phrase("Signature"))
         cell1.colspan = 1
         cell1.rowspan = 2
-        cell1.horizontalAlignment = Element.ALIGN_LEFT
+        cell1.horizontalAlignment = Element.ALIGN_RIGHT
+        cell1.verticalAlignment = Element.ALIGN_CENTER
         cell1.setPadding(5f)
         table1.addCell(cell1)
 
@@ -257,7 +265,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
             var sign = storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + prefManager.dirName + File.separator + "signature.png"
 
             val img = Image.getInstance(sign)
-            img.scaleAbsolute(100f, 20f)
+            img.scaleAbsolute(100f, 42f)
             cell1 = PdfPCell(img)
             cell1.colspan = 1
             cell1.rowspan = 1
@@ -298,7 +306,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         cell = PdfPCell(Phrase("Date"))
         cell.colspan = 1
         cell.rowspan = 2
-        cell.horizontalAlignment = Element.ALIGN_LEFT
+        cell.horizontalAlignment = Element.ALIGN_RIGHT
         cell1.verticalAlignment = Element.ALIGN_CENTER
         table2.addCell(cell)
 
@@ -468,5 +476,20 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         override fun onCloseDocument(writer: PdfWriter?, document: Document?) {
             ColumnText.showTextAligned(total, Element.ALIGN_LEFT, Phrase((writer!!.currentPageNumber - 1).toString()), 2f, 2f, 0f)
         }
+    }
+
+    fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap {
+        var width = image.width
+        var height = image.height
+
+        val bitmapRatio = width.toFloat() / height.toFloat()
+        if (bitmapRatio > 1) {
+            width = maxSize
+            height = (width / bitmapRatio).toInt()
+        } else {
+            height = maxSize
+            width = (height * bitmapRatio).toInt()
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true)
     }
 }

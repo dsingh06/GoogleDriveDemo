@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
+import android.inputmethodservice.Keyboard
 import android.os.*
 import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
@@ -12,24 +13,13 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.text.Layout
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import com.thatapp.checklists.R
 import kotlinx.android.synthetic.main.display_checklists.*
-import org.apache.poi.ss.usermodel.Cell
-import org.apache.poi.ss.usermodel.Row
-import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.File
 import android.view.inputmethod.InputMethodManager
-import android.widget.DatePicker
-import android.widget.EditText
-import android.widget.LinearLayout
+import android.widget.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.drive.Drive.getDriveResourceClient
-import com.google.android.gms.drive.DriveFolder
-import com.google.android.gms.drive.MetadataChangeSet
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.json.gson.GsonFactory
@@ -37,6 +27,8 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.thatapp.checklists.ModelClasses.*
 import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastSuccessBackground
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -148,8 +140,9 @@ class DisplayQuestionsActivity : AppCompatActivity() {
             var questionsItem: QuestionItem
             var heading = 0
             var question = 0
+            rowIter.next()
             while (rowIter.hasNext()) {
-                val row: Row = rowIter.next()
+                val row = rowIter.next()
                 val cellIterator: Iterator<Cell> = row.cellIterator()
                 while (cellIterator.hasNext()) {
                     val cell: Cell = cellIterator.next()
