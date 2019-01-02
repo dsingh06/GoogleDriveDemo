@@ -1,7 +1,6 @@
 package com.thatapp.checklists.ModelClasses
 
 import android.content.Context
-import android.util.Log
 import java.io.FileOutputStream
 
 import java.io.File
@@ -14,6 +13,7 @@ import java.io.ByteArrayOutputStream
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
+import android.widget.Toast
 import com.itextpdf.text.*
 import com.itextpdf.text.Paragraph
 import com.itextpdf.text.pdf.*
@@ -21,6 +21,8 @@ import com.thatapp.checklists.R
 
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter
+
+
 
 
 class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, val filename: String, val additionalDetails: String, val workOrderNumber: String) : PdfPageEventHelper() {
@@ -44,7 +46,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
             writer = PdfWriter.getInstance(document, FileOutputStream(des))
             writer.setPageEvent(HeaderFooterPageEvent())
         } catch (ex: Exception) {
-            Log.e("eee", ex.toString())
+			Toast.makeText(context,"Error creating file at Step-1",Toast.LENGTH_SHORT).show()
             return
         }
         document.pageSize = PageSize.A4
@@ -52,7 +54,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         document.open()
 
         var table = PdfPTable(2) // two columns
-        table.setWidths(floatArrayOf(1f, 1f)) // of equal width
+        table.setWidths(floatArrayOf(2f, 1f)) // of equal width
         table.widthPercentage = 100f
         table.horizontalAlignment = Element.ALIGN_CENTER
 
@@ -67,27 +69,31 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         table.keepTogether = true
         table.addCell(topCell)
 
-        try { // TODO what if no image is there
+        try {
             val logo = storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + "companylogo.png"
-            val img = BitmapFactory.decodeFile(logo)
+			val options = BitmapFactory.Options().apply {
+				inJustDecodeBounds = true
+			}
+			BitmapFactory.decodeFile(logo,options) // decoded without loading in memory
 
-			val newImage = getResizedBitmap(img,125)
+			options.inSampleSize = calculateInSampleSize(options,130, 145)
+			options.inJustDecodeBounds = false;
+			val img:Bitmap = BitmapFactory.decodeFile(logo,options) // we have bitmap without OutOfMemory error
+
+			val newImage = resize(img,130,145)
 
 			val stream = ByteArrayOutputStream()
 			newImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 			val bitmapData = stream.toByteArray();
 			val image =  Image.getInstance(bitmapData)
-
-            image.scaleAbsolute(125f, 125f)
-            topCell = PdfPCell(image)
-            topCell.colspan = 2
-            topCell.rowspan = 2
+			topCell = PdfPCell(image)
             topCell.horizontalAlignment = Element.ALIGN_RIGHT
-            topCell.setPadding(5f)
+            topCell.verticalAlignment = Element.ALIGN_BOTTOM
+            topCell.paddingBottom = 5f
 
             table.addCell(topCell).setBorder(PdfPCell.NO_BORDER)
         } catch (ex: Exception) {
-            Log.e("not ", ex.toString())
+			Toast.makeText(context,"Error creating file at Step-2",Toast.LENGTH_SHORT).show()
         }
 
         document.add(table)
@@ -155,7 +161,6 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
                 // Assigning drawable resource
                 var d: Drawable? = null
-                Log.e("excel ", "ans   " + ques.answer)
 
                 try {
                     d = ContextCompat.getDrawable(context, com.thatapp.checklists.R.drawable.ic_yes)
@@ -197,7 +202,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
 
                 } catch (ex: Exception) {
-                    Log.e("exxx", "111   " + ex.toString())
+					Toast.makeText(context,"Error creating file at Step-3",Toast.LENGTH_SHORT).show()
                     return
                 }
 
@@ -211,7 +216,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
         table.addCell(cell)
 
-        var table1 = PdfPTable(4)
+        val table1 = PdfPTable(4)
         table1.setWidths(floatArrayOf(2f, 2f, 2f, 3f))
 
 
@@ -254,7 +259,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
             table1.addCell(cell1)
         } catch (ex: Exception) {
-            Log.e("not ", ex.toString())
+			Toast.makeText(context,"Error creating file at Step-4",Toast.LENGTH_SHORT).show()
         }
 
         cell = PdfPCell(table1)
@@ -308,7 +313,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
             document.add(table)
             document.close()
         } catch (e: Exception) {
-            Log.e("exception ", e.toString())
+			Toast.makeText(context,"Error creating file at Step-5",Toast.LENGTH_SHORT).show()
             return
         }
     }
@@ -471,4 +476,45 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         }
         return Bitmap.createScaledBitmap(image, width, height, true)
     }
+
+	fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+		// Raw height and width of image
+		val (height: Int, width: Int) = options.run { outHeight to outWidth }
+		var inSampleSize = 1
+
+		if (height > reqHeight || width > reqWidth) {
+
+			val halfHeight: Int = height / 2
+			val halfWidth: Int = width / 2
+
+			// Calculate the largest inSampleSize value that is a power of 2 and keeps both
+			// height and width larger than the requested height and width.
+			while ((halfHeight / inSampleSize >= reqHeight) && (halfWidth / inSampleSize >= reqWidth)) {
+				inSampleSize *= 2
+			}
+		}
+		return inSampleSize
+	}
+
+	private fun resize(image: Bitmap, maxWidth: Int, maxHeight: Int): Bitmap {
+		var image = image
+		if (maxHeight > 0 && maxWidth > 0) {
+			val width = image.width
+			val height = image.height
+			val ratioBitmap = width.toFloat() / height.toFloat()
+			val ratioMax = maxWidth.toFloat() / maxHeight.toFloat()
+
+			var finalWidth = maxWidth
+			var finalHeight = maxHeight
+			if (ratioMax > ratioBitmap) {
+				finalWidth = (maxHeight.toFloat() * ratioBitmap).toInt()
+			} else {
+				finalHeight = (maxWidth.toFloat() / ratioBitmap).toInt()
+			}
+			image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true)
+			return image
+		} else {
+			return image
+		}
+	}
 }
