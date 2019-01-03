@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory
 import java.io.ByteArrayOutputStream
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.provider.DocumentsContract
 import android.support.v4.content.ContextCompat
 import android.widget.Toast
 import com.itextpdf.text.*
@@ -35,6 +36,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
     val filep = File(storageDir.getAbsolutePath() + File.separator + "generated" + File.separator + prefManager.dirName)
 
     var des = filep.absolutePath + "/" + fileNm
+
     lateinit var writer: PdfWriter
     val document = Document()
 

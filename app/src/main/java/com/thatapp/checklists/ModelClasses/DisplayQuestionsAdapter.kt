@@ -46,6 +46,10 @@ class DisplayQuestionsAdapter(var questionItemList: List<QuestionItem>, var cont
 
             holder.question.setText("")
             holder.btnLayout.setVisibility(View.GONE)
+            holder.heading.setOnClickListener{
+
+            }
+
         } else {
             holder.serialNo.setText("\t\t"+quesItem.serialNo)
             holder.headingLayout.setBackgroundColor(Color.parseColor("#FFFFFF"))

@@ -42,16 +42,24 @@
         <activity
             android:name=".ViewClasses.DisplayQuestionsActivity"
             android:parentActivityName=".ViewClasses.DisplayCheckListsActivity"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".ViewClasses.DisplayCheckListsActivity"
-            android:parentActivityName=".ViewClasses.MainActivity" />
+            android:parentActivityName=".ViewClasses.MainActivity"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".ViewClasses.DisplayReportsActivity"
-            android:parentActivityName=".ViewClasses.DisplayCheckListsActivity" />
+            android:parentActivityName=".ViewClasses.DisplayCheckListsActivity"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".ViewClasses.ViewPdfActivity"
-            android:parentActivityName=".ViewClasses.DisplayReportsActivity" />
+            android:parentActivityName=".ViewClasses.DisplayReportsActivity"
+            android:screenOrientation="portrait"
+            />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
-import android.inputmethodservice.Keyboard
 import android.os.*
 import android.support.annotation.RequiresApi
 import android.support.design.widget.Snackbar
@@ -13,13 +12,24 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.text.Layout
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.thatapp.checklists.R
 import kotlinx.android.synthetic.main.display_checklists.*
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.Row
+import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.File
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.DatePicker
+import android.widget.EditText
+import android.widget.LinearLayout
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.drive.Drive.getDriveResourceClient
+import com.google.android.gms.drive.DriveFolder
+import com.google.android.gms.drive.MetadataChangeSet
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.json.gson.GsonFactory
@@ -27,10 +37,10 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.thatapp.checklists.ModelClasses.*
 import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastSuccessBackground
-import org.apache.poi.ss.usermodel.Cell
-import org.apache.poi.ss.usermodel.WorkbookFactory
+import kotlinx.android.synthetic.main.activity_downloaded_checklists.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class DisplayQuestionsActivity : AppCompatActivity() {
@@ -58,13 +68,13 @@ class DisplayQuestionsActivity : AppCompatActivity() {
         val filename: String = intent.getStringExtra("fileName")
 //        Log.e("file name is ", "@   " + filename)
 
-		toolbar = findViewById(R.id.my_toolbar)
-		toolbar.setTitle(filename)
-		toolbar.setNavigationIcon(R.drawable.ic_back)
-		setSupportActionBar(toolbar)
+        toolbar = findViewById(R.id.my_toolbar)
+        toolbar.setTitle(filename)
+        toolbar.setNavigationIcon(R.drawable.ic_back)
+        setSupportActionBar(toolbar)
 
 
-		tvdateTime.setText(SimpleDateFormat("dd/MM/yyyy    HH:mm").format(Date()))
+        tvdateTime.setText(SimpleDateFormat("dd/MM/yyyy    HH:mm").format(Date()))
         val newCalendar = Calendar.getInstance();
         val siteDatePickerDialog = DatePickerDialog(this, R.style.MyDatePickerDialogTheme, DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
             val newDate = Calendar.getInstance();
@@ -88,6 +98,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
                     }
                 }
             }
+
             if (uncheckedQuestionArray.size >= 1) {
                 val stringOfQuestions = uncheckedQuestionArray.toString().replace("[", "").replace("]", "")
                 AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
@@ -97,38 +108,38 @@ class DisplayQuestionsActivity : AppCompatActivity() {
                             uncheckedQuestionArray.clear()
                         })
                         .setNegativeButton("Skip ALL", { _, _ ->
-							showInfo()
+                            showInfo()
                             CreatePdf(questions, filename, additionalDetails.text.toString(), workOrder.text.toString()).execute(this)
                         })
                         .setIcon(R.drawable.ic_alert)
                         .show()
             } else {
-				showInfo()
-                CreatePdf(questions, filename, additionalDetails.text.toString(),workOrder.text.toString()).execute(this)
+                showInfo()
+                CreatePdf(questions, filename, additionalDetails.text.toString(), workOrder.text.toString()).execute(this)
             }
         }
 
         loadQuestionsArray(this, filename)
     }
 
-	private fun showInfo() {
+    private fun showInfo() {
 //							val snack  = Snackbar.make(btnSubmit, "Creating PDF...", Snackbar.LENGTH_LONG)
 //							val view = snack.view
 //							view.getBackground().setColorFilter(toastSuccessBackground, PorterDuff.Mode.SRC_IN)
 //							snack.show()
-		btnSubmit.isEnabled = false
-		btnSubmit.isClickable = false
-		btnSubmit.setBackgroundColor(toastSuccessBackground)
-		btnSubmit.text = "Creating PDf......please wait"
+        btnSubmit.isEnabled = false
+        btnSubmit.isClickable = false
+        btnSubmit.setBackgroundColor(toastSuccessBackground)
+        btnSubmit.text = "Creating PDf......please wait"
 
-	}
+    }
 
-	@RequiresApi(Build.VERSION_CODES.M)
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun loadQuestionsArray(context: Context, fileName: String) {
 
         try {
             // Creating Input Stream
-            val file = File(context.getFilesDir().getAbsolutePath() + File.separator + "downloads",fileName)// + File.separator + prefManager.dirName, fileName)
+            val file = File(context.getFilesDir().getAbsolutePath() + File.separator + "downloads", fileName)// + File.separator + prefManager.dirName, fileName)
 
             // Create a workbook using the File System
             val myWorkBook = WorkbookFactory.create(file)
@@ -140,24 +151,19 @@ class DisplayQuestionsActivity : AppCompatActivity() {
             var questionsItem: QuestionItem
             var heading = 0
             var question = 0
-            rowIter.next()
             while (rowIter.hasNext()) {
-                val row = rowIter.next()
+                val row: Row = rowIter.next()
                 val cellIterator: Iterator<Cell> = row.cellIterator()
                 while (cellIterator.hasNext()) {
                     val cell: Cell = cellIterator.next()
 
                     if (row.rowNum >= 0) { //To filter column headings
                         if (cell.columnIndex == 0) {// To match column index
-//                            Log.e("column", "")
-//                            Log.e(TAG, "\n column Value: " + cell.toString())
                             heading += 1
                             question = 0
                             questionsItem = QuestionItem(heading.toString(), cell.toString(), "")
                             questions.add(questionsItem)
                         } else {
-//                            Log.e("row", "")
-//                            Log.e(TAG, "\t\tCell Value: " + cell.toString())
                             question += 1
                             questionsItem = QuestionItem("" + heading + "." + question, "", cell.toString())
                             questions.add(questionsItem)
@@ -171,6 +177,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
                 rv_list.layoutManager = LinearLayoutManager(this)
                 // Access the RecyclerView Adapter and load the data into it
                 rv_list.adapter = DisplayQuestionsAdapter(questions, this)
+//loadAdapter()
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -178,12 +185,39 @@ class DisplayQuestionsActivity : AppCompatActivity() {
         return
     }
 
+   /* private fun loadAdapter() {
+        var mAdapter: SimpleAdapter = SimpleAdapter(this, questions)
+
+
+        //This is the code to provide a sectioned list
+        var sections: ArrayList<SimpleSectionedAdapter.Section> = ArrayList()
+
+        //Sections
+        sections.add(SimpleSectionedAdapter.Section(0, "Section 1"));
+        sections.add(SimpleSectionedAdapter.Section(5, "Section 2"));
+        sections.add(SimpleSectionedAdapter.Section(12, "Section 3"));
+        sections.add(SimpleSectionedAdapter.Section(14, "Section 4"));
+        sections.add(SimpleSectionedAdapter.Section(20, "Section 5"));
+        Log.e("test", "test")
+        //Add your adapter to the sectionAdapter
+//        var dummy: SimpleSectionedAdapter.Section[] = SimpleSectionedAdapter.Section[sections.size()]
+        var mSectionedAdapter: SimpleSectionedAdapter = SimpleSectionedAdapter(this, R.layout.question_list, mAdapter)
+        mSectionedAdapter.setSections(sections)
+
+        //Apply this adapter to the RecyclerView
+        val rv_list: RecyclerView = findViewById(R.id.rc)
+        rv_list.layoutManager = LinearLayoutManager(this)
+
+        rv_list.setAdapter(mSectionedAdapter)
+    }
+
+*/
     private fun goBackMethod() {
-		val toast  = Toast.makeText(this, "PDF Created", Toast.LENGTH_LONG)
-		val view = toast.view
-		view.getBackground().setColorFilter(toastSuccessBackground, PorterDuff.Mode.SRC_IN)
-		toast.show()
-		finish()
+        val toast = Toast.makeText(this, "PDF Created", Toast.LENGTH_LONG)
+        val view = toast.view
+        view.getBackground().setColorFilter(toastSuccessBackground, PorterDuff.Mode.SRC_IN)
+        toast.show()
+        finish()
     }
 
     fun hideSoftKeyboard() {
