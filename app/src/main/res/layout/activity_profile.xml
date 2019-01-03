@@ -137,7 +137,7 @@
                 android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/text_size"
-                tools:src="@drawable/user" />
+                app:srcCompat="@drawable/user"/>
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"

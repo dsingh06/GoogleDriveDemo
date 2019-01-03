@@ -23,9 +23,6 @@ import com.thatapp.checklists.R
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter
 
-
-
-
 class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, val filename: String, val additionalDetails: String, val workOrderNumber: String) : PdfPageEventHelper() {
 
     var prefManager = PrefManager(context)
@@ -36,6 +33,9 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
     val filep = File(storageDir.getAbsolutePath() + File.separator + "generated" + File.separator + prefManager.dirName)
 
     var des = filep.absolutePath + "/" + fileNm
+//    var path: Path = File(des).toPath()
+//    var attributes = Files.setAttribute(path, "syns_status")
+
 
     lateinit var writer: PdfWriter
     val document = Document()

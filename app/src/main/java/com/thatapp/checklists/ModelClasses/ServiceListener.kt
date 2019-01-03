@@ -34,4 +34,5 @@ interface ServiceListener {
   fun fileDownloaded(file: File,fileName:String)
   fun cancelled()
   fun handleError(exception: Exception)
+  fun fileDownloading(fileName: String)
 }

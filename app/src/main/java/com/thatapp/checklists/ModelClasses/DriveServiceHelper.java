@@ -85,35 +85,36 @@ public class DriveServiceHelper {
         }
     }
 
-    private void downloadFileTrial(Uri uri,ContentResolver contentResolver) {
+    private void downloadFileTrial(Uri uri, ContentResolver contentResolver) {
         // Retrieve the metadata as a File object.
         try (Cursor cursor = contentResolver.query(uri, null, null, null, null)) {
             if (cursor != null && cursor.moveToFirst()) {
                 int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                 String fileName = cursor.getString(nameIndex);
-
+                serviceListener.fileDownloading(fileName);
                 InputStream in = contentResolver.openInputStream(uri);
                 java.io.File storageDir = context.getFilesDir();
                 prefManager = new PrefManager(context);
                 java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads");
                 java.io.File des = new java.io.File(filep.getAbsolutePath() + java.io.File.separator + fileName);
 
-                des.setWritable(true,false);
+                des.setWritable(true, false);
 
                 OutputStream outputStream = new FileOutputStream(des);
                 byte buffer[] = new byte[1024];
                 int length = 0;
-                while((length=in.read(buffer)) > 0) {
-                    outputStream.write(buffer,0,length);
+                while ((length = in.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, length);
                 }
                 outputStream.close();
                 in.close();
                 serviceListener.fileDownloaded(des, "abcd");
             }
-        } catch(Exception e){
-                serviceListener.handleError(e);
-            }
+        } catch (Exception e) {
+            serviceListener.handleError(e);
+        }
     }
+
     /**
      * Returns a {@link FileList} containing all the visible files in the user's My Drive.
      *
@@ -285,8 +286,8 @@ public class DriveServiceHelper {
         intent.addCategory(Intent.CATEGORY_OPENABLE); // to avoid receiving virtual files
         intent.setType("*/*");
         String[] mimeTypes = {
-                        "application/vnd.ms-excel"//, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
-                };
+                "application/vnd.ms-excel"//, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
+        };
 
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         // intent.setType("application/vnd.ms-excel");
@@ -303,7 +304,7 @@ public class DriveServiceHelper {
         return Tasks.call(mExecutor, () -> {
             // Retrieve the document's display name from its metadata.
             String name = "";
-            downloadFileTrial(uri,contentResolver);
+            downloadFileTrial(uri, contentResolver);
 
 //            try (Cursor cursor = contentResolver.query(uri, null, null, null, null)) {
 //                if (cursor != null && cursor.moveToFirst()) {

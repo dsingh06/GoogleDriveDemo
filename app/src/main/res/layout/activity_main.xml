@@ -99,7 +99,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/textView5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textView2"
-            app:srcCompat="@drawable/cloudsearching" />
+            app:srcCompat="@drawable/checklist" />
 
     </android.support.constraint.ConstraintLayout>
     <View
