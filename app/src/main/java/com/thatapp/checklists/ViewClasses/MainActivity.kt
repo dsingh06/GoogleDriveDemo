@@ -102,13 +102,13 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         super.onCreate(savedInstanceState)
         setContentView(com.thatapp.checklists.R.layout.activity_main)
         prefManager = PrefManager(this)
-//        addNotification()
-//        createNotificationChannel()
         if (prefManager.firstRun) prefManager.firstRun = false //app running first time
 
         linkVarsToViews()
 
-        login.setOnClickListener { requestSignIn() } // Login button
+        login.setOnClickListener {
+            requestSignIn()
+        } // Login button
 
 
         checklistsOnline.setOnClickListener {
@@ -293,6 +293,8 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
     override fun fileDownloaded(file: File, fileName: String) {
         showSnack(toastSuccessBackground, "File download complete", Snackbar.LENGTH_LONG)
+        var notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(1);
     }
 
     override fun cancelled() {
@@ -310,40 +312,8 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     }
 
     override fun fileDownloading(fileName: String) {
-sendNotification()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            var CHANNEL_ID = "my_channel_01"// The id of the channel.
-            var name = "SSS"// The user-visible name of the channel.
-            var importance = NotificationManager.IMPORTANCE_HIGH
-            NotificationChannel(CHANNEL_ID, name, importance)
-// Create a notification and set the notification channel.
-            var notification = Notification.Builder(this@MainActivity)
-                    .setContentTitle("New Message")
-                    .setContentText("You've received new messages.")
-                    .setSmallIcon(android.R.drawable.ic_delete)
-                    .setChannelId(CHANNEL_ID)
-                    .build()
-
-            val notificationManager = getSystemService(
-                    NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.notify(1, notification)
-
-            Log.e("build", "11")
-        } else {
-            Log.e("build", "12")
-            addNotification()
-        }
-
-  /*      val builder = NotificationCompat.Builder(this)
-        builder.setSmallIcon(R.drawable.engineer)
-        builder.setContentTitle("BasicNotifications Sample")
-        builder.setContentText("Time to learn about notifications!")
-        val notificationManager = getSystemService(
-                NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(1, builder.build())
-        addNotification()
-*/    }
+        showNotification(fileName)
+    }
 
 
     private fun logoutUser() {
@@ -430,116 +400,44 @@ sendNotification()
         }
     }
 
+    fun showNotification(title: String) {
+        var notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    fun sendNotification() {
-        Log.e("inside", "noti")
+        var notificationId = 1
+        var channelId = "channel-01";
+        var channelName = "checkList";
+        var importance = NotificationManager.IMPORTANCE_HIGH;
 
-        // BEGIN_INCLUDE(build_action)
-        /** Create an intent that will be fired when the user clicks the notification.
-         * The intent needs to be packaged into a {@link android.app.PendingIntent} so that the
-         * notification service can fire it on our behalf.
-         */
-        val intent = Intent(Intent.ACTION_VIEW,
-                Uri.parse("http://developer.android.com/reference/android/app/Notification.html"))
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-        // END_INCLUDE(build_action)
-        // BEGIN_INCLUDE (build_notification)
-        /**
-         * Use NotificationCompat.Builder to set up our notification.
-         */
-        val builder = NotificationCompat.Builder(this)
-        /** Set the icon that will appear in the notification bar. This icon also appears
-         * in the lower right hand corner of the notification itself.
-         *
-         * Important note: although you can use any drawable as the small icon, Android
-         * design guidelines state that the icon should be simple and monochrome. Full-color
-         * bitmaps or busy images don't render well on smaller screens and can end up
-         * confusing the user.
-         */
-        builder.setSmallIcon(R.drawable.checklist)
-        // Set the intent that will fire when the user taps the notification.
-        builder.setContentIntent(pendingIntent)
-        // Set the notification to auto-cancel. This means that the notification will disappear
-        // after the user taps it, rather than remaining until it's explicitly dismissed.
-        builder.setAutoCancel(true)
-        /**
-         *Build the notification's appearance.
-         * Set the large icon, which appears on the left of the notification. In this
-         * sample we'll set the large icon to be the same as our app icon. The app icon is a
-         * reasonable default if you don't have anything more compelling to use as an icon.
-         */
-        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.checklist))
-        /**
-         * Set the text of the notification. This sample sets the three most commononly used
-         * text areas:
-         * 1. The content title, which appears in large type at the top of the notification
-         * 2. The content text, which appears in smaller text below the title
-         * 3. The subtext, which appears under the text on newer devices. Devices running
-         * versions of Android prior to 4.2 will ignore this field, so don't use it for
-         * anything vital!
-         */
-        builder.setContentTitle("BasicNotifications Sample")
-        builder.setContentText("Time to learn about notifications!")
-        builder.setSubText("Tap to view documentation about notifications.")
-
-        /**
-         * Send the notification. This will immediately display the notification icon in the
-         * notification bar.
-         */
-        val notificationManager = getSystemService(
-                NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(2, builder.build())
-
-        Log.e("inside", "noti 2")
-        // END_INCLUDE(send_notification)
-    }
-
-
-    private fun addNotification() {
-
-
-        val builder = NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.checklist)
-                .setContentTitle("Notifications Example")
-                .setContentText("This is a test notification")
-        val notificationIntent = Intent(this, MainActivity::class.java)
-        val contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT)
-        builder.setContentIntent(contentIntent)
-        // Add as notification
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.notify(2, builder.build())
-    }
-
-
-
-    private fun createNotificationChannel() {
-
-        val builder = NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.checklist)
-                .setContentTitle("Notifications Example")
-                .setContentText("This is a test notification")
-        val notificationIntent = Intent(this, MainActivity::class.java)
-        val contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT)
-        builder.setContentIntent(contentIntent)
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "sss"
-            val descriptionText = "1222121"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("12", name, importance).apply {
-                description = descriptionText
-            }
-            // Register the channel with the system
-            val notificationManager: NotificationManager =
-                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-            notificationManager.notify(2,builder.build())
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            var mChannel = NotificationChannel(
+                    channelId, channelName, importance);
+            notificationManager.createNotificationChannel(mChannel);
         }
+
+        var mBuilder: NotificationCompat.Builder = NotificationCompat.Builder(this, channelId)
+                .setContentTitle("CheckList App")
+                .setContentText(title + " is Downloading")
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_notify))
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Log.e("Lollipop", " Ok ")
+            mBuilder.setSmallIcon(getNotificationIcon(mBuilder))
+
+        } else {
+            mBuilder.setSmallIcon(R.drawable.ic_notify)
+        }
+
+        notificationManager.notify(notificationId, mBuilder.build())
     }
 
+    fun getNotificationIcon(notificationBuilder: NotificationCompat.Builder): Int {
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            var color = getResources().getColor(R.color.primary_dark_material_dark)
+            notificationBuilder.setColor(color)
+            return R.drawable.ic_notify
 
+        }
+        return R.drawable.ic_notify
+    }
 }
