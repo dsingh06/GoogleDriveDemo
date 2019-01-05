@@ -33,6 +33,10 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import io.reactivex.disposables.CompositeDisposable;
+
+
+
 /**
  * A utility for performing read/write operations on Drive files via the REST API and opening a
  * file picker UI via Storage Access Framework.
@@ -45,13 +49,17 @@ public class DriveServiceHelper {
     ServiceListener serviceListener;
     PrefManager prefManager;
     private Boolean isFileFromDrive = false;
-
+    private FilesDatabase filesDatabase = null;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    static ArrayList<String> allLocalFiles;
+    static ArrayList<String> allDriveFiles;
     public DriveServiceHelper(Drive driveService, Activity activity, Context context) {
         this.mDriveService = driveService;
         this.activity = activity;
         this.context = context;
         serviceListener = (ServiceListener) activity;
         prefManager = new PrefManager(activity);
+
     }
 
     private void downloadFile(String fileId) {
@@ -123,10 +131,11 @@ public class DriveServiceHelper {
      * request Drive Full Scope in the <a href="https://play.google.com/apps/publish">Google
      * Developer's Console</a> and be submitted to Google for verification.</p>
      */
-    public boolean driveCheck() throws IOException {
+    public boolean driveCheck(FilesDatabase filesDatabase) throws IOException {
 
         initFolders();
         initDrive();
+        this.filesDatabase = filesDatabase;
 
         if (prefManager.getDirName().length() > 3) {
             driveSync();
@@ -189,22 +198,27 @@ public class DriveServiceHelper {
 
 
     public void driveSync() throws IOException {
-
+        FilesSync fs = null;
         ArrayList<File> driveFileList = new ArrayList();
         ArrayList<java.io.File> deviceFileList = new ArrayList();
         java.io.File storageDir = context.getFilesDir();
         prefManager = new PrefManager(context);
+        allLocalFiles= new ArrayList<>();
+        allDriveFiles= new ArrayList<>();
         java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "generated" + java.io.File.separator + prefManager.getDirName());
         java.io.File[] testD = filep.listFiles();
         for (int i = 0; i < testD.length; i++) {
             deviceFileList.add(testD[i]);
+            allLocalFiles.add(testD[i].getName());
         }
 
         FileList request = mDriveService.files().list().setQ("mimeType='application/pdf' and trashed=false and '" + prefManager.getFolderID() + "' in parents").setOrderBy("name").setSpaces("Drive").execute();
         for (File file : request.getFiles()) {
 //            Log.e("data ", "report files  : " + file.getName() + "  " + file.getId());
             driveFileList.add(file);
+            allDriveFiles.add(file.getName());
         }
+
         Log.e("length device", " size in drive  " + driveFileList.size() + "      device " + deviceFileList.size());
 
         Set<String> hSet = new HashSet<>();
@@ -231,7 +245,6 @@ public class DriveServiceHelper {
         for (java.io.File fName : deviceFileList) {
             for (File fdName : driveFileList) {
                 if (fName.getName().equals(fdName.getName())) {
-//                    Log.e("file name ", "matched  " + fName.getName() + "     " + fdName);
                     hSet.remove(fdName.getName());
                 }
             }
@@ -244,18 +257,22 @@ public class DriveServiceHelper {
 
         for (String vhSet : hSet) {
             String fileData = vhSet;
+         //   int i=1;
             Log.e("file to sync", fileData);
+           //  insertToDb(new FilesSync(fileData,"no",i));
+          //   i++;
 
-            if (deviceFileList.size() > driveFileList.size()) {
+
+           // if (deviceFileList.size() > driveFileList.size()) {
                 for (java.io.File fileUpload : deviceFileList) {
                     if (vhSet.equalsIgnoreCase(fileUpload.getName())) {
-                        Log.e("inside ", "up " + fileUpload.getName() + "     " + fileData);
+                        Log.e("inside ", "up " + fileUpload.getName() + "   " + fileData);
                         new DriveUploader(fileUpload, context);
                     } else {
                         //  Log.e("inside ", "up else " + fileUpload.getName() + "     " + fileData);
                     }
                 }
-            } /*else if (driveFileList.size() > deviceFileList.size()) {
+           /* } else if (driveFileList.size() > deviceFileList.size()) {
 
                 for (File fileDownload : driveFileList) {
                     if (vhSet.equalsIgnoreCase(fileDownload.getName())) {
@@ -267,6 +284,13 @@ public class DriveServiceHelper {
                 }
             }*/
         }
+       /* List filesList = new ArrayList(filesDatabase.filesDao().getAll());
+        int i=1;
+        for(i=0; i<filesList.size();i++){
+            Log.e("file","11  "+filesList.get(i).toString());
+            //    i++;
+        }*/
+
         Log.e("files ", "synced");
     }
 
@@ -370,7 +394,7 @@ public class DriveServiceHelper {
             mDriveService.files().get(fileId)
                     .executeMediaAndDownloadTo(outputStream);
 
-            FileOutputStream fOut = new FileOutputStream(des);
+0            FileOutputStream fOut = new FileOutputStream(des);
             fOut.write(((ByteArrayOutputStream) outputStream).toByteArray());
             fOut.close();
             Log.e("file download", "success");
@@ -382,5 +406,20 @@ public class DriveServiceHelper {
         }
     }
 */
+
+    public void insertToDb(FilesSync filename) {
+      try {
+
+          filesDatabase.filesDao().insert(filename);
+          Log.e("add", " added");
+      }catch (Exception ex){
+          Log.e("add",ex.toString());
+      }
+     /*   compositeDisposable.add(Observable.fromCallable{filesDatabase?.filesDao()?.insert(student)}
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe())
+    */
+    }
 
 }

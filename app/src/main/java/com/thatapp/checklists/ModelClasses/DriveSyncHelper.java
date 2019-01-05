@@ -28,10 +28,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import static com.thatapp.checklists.ModelClasses.DriveServiceHelper.allDriveFiles;
+import static com.thatapp.checklists.ModelClasses.DriveServiceHelper.allLocalFiles;
 
 /**
  * A utility for performing read/write operations on Drive files via the REST API and Syncing Files between Device and Drive Folder
@@ -105,11 +109,17 @@ public class DriveSyncHelper {
 
         java.io.File storageDir = context.getFilesDir();
         prefManager = new PrefManager(context);
+        allLocalFiles = new ArrayList<>();
+        allDriveFiles= new ArrayList<>();
         java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "generated" + java.io.File.separator + prefManager.getDirName());
         java.io.File[] testD = filep.listFiles();
-//        for (int i = 0; i < testD.length; i++) {
-//            deviceFileList.add(testD[i]);
-//        }
+
+
+        for (int m = 0; m < testD.length; m++) {
+
+            allLocalFiles.add(testD[m].getName());
+//            Log.e("file in static", "ok  "+allFiles.size());
+        }
 
         ArrayList<java.io.File> deviceFileList = new ArrayList<>(Arrays.asList(testD));
         FileList request = mDriveService.files().list()
@@ -120,13 +130,10 @@ public class DriveSyncHelper {
         ArrayList<File> driveFileList = new ArrayList<>(request.getFiles());
 
 
-
-
-
-        //        for (File file : request.getFiles()) {
+        for (File file : request.getFiles()) {
 //            Log.e("data ", "report files  : " + file.getName() + "  " + file.getId());
-///            driveFileList.add(file);
-//        }
+            allDriveFiles.add(file.getName());
+        }
 //        Log.e("length device", " size in drive  " + driveFileList.size() + "      device " + deviceFileList.size());
 
         Set<String> hSet = new HashSet<>();

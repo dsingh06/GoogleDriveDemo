@@ -22,11 +22,7 @@ import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
-import android.support.annotation.NonNull
-import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat.getSystemService
-
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -46,6 +42,10 @@ import com.google.api.services.drive.DriveScopes
 import com.thatapp.checklists.ModelClasses.*
 import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastFailureBackground
 import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastSuccessBackground
+import io.reactivex.Observable
+import io.reactivex.Observer
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.io.*
 
 
@@ -68,17 +68,11 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     private var mGoogleSignInClient: GoogleSignInClient? = null
     private var mGoogleSignInOptions: GoogleSignInOptions? = null
 
-    /**
-     * Google Drive client.
-     */
-    lateinit var mDriveClient: DriveClient
+    lateinit var filesList : List<FilesSync>
 
-    /**
-     * Google Drive resource client.
-     */
-    lateinit var mDriveResourceClient: DriveResourceClient
-    lateinit var mNotifyManager: NotificationManager
-    lateinit var mBuilder: NotificationCompat.Builder
+    private var filesDatabase:FilesDatabase? = null
+    val compositeDisposable = CompositeDisposable()
+
 
     companion object {
         val toastSuccessBackground = Color.parseColor("#228B22")
@@ -102,16 +96,27 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         super.onCreate(savedInstanceState)
         setContentView(com.thatapp.checklists.R.layout.activity_main)
         prefManager = PrefManager(this)
+        filesDatabase = FilesDatabase.getInstance(this)
         if (prefManager.firstRun) prefManager.firstRun = false //app running first time
 
         linkVarsToViews()
+
+        if (mSignedInAccount != null && mGoogleSignInClient != null) {
+            startupCheck()
+        } else {
+            requestSignIn()
+        }
 
         login.setOnClickListener {
             requestSignIn()
         } // Login button
 
 
+
         checklistsOnline.setOnClickListener {
+            //getAllData()
+          //startupCheck()
+
             if (!isNetworkConnected()) {
                 showSnack(toastFailureBackground, "NO INTERNET", Snackbar.LENGTH_SHORT)
             } else {
@@ -163,7 +168,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         mSignedInAccount = GoogleSignIn.getLastSignedInAccount(this)
         if (mSignedInAccount === null) {
             state = ButtonState.LOGGED_OUT
-//			requestSignIn()
+			requestSignIn()
         } else {
             state = ButtonState.LOGGED_IN
             initialistDriveHelper(mSignedInAccount!!)
@@ -236,7 +241,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                     initialistDriveHelper(mSignedInAccount!!)
                     prefManager.loginEmail = mSignedInAccount!!.email
                     prefManager.loginStatus = true
-//                    prefManager.userName = googleAccount.displayName
+//                     prefManager.userName = googleAccount.displayName
 //                    prefManager.dirName = googleAccount.email
 
                     //  PrefManager.dirName = googleAccount.email.toString().split("@").get(0)
@@ -275,6 +280,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                 .build()
 
         mDriverServiceHelper = DriveServiceHelper(googleDriveService, this, applicationContext)
+        startupCheck()
         /////////////////////////////from example api/////////////////////
 //		mDriveClient = Drive.getDriveClient(this, googleAccount)
         // Build a drive resource client.
@@ -288,6 +294,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     }
 
     override fun loggedIn() {
+
 
     }
 
@@ -362,7 +369,8 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
     private fun startupCheck() {
         if (mDriverServiceHelper != null) {
-            CheckDriveSync(mDriverServiceHelper!!).execute(this)
+            CheckDriveSync(mDriverServiceHelper!!,filesDatabase!!).execute(this)
+
         }
     }
 
@@ -388,11 +396,11 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         }
     }
 
-    class CheckDriveSync(val driveServiceHelper: DriveServiceHelper) : AsyncTask<Context, Void, Boolean>() {
+    class CheckDriveSync(val driveServiceHelper: DriveServiceHelper,val filesDatabase:FilesDatabase) : AsyncTask<Context, Void, Boolean>() {
 
         override fun doInBackground(vararg p0: Context): Boolean? {
             try {
-                driveServiceHelper.driveCheck()
+                driveServiceHelper.driveCheck(filesDatabase)
             } catch (e: Exception) {
                 Log.e("Main-- driveCheck", "" + e.toString())
             }
@@ -420,7 +428,6 @@ class MainActivity : AppCompatActivity(), ServiceListener {
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_notify))
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Log.e("Lollipop", " Ok ")
             mBuilder.setSmallIcon(getNotificationIcon(mBuilder))
 
         } else {
@@ -436,7 +443,6 @@ class MainActivity : AppCompatActivity(), ServiceListener {
             var color = getResources().getColor(R.color.primary_dark_material_dark)
             notificationBuilder.setColor(color)
             return R.drawable.ic_notify
-
         }
         return R.drawable.ic_notify
     }

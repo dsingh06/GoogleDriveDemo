@@ -24,6 +24,8 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import com.google.api.services.drive.model.FileList
+import com.thatapp.checklists.ModelClasses.DriveServiceHelper.allDriveFiles
+import com.thatapp.checklists.ModelClasses.DriveServiceHelper.allLocalFiles
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
@@ -146,6 +148,8 @@ class DriveUploader(private val fileName: java.io.File, private val context: Con
         val file = mDriveService.files().create(fileMetadata, mediaContent)
                 .setFields("id, parents")
                 .execute()
+        allLocalFiles.add(fileName.name)
+        allDriveFiles.add(fileName.name)
         Log.e("NEW File ID: ", "  " + file.getId())
     }
 
