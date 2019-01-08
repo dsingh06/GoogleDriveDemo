@@ -49,7 +49,7 @@ public class DriveServiceHelper {
     ServiceListener serviceListener;
     PrefManager prefManager;
     private Boolean isFileFromDrive = false;
-    private FilesDatabase filesDatabase = null;
+//    private FilesDatabase filesDatabase = null;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     static ArrayList<String> allLocalFiles;
     static ArrayList<String> allDriveFiles;
@@ -131,11 +131,11 @@ public class DriveServiceHelper {
      * request Drive Full Scope in the <a href="https://play.google.com/apps/publish">Google
      * Developer's Console</a> and be submitted to Google for verification.</p>
      */
-    public boolean driveCheck(FilesDatabase filesDatabase) throws IOException {
+    public boolean driveCheck() throws IOException {
 
         initFolders();
         initDrive();
-        this.filesDatabase = filesDatabase;
+//        this.filesDatabase = filesDatabase;
 
         if (prefManager.getDirName().length() > 3) {
             driveSync();
@@ -198,7 +198,6 @@ public class DriveServiceHelper {
 
 
     public void driveSync() throws IOException {
-        FilesSync fs = null;
         ArrayList<File> driveFileList = new ArrayList();
         ArrayList<java.io.File> deviceFileList = new ArrayList();
         java.io.File storageDir = context.getFilesDir();
@@ -406,20 +405,5 @@ public class DriveServiceHelper {
         }
     }
 */
-
-    public void insertToDb(FilesSync filename) {
-      try {
-
-          filesDatabase.filesDao().insert(filename);
-          Log.e("add", " added");
-      }catch (Exception ex){
-          Log.e("add",ex.toString());
-      }
-     /*   compositeDisposable.add(Observable.fromCallable{filesDatabase?.filesDao()?.insert(student)}
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe())
-    */
-    }
 
 }

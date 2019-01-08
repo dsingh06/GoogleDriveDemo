@@ -75,7 +75,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                     holder.ivStatus.setImageDrawable(context.getDrawable(R.drawable.cloud_s))
                 } else {
                     Log.e("ccc", "no")
-                    holder.ivStatus.setImageDrawable(context.getDrawable(R.drawable.cloud_ns))
+                    holder.ivStatus.setImageDrawable(context.getDrawable(R.drawable.cloud_s))
                 }
             } catch (ex: Exception) {
             }

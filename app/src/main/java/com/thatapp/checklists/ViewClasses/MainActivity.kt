@@ -68,9 +68,9 @@ class MainActivity : AppCompatActivity(), ServiceListener {
     private var mGoogleSignInClient: GoogleSignInClient? = null
     private var mGoogleSignInOptions: GoogleSignInOptions? = null
 
-    lateinit var filesList : List<FilesSync>
+//    lateinit var filesList : List<FilesSync>
 
-    private var filesDatabase:FilesDatabase? = null
+//    private var filesDatabase:FilesDatabase? = null
     val compositeDisposable = CompositeDisposable()
 
 
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         super.onCreate(savedInstanceState)
         setContentView(com.thatapp.checklists.R.layout.activity_main)
         prefManager = PrefManager(this)
-        filesDatabase = FilesDatabase.getInstance(this)
+//        filesDatabase = FilesDatabase.getInstance(this)
         if (prefManager.firstRun) prefManager.firstRun = false //app running first time
 
         linkVarsToViews()
@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
             }
         }
-        view.setOnClickListener {
+        customBackgroundIV.setOnClickListener {
             if (prefManager.jobTitle!!.length < 3 || prefManager.companyName!!.length < 3) {
                 Toast.makeText(applicationContext, "Please Complete Your Profile", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, ProfileActivity::class.java))
@@ -369,7 +369,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 
     private fun startupCheck() {
         if (mDriverServiceHelper != null) {
-            CheckDriveSync(mDriverServiceHelper!!,filesDatabase!!).execute(this)
+            CheckDriveSync(mDriverServiceHelper!!).execute(this)
 
         }
     }
@@ -396,11 +396,11 @@ class MainActivity : AppCompatActivity(), ServiceListener {
         }
     }
 
-    class CheckDriveSync(val driveServiceHelper: DriveServiceHelper,val filesDatabase:FilesDatabase) : AsyncTask<Context, Void, Boolean>() {
+    class CheckDriveSync(val driveServiceHelper: DriveServiceHelper) : AsyncTask<Context, Void, Boolean>() {
 
         override fun doInBackground(vararg p0: Context): Boolean? {
             try {
-                driveServiceHelper.driveCheck(filesDatabase)
+                driveServiceHelper.driveCheck()
             } catch (e: Exception) {
                 Log.e("Main-- driveCheck", "" + e.toString())
             }

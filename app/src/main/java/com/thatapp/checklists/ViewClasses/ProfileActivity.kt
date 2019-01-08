@@ -1,8 +1,6 @@
 package com.thatapp.checklists.ViewClasses
 
 import android.Manifest
-import android.annotation.TargetApi
-import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -12,7 +10,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.graphics.PorterDuff
 import android.media.ExifInterface
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
@@ -135,7 +132,6 @@ class ProfileActivity : AppCompatActivity() {
             val bmp = BitmapFactory.decodeFile(logo.toString())
             imageView.setImageBitmap(bmp)
         }
-
     }
 
 
@@ -145,7 +141,6 @@ class ProfileActivity : AppCompatActivity() {
             val bmp = BitmapFactory.decodeFile(sign.toString())
             signature.setImageBitmap(bmp)
         }
-
     }
 
     private fun showToast(backgroundColor: Int, message: String, length: Int) {
@@ -268,7 +263,7 @@ class ProfileActivity : AppCompatActivity() {
                     try {
                         val uri: Uri = data.getData()
                         try {
-                            val bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri)
+                            val bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri) //TODO OOM ERROR HERE
                             val path = saveProfileImage(bitmap)
                             showToast(toastSuccessBackground, "Pic Saved", Toast.LENGTH_SHORT)
                             imageUser.setImageBitmap(bitmap)

@@ -147,7 +147,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
             // Get the first sheet from workbook
             val mySheet = myWorkBook.getSheetAt(0)
             val rowIter = mySheet.rowIterator()
-            rowIter.next()
+            if (rowIter.hasNext()) rowIter.next()
             var questionsItem: QuestionItem
             var heading = 0
             var question = 0
