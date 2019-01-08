@@ -18,6 +18,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -71,7 +72,7 @@ public class DriveServiceHelper {
 
             java.io.File storageDir = context.getFilesDir();
             prefManager = new PrefManager(context);
-            java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads" + java.io.File.separator + prefManager.getDirName());
+            java.io.File filep = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads");
 
             java.io.File des = new java.io.File(filep.getAbsolutePath() + java.io.File.separator + fileName);
 
@@ -156,7 +157,7 @@ public class DriveServiceHelper {
 
         java.io.File storageDir = context.getFilesDir();
         prefManager = new PrefManager(context);
-        java.io.File fileD = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads" + java.io.File.separator + prefManager.getDirName());
+        java.io.File fileD = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "downloads");
         Boolean d = fileD.mkdirs();
         java.io.File fileR = new java.io.File(storageDir.getAbsolutePath() + java.io.File.separator + "generated" + java.io.File.separator + prefManager.getDirName());
         Boolean g = fileR.mkdirs();

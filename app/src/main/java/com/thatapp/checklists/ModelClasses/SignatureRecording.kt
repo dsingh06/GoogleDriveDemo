@@ -55,7 +55,7 @@ class SignatureRecording : AppCompatActivity() {
             finish()
         }
 
-        val sign = File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + prefManager.dirName + File.separator + "signature.png")
+        val sign = File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + "signature.png")
         if (sign.exists()) {
             val bmp = BitmapFactory.decodeFile(sign.toString())
             imageView.setImageBitmap(bmp)
@@ -101,9 +101,9 @@ class SignatureRecording : AppCompatActivity() {
 
 
     private fun getDestinationFile(): File {
-        val f = File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + prefManager.dirName)
+        val f = File(getFilesDir().getAbsolutePath() + File.separator + "downloads")
         if (!f.exists()) f.mkdirs()
-        return (File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + prefManager.dirName, "signature.png"))
+        return (File(getFilesDir().getAbsolutePath() + File.separator + "downloads", "signature.png"))
     }
 
 

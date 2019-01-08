@@ -92,10 +92,13 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
             topCell.horizontalAlignment = Element.ALIGN_RIGHT
             topCell.verticalAlignment = Element.ALIGN_BOTTOM
             topCell.paddingBottom = 5f
-
             table.addCell(topCell).setBorder(PdfPCell.NO_BORDER)
         } catch (ex: Exception) {
-			Toast.makeText(context,"Error creating file at Step-2",Toast.LENGTH_SHORT).show()
+			topCell = PdfPCell(Phrase(" "))
+			topCell.horizontalAlignment = Element.ALIGN_RIGHT
+			topCell.verticalAlignment = Element.ALIGN_BOTTOM
+			topCell.paddingBottom = 5f
+			table.addCell(topCell).setBorder(PdfPCell.NO_BORDER)
         }
 
         document.add(table)
@@ -248,20 +251,23 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         table1.addCell(cell1)
 
         try {
-            var sign = storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + prefManager.dirName + File.separator + "signature.png"
-
+            val sign= storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + "signature.png"
             val img = Image.getInstance(sign)
             img.scaleAbsolute(100f, 42f)
             cell1 = PdfPCell(img)
             cell1.colspan = 1
             cell1.rowspan = 1
             cell1.horizontalAlignment = Element.ALIGN_CENTER
-//            cell1.verticalAlignment = Element.ALIGN_CENTER
             cell1.setPadding(5f)
-
             table1.addCell(cell1)
         } catch (ex: Exception) {
-			Toast.makeText(context,"Error creating file at Step-4",Toast.LENGTH_SHORT).show()
+			cell1 = PdfPCell(Phrase(""))
+            cell1.colspan = 1
+            cell1.rowspan = 1
+            cell1.horizontalAlignment = Element.ALIGN_CENTER
+            cell1.verticalAlignment = Element.ALIGN_CENTER
+            cell1.setPadding(5f)
+            table1.addCell(cell1)
         }
 
         cell = PdfPCell(table1)

@@ -30,6 +30,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import com.thatapp.checklists.ModelClasses.PrefManager
 import com.thatapp.checklists.R
+import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastFailureBackground
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -160,11 +161,25 @@ lateinit var prefManager:PrefManager
             asset.close()
             output.close()
         }
-        fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
-        // This is the PdfRenderer we use to render the PDF.
 
-		pdfRenderer = PdfRenderer(fileDescriptor)
-		currentPage = pdfRenderer.openPage(INITIAL_PAGE_INDEX)
+        try{
+            fileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+            // This is the PdfRenderer we use to render the PDF.
+            pdfRenderer = PdfRenderer(fileDescriptor)
+			currentPage = pdfRenderer.openPage(INITIAL_PAGE_INDEX)
+        } catch (e: IOException){
+            val t = Toast.makeText(this,"Error opening file!",Toast.LENGTH_SHORT)
+            val v = t.view
+            v.setBackgroundColor(toastFailureBackground)
+            t.show()
+			finish()
+        } catch (e:kotlin.UninitializedPropertyAccessException){
+			val t = Toast.makeText(this,"Error opening file!",Toast.LENGTH_SHORT)
+			val v = t.view
+			v.setBackgroundColor(toastFailureBackground)
+			t.show()
+			finish()
+		}
 
     }
 

@@ -123,7 +123,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                 requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName + File.separator, downloaded[position].name)
             } else {
                 intent.type = "application/vnd.ms-excel"
-                requestFile = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator + prefManager.dirName, downloaded[position].name)
+                requestFile = File(context.filesDir.absolutePath + File.separator + "downloads" , downloaded[position].name)
             }
             val fileUri: Uri? = try {
                 FileProvider.getUriForFile(
@@ -231,7 +231,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             lateinit var dir1: File
             var dirTemp = File(context.filesDir.absolutePath + File.separator + "trash" + File.separator + prefManager.dirName)
             if (dir.equals("checklist")) {
-                dir1 = File(context.filesDir.absolutePath + File.separator + "downloads" + File.separator + prefManager.dirName)
+                dir1 = File(context.filesDir.absolutePath + File.separator + "downloads")
 //                Log.e("type", "checklist")
             } else if (dir.equals("report")) {
                 dir1 = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName)
