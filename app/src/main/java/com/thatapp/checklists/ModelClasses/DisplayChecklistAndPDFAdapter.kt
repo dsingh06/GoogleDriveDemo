@@ -1,11 +1,11 @@
 package com.thatapp.checklists.ModelClasses
 
-import android.app.Activity
-import android.support.v7.widget.RecyclerView
-
 import android.content.Context
+import android.support.v7.widget.RecyclerView
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.net.Uri
+import android.support.v4.content.ContextCompat.getSystemService
 import android.support.v4.content.FileProvider
 import android.util.Log
 import android.view.*
@@ -17,16 +17,13 @@ import com.thatapp.checklists.ViewClasses.DisplayCheckListsActivity
 import com.thatapp.checklists.ViewClasses.DisplayQuestionsActivity
 import com.thatapp.checklists.ViewClasses.ViewPdfActivity
 import kotlinx.android.synthetic.main.checklist_layout.view.*
-import okio.Okio
-
-
 import java.lang.Exception
-import java.nio.file.Files
 import java.text.SimpleDateFormat
 import java.util.*
-
 import kotlin.collections.ArrayList
 import java.io.*
+
+
 
 
 class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context: Context, val type: String) : RecyclerView.Adapter<DisplayChecklistAndPDFAdapter.UserViewHolder>() {
@@ -69,17 +66,23 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             holder.updateDateTime.text = "Created: ".plus(timeCreated[1]).plus("   ").plus(timeCreated[0])
             Log.e(TAG, timeCreated[0] + " " + timeCreated[1])
             holder.ivShare.setVisibility(View.VISIBLE)
-            try {
-                if (allLocalFiles!!.contains(downloaded[position].name) && allDriveFiles!!.contains(downloaded[position].name)) {
-                    Log.e("ccc", "yes")
-                    holder.ivStatus.setImageDrawable(context.getDrawable(R.drawable.cloud_s))
-                } else {
-                    Log.e("ccc", "no")
-                    holder.ivStatus.setImageDrawable(context.getDrawable(R.drawable.cloud_s))
-                }
-            } catch (ex: Exception) {
-            }
 
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val activeNetworkInfo = connectivityManager.activeNetworkInfo
+            if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
+                try {
+                    if (allLocalFiles!!.contains(downloaded[position].name) && allDriveFiles!!.contains(downloaded[position].name)) {
+//                    Log.e("ccc", "yes")
+                        holder.ivStatus.setImageDrawable(context.getDrawable(R.drawable.cloud_g))
+                    } else {
+//                    Log.e("ccc", "no")
+                        holder.ivStatus.setImageDrawable(context.getDrawable(R.drawable.cloud_s))
+                    }
+                } catch (ex: Exception) {
+                }
+            } else {
+				holder.ivStatus.setImageDrawable(context.getDrawable(R.drawable.cloud_confusion))
+			}
             holder.parentView.setOnClickListener {
                 file_name = downloaded[position].name
                 val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName + File.separator, downloaded[position].name)
