@@ -5,13 +5,12 @@ import android.support.v7.widget.RecyclerView
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Uri
-import android.support.v4.content.ContextCompat.getSystemService
 import android.support.v4.content.FileProvider
 import android.util.Log
 import android.view.*
 import android.widget.*
-import com.thatapp.checklists.ModelClasses.DriveServiceHelper.allDriveFiles
-import com.thatapp.checklists.ModelClasses.DriveServiceHelper.allLocalFiles
+import com.thatapp.checklists.ModelClasses.DriveUploader.Companion.setOfList_DriveFiles
+import com.thatapp.checklists.ModelClasses.DriveUploader.Companion.setOfList_LocalFiles
 import com.thatapp.checklists.R
 import com.thatapp.checklists.ViewClasses.DisplayCheckListsActivity
 import com.thatapp.checklists.ViewClasses.DisplayQuestionsActivity
@@ -71,7 +70,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             val activeNetworkInfo = connectivityManager.activeNetworkInfo
             if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
                 try {
-                    if (allLocalFiles!!.contains(downloaded[position].name) && allDriveFiles!!.contains(downloaded[position].name)) {
+                    if (setOfList_LocalFiles!!.contains(downloaded[position].name) && setOfList_DriveFiles!!.contains(downloaded[position].name)) {
 //                    Log.e("ccc", "yes")
                         holder.ivStatus.setImageDrawable(context.getDrawable(R.drawable.cloud_g))
                     } else {

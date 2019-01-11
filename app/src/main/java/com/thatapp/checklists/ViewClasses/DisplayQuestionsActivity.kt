@@ -6,14 +6,11 @@ import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.*
 import android.support.annotation.RequiresApi
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.text.Layout
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.thatapp.checklists.R
@@ -25,19 +22,8 @@ import java.io.File
 import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
 import android.widget.EditText
-import android.widget.LinearLayout
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.drive.Drive.getDriveResourceClient
-import com.google.android.gms.drive.DriveFolder
-import com.google.android.gms.drive.MetadataChangeSet
-import com.google.api.client.extensions.android.http.AndroidHttp
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
-import com.google.api.client.json.gson.GsonFactory
-import com.google.api.services.drive.Drive
-import com.google.api.services.drive.DriveScopes
 import com.thatapp.checklists.ModelClasses.*
 import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastSuccessBackground
-import kotlinx.android.synthetic.main.activity_downloaded_checklists.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -48,7 +34,6 @@ class DisplayQuestionsActivity : AppCompatActivity() {
     val questions: ArrayList<QuestionItem> = ArrayList()
 
     private val TAG = "My_LogMainActivity"
-    private lateinit var mDriverServiceHelper: DriveServiceHelper
     private lateinit var prefManager: PrefManager
 
     lateinit var additionalDetails: EditText
@@ -185,33 +170,6 @@ class DisplayQuestionsActivity : AppCompatActivity() {
         return
     }
 
-   /* private fun loadAdapter() {
-        var mAdapter: SimpleAdapter = SimpleAdapter(this, questions)
-
-
-        //This is the code to provide a sectioned list
-        var sections: ArrayList<SimpleSectionedAdapter.Section> = ArrayList()
-
-        //Sections
-        sections.add(SimpleSectionedAdapter.Section(0, "Section 1"));
-        sections.add(SimpleSectionedAdapter.Section(5, "Section 2"));
-        sections.add(SimpleSectionedAdapter.Section(12, "Section 3"));
-        sections.add(SimpleSectionedAdapter.Section(14, "Section 4"));
-        sections.add(SimpleSectionedAdapter.Section(20, "Section 5"));
-        Log.e("test", "test")
-        //Add your adapter to the sectionAdapter
-//        var dummy: SimpleSectionedAdapter.Section[] = SimpleSectionedAdapter.Section[sections.size()]
-        var mSectionedAdapter: SimpleSectionedAdapter = SimpleSectionedAdapter(this, R.layout.question_list, mAdapter)
-        mSectionedAdapter.setSections(sections)
-
-        //Apply this adapter to the RecyclerView
-        val rv_list: RecyclerView = findViewById(R.id.rc)
-        rv_list.layoutManager = LinearLayoutManager(this)
-
-        rv_list.setAdapter(mSectionedAdapter)
-    }
-
-*/
     private fun goBackMethod() {
         val toast = Toast.makeText(this, "PDF Created", Toast.LENGTH_LONG)
         val view = toast.view
@@ -234,9 +192,8 @@ class DisplayQuestionsActivity : AppCompatActivity() {
             try {
                 pdfCreationObject.startPDFCreation()
             } catch (e: Exception) {
-            } // Tried with DriveUploadHelper before
-            //val obj = DriveUploader(File(pdfCreationObject.des), p0[0])
-            val obj = DriveUploader(File(pdfCreationObject.des), p0[0])
+            }
+            DriveUploader(p0[0])
             return p0[0]
         }
 
@@ -245,23 +202,4 @@ class DisplayQuestionsActivity : AppCompatActivity() {
             (result as DisplayQuestionsActivity).goBackMethod()
         }
     }
-
-    fun checkService() {
-        val credential = GoogleAccountCredential.usingOAuth2(
-                this, setOf(DriveScopes.DRIVE_FILE))
-        val googleAccount = GoogleSignIn.getLastSignedInAccount(this)
-        if (googleAccount != null) {
-            credential.selectedAccount = googleAccount.account
-        }
-
-        val googleDriveService = Drive.Builder(
-                AndroidHttp.newCompatibleTransport(),
-                GsonFactory(),
-                credential)
-                .setApplicationName("Checklist")
-                .build()
-
-        mDriverServiceHelper = DriveServiceHelper(googleDriveService, this, applicationContext)
-    }
-
 }

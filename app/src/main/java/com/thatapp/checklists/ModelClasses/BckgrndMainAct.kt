@@ -35,7 +35,6 @@ class CustomBackgroundIV @JvmOverloads constructor(context: Context, attrs: Attr
         canvasWidth = w
         canvasHeight = h
         drawHeight = ((drawPercent/100)*canvasHeight)
-        Log.e("MYTAG",drawHeight.toString())
     }
 
     override fun onDraw(canvas: Canvas) {

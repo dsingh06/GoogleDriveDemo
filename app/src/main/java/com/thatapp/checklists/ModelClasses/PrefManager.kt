@@ -10,19 +10,21 @@ public class PrefManager(var context: Context) {
 
 
     var downloadPath: String?
-        get() = sharedPref.getString(KEY_DOWNLOAD_PATH, "na")
+        get() = sharedPref.getString(KEY_DOWNLOAD_PATH, "")
         set(strPath) {
             editor.putString(KEY_DOWNLOAD_PATH, strPath)
             editor.commit()
         }
 
+    // FOLDER TO STORE THE FILE
     var folderID: String?
-        get() = sharedPref.getString(KEY_FOLDER_ID, "na")
+        get() = sharedPref.getString(KEY_FOLDER_ID, "")
         set(strFolderID) {
             editor.putString(KEY_FOLDER_ID, strFolderID)
             editor.commit()
         }
 
+    // PARENT FOLDER OF FOLDERID ABOVE - I.E. CHECKLIST APP
     var rootFolderID: String?
         get() = sharedPref.getString(KEY_ROOT_FOLDER_ID, "na")
         set(strFolderID) {
@@ -102,8 +104,9 @@ public class PrefManager(var context: Context) {
             editor.commit()
         }
 
+    // LOCAL DIRECTORY NAME WHERE GENERATED FILES STAY
     var dirName: String?
-        get() = sharedPref.getString(KEY_DIR_NAME, "na")
+        get() = sharedPref.getString(KEY_DIR_NAME,"")
         set(strDir) {
             editor.putString(KEY_DIR_NAME, strDir)
             editor.commit()
