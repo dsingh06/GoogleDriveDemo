@@ -76,7 +76,7 @@ class DisplayCheckListsActivity : AppCompatActivity(), RecyclerItemTouchHelper.R
         val storageDir = getFilesDir()
         val files: Array<File>? = File(storageDir.getAbsolutePath() + File.separator + "downloads").listFiles(fileNameFilter)
         if (files != null) {
-            Log.e("Files", "Size: " + files.size)
+//            Log.e("Files", "Size: " + files.size)
             for (i in files) {
                 downloaded.add(i)
             }

@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import com.thatapp.checklists.R
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,7 +22,9 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import android.provider.OpenableColumns
+import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v4.app.NotificationCompat
+import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -32,18 +33,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.Scope
 import com.google.api.services.drive.DriveScopes
 import com.thatapp.checklists.ModelClasses.*
+import com.crashlytics.android.Crashlytics
+import com.crashlytics.android.core.CrashlyticsCore
+import com.thatapp.checklists.BuildConfig
+import com.thatapp.checklists.ViewClasses.MainActivity.Companion.REQUEST_CODE_SIGN_IN
+import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastFailureBackground
+import io.fabric.sdk.android.Fabric;
 import java.io.*
 
 class MainActivity : AppCompatActivity(), ServiceListener {
 
-	enum class ButtonState {
-		LOGGED_OUT,
-		LOGGED_IN
-	}
-
 	private val TAG = "From MainActivity: "
-	private val REQUEST_CODE_SIGN_IN = 1
-	private val REQUEST_CODE_DOWNLOAD_DOCUMENTS = 2
+	private val REQUEST_CODE_DOWNLOAD_DOCUMENTS = 3
 	private var mSignedInAccount: GoogleSignInAccount? = null
 	private var mGoogleSignInClient: GoogleSignInClient? = null
 	private var mGoogleSignInOptions: GoogleSignInOptions? = null
@@ -53,16 +54,27 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 	private val PROFILE_ACTIVITY = 33
 	private lateinit var prefManager: PrefManager
 
+	enum class ButtonState {
+		LOGGED_OUT,
+		LOGGED_IN
+	}
+
 	val UPLOAD_JOB_SCHEDULER_ID = 31
 
 	companion object {
+		val REQUEST_CODE_SIGN_IN = 1
 		val toastSuccessBackground = Color.parseColor("#228B22")
 		val toastFailureBackground = Color.parseColor("#B22222")
 	}
 
-
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		val crashlyticsKit = Crashlytics.Builder()
+				.core(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+				.build();
+		Fabric.with(this, crashlyticsKit);
+//		Fabric.with(this, Crashlytics());
+
 		setContentView(com.thatapp.checklists.R.layout.activity_main)
 		prefManager = PrefManager(this)
 
@@ -122,7 +134,6 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 		}
 	}
 
-
 	override fun onResume() {
 		super.onResume()
 		mSignedInAccount = GoogleSignIn.getLastSignedInAccount(this)
@@ -141,18 +152,13 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 		setButtons()
 	}
 
-
 	override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
 		super.onActivityResult(requestCode, resultCode, resultData)
 
+//		Log.e (TAG, "Resultcode: "+resultCode)
 		when (requestCode) {
-			REQUEST_CODE_SIGN_IN -> if (resultCode == Activity.RESULT_OK && resultData != null) {
-				Log.e(TAG, "Going to Handle Signin result")
-				handleSignInResult(resultData) // Where jobScheduler is set
-			} else {
-				showSnack(toastFailureBackground, "Unable to Sign-In", Snackbar.LENGTH_SHORT)
-			}
-			REQUEST_CODE_DOWNLOAD_DOCUMENTS -> if (resultCode == Activity.RESULT_OK && resultData != null) {
+			REQUEST_CODE_SIGN_IN -> handleSignInResult(resultData!!)
+			REQUEST_CODE_DOWNLOAD_DOCUMENTS -> if (resultCode == RESULT_OK && resultData != null) {
 				val uri = resultData.data
 				if (uri != null) {
 					downloadFileFromFilePicker(uri)
@@ -161,10 +167,6 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 		}
 	}
 
-	/**
-	 * Handles the `result` of a completed sign-in activity initiated from [ ][.requestSignIn].
-	 */
-//    @SuppressLint("ServiceCast")
 	private fun handleSignInResult(result: Intent) {
 		GoogleSignIn.getSignedInAccountFromIntent(result)
 				.addOnSuccessListener { googleAccount ->
@@ -177,13 +179,13 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 					startupCheck()
 					setButtons()
 					if (!isJobServiceOn()) setJobScheduler()
+					showSnack(toastSuccessBackground,"Sign-in success!",Snackbar.LENGTH_SHORT)
+					prefManager.loginStatus = true
 				}
 				.addOnFailureListener { exception ->
-					showSnack(toastFailureBackground, exception.toString(), Snackbar.LENGTH_LONG)
 					prefManager.loginStatus = false
 				}
 	}
-
 
 	private fun requestSignIn() {
 		if (isNetworkConnected()) {
@@ -194,6 +196,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 						//createDriveClients(googleSignInAccount);
 					}
 					?.addOnFailureListener {
+						Crashlytics.logException(it)
 						// Silent sign-in failed, display account selection prompt
 						startActivityForResult(
 								mGoogleSignInClient?.getSignInIntent(), REQUEST_CODE_SIGN_IN);
@@ -217,8 +220,8 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 		return (activeNetwork != null && activeNetwork.isConnectedOrConnecting)
 	}
 
-	private fun setJobScheduler() {
-		Log.e(TAG,"1 Job Scheduling Setup")
+	private fun setJobScheduler() {// todo pause if not needed?
+// Log.e(TAG,"1 Job Scheduling Setup")
 		val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
 		jobScheduler.schedule(JobInfo.Builder(UPLOAD_JOB_SCHEDULER_ID,
 				ComponentName(this, DriveSyncService::class.java))
@@ -239,7 +242,6 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 		return hasBeenScheduled
 	}
 
-
 	private fun linkVarsToViews() {
 		checklistsOnline = findViewById(R.id.downloadAndSyncLayout)
 		myProfile = findViewById(R.id.myProfileLayout)
@@ -257,8 +259,8 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 		showSnack(toastFailureBackground, "User cancelled", Snackbar.LENGTH_LONG)
 	}
 
-
 	override fun handleError(exception: Exception) {
+//		Crashlytics.logException(exception)
 		if (exception.message === "Sign-in failed.") setButtons()
 		val errorMessage = getString(R.string.status_error, exception.message)
 		val snack = Snackbar.make(main_layout, errorMessage, Snackbar.LENGTH_LONG)
@@ -332,14 +334,12 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 				}
 			}
 		} catch (e: Exception) {
+			Crashlytics.logException(e)
 			handleError(e)
 		}
 	}
 
-
-	private fun startupCheck() {
-		CheckDriveSync().execute(this)
-	}
+	private fun startupCheck() = CheckDriveSync().execute(this)
 
 	private fun setButtons() {
 		when (state) {
@@ -364,19 +364,19 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 	}
 
 	private fun showNotification(title: String) {
-		var notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-		var notificationId = 1
-		var channelId = "channel-01";
-		var channelName = "checkList";
-		var importance = NotificationManager.IMPORTANCE_HIGH;
+		val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+		val notificationId = 1
+		val channelId = "channel-01"
+		val channelName = "checkList"
+		val importance = NotificationManager.IMPORTANCE_HIGH
 
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-			var mChannel = NotificationChannel(
-					channelId, channelName, importance);
-			notificationManager.createNotificationChannel(mChannel);
+			val mChannel = NotificationChannel(
+					channelId, channelName, importance)
+			notificationManager.createNotificationChannel(mChannel)
 		}
 
-		var mBuilder: NotificationCompat.Builder = NotificationCompat.Builder(this, channelId)
+		val mBuilder: NotificationCompat.Builder = NotificationCompat.Builder(this, channelId)
 				.setContentTitle("CheckList App")
 				.setContentText(title + " is Downloading")
 				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_notify))
@@ -392,7 +392,6 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 	}
 
 	private fun getNotificationIcon(notificationBuilder: NotificationCompat.Builder): Int {
-
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			var color = resources.getColor(R.color.primary_dark_material_dark)
 			notificationBuilder.setColor(color)
@@ -405,7 +404,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     class CheckDriveSync() : AsyncTask<Context, Void, Void>() {
         override fun doInBackground(vararg p0: Context): Void? {
-			Log.e("From MainActivity: ","In Async Task")
+//			Log.e("From MainActivity: ","In Async Task")
 			DriveUploader(p0[0])
 			return null
         }

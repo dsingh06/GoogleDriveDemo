@@ -28,6 +28,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import com.crashlytics.android.Crashlytics
 import com.thatapp.checklists.ModelClasses.PrefManager
 import com.thatapp.checklists.R
 import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastFailureBackground
@@ -110,7 +111,7 @@ lateinit var prefManager:PrefManager
 
         val intent: Intent = intent
         filename = intent.getStringExtra("fileName")
-        Log.e("file name is ", "@   " + filename)
+//        Log.e("file name is ", "@   " + filename)
         openRenderer(filename)
         showPage(pageIndex)
 
@@ -126,7 +127,7 @@ lateinit var prefManager:PrefManager
         try {
             closeRenderer()
         } catch (e: IOException) {
-            Log.d(TAG, e.toString())
+            Crashlytics.logException(e)
         }
         super.onStop()
     }
@@ -168,12 +169,14 @@ lateinit var prefManager:PrefManager
             pdfRenderer = PdfRenderer(fileDescriptor)
 			currentPage = pdfRenderer.openPage(INITIAL_PAGE_INDEX)
         } catch (e: IOException){
+            Crashlytics.logException(e)
             val t = Toast.makeText(this,"Error opening file!",Toast.LENGTH_SHORT)
             val v = t.view
             v.setBackgroundColor(toastFailureBackground)
             t.show()
 			finish()
         } catch (e:kotlin.UninitializedPropertyAccessException){
+            Crashlytics.logException(e)
 			val t = Toast.makeText(this,"Error opening file!",Toast.LENGTH_SHORT)
 			val v = t.view
 			v.setBackgroundColor(toastFailureBackground)
@@ -253,7 +256,7 @@ lateinit var prefManager:PrefManager
             openRenderer(filename)
             showPage(pageIndex)
         } catch (e: IOException) {
-            Log.d(TAG, e.toString())
+            Crashlytics.logException(e)
         }
     }
 }

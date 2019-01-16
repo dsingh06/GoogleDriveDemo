@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <files-path path="downloads/" name="downloads" />
-    <files-path path="generated/" name="generated" />
+    <!--files-path path="downloads/" name="downloads" />
+    <files-path path="generated/" name="generated" /-->
+    <external-path name="My_Images" path="." />
+    <files-path
+        name="Files"
+        path="/"/>
+    <!--external-path name="external_files" path="."/-->
+
 </paths>

@@ -14,55 +14,54 @@ import android.net.Uri
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
-import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.PopupMenu
-import android.system.Os.read
-import android.util.Log
 import android.view.Gravity
-import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.crashlytics.android.Crashlytics
 import com.thatapp.checklists.ModelClasses.PrefManager
-import com.thatapp.checklists.ModelClasses.SignatureRecording
 import com.thatapp.checklists.R
 import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastFailureBackground
 import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastSuccessBackground
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_profile.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 
 class ProfileActivity : AppCompatActivity() {
 
     private lateinit var actionBarObject: ActionBar
-
     private lateinit var prefManager: PrefManager
-
     private val SIGNATURE_CODE = 131
     private val REQUEST_IMAGE_CAPTURE = 101
-    private val REQUEST_IMAGE_PICK = 102
-    private val REQUEST_PERMISSIONS = 102
+    private val REQUEST_IMAGE_PICK = 331
+    private val REQUEST_PERMISSIONS = 113
+    private var imagePath: String=""
 
-    private val REQUEST_USERIMAGE_CAPTURE = 103
-    private val REQUEST_USERIMAGE_PICK = 104
+    private val TAG = "ProfileData: "
 
-    lateinit var imagePath: String
+    lateinit var tempStorageDir:File
+    lateinit var storageDir:File
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         setSupportActionBar(findViewById(R.id.my_toolbar))
+
+
+        tempStorageDir = File(filesDir.absolutePath + File.separator + "TempFolder")
+        storageDir = File(filesDir.absolutePath + File.separator + "CompanyPhoto")
+        if (!tempStorageDir.exists()) tempStorageDir.mkdirs()
+        if(!storageDir.exists()) storageDir.mkdirs()
+
 
         actionBarObject = supportActionBar!!
         actionBarObject.setDisplayHomeAsUpEnabled(true)
@@ -74,18 +73,18 @@ class ProfileActivity : AppCompatActivity() {
         etcompanyname.setText(prefManager.companyName)
         etjobtitle.setText(prefManager.jobTitle)
 
-        setLogoInImageview()
+        setLogoInImageview() // good to go - todo check size is small
 
-        setSignatureInImageview()
-        setProfileInImageview()
+        setSignatureInImageview() // good  to go
+
         signature.setOnClickListener {
             startActivityForResult(Intent(this, SignatureRecording::class.java), SIGNATURE_CODE)
         }
 
         btnSave.setOnClickListener {
-            var name = etyourname.text.toString()
-            var companyName = etcompanyname.text.toString()
-            var jobTitle = etjobtitle.text.toString()
+            val name = etyourname.text.toString()
+            val companyName = etcompanyname.text.toString()
+            val jobTitle = etjobtitle.text.toString()
 
             if (name.isBlank()) {
                 showToast(toastFailureBackground, "Please Enter Your Name", Toast.LENGTH_SHORT)
@@ -100,46 +99,29 @@ class ProfileActivity : AppCompatActivity() {
                 prefManager.userName = name
                 prefManager.jobTitle = jobTitle
                 prefManager.companyName = companyName
-                showToast(toastSuccessBackground, "Profile Saved", Toast.LENGTH_SHORT)
+                showToast(toastSuccessBackground, "Profile Saved!", Toast.LENGTH_SHORT)
                 finish()
             }
         }
 
-        logoLayout.setOnClickListener {
-            menuPop(companyImageView)
-        }
-
-
-        imageUser.setOnClickListener {
-            menuImagePop(imageUser)
-        }
+        logoLayout.setOnClickListener { menuPop(companyImageView) }
 
         checkPermissions()
     }
 
-    private fun setProfileInImageview() {
-        val logo = File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + "user.png")
-        if (logo.exists()) {
-            val bmp = BitmapFactory.decodeFile(logo.toString())
-            imageUser.setImageBitmap(bmp)
-        }
-    }
-
-
     private fun setLogoInImageview() {
-        val logo = File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + "companylogo.png")
+        val logo = File(getFilesDir().getAbsolutePath() + File.separator + "CompanyPhoto" + File.separator + "companylogo.png")
         if (logo.exists()) {
-            val bmp = BitmapFactory.decodeFile(logo.toString())
-            imageView.setImageBitmap(bmp)
+            Glide.with(this).load(logo).into(imageView)
         }
     }
-
 
     private fun setSignatureInImageview() {
         val sign = File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + "signature.png")
         if (sign.exists()) {
-            val bmp = BitmapFactory.decodeFile(sign.toString())
-            signature.setImageBitmap(bmp)
+            val bitmap = BitmapFactory.decodeFile(sign.absolutePath)
+            signature.setImageBitmap(bitmap)
+//            Glide.with(this).load(sign).into(signature)
         }
     }
 
@@ -178,7 +160,7 @@ class ProfileActivity : AppCompatActivity() {
         popup.show() // Show the popup menu
     }
 
-    fun showAlert(context: Context) {
+    private fun showAlert(context: Context) {
         val builder: AlertDialog.Builder
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder = AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert)
@@ -194,7 +176,6 @@ class ProfileActivity : AppCompatActivity() {
                 .setIcon(R.drawable.checklist)
                 .show()
     }
-
     private fun sendIntentChoosePicture() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.setType("image/*")
@@ -211,19 +192,12 @@ class ProfileActivity : AppCompatActivity() {
 
         if (requestCode == SIGNATURE_CODE) {
             setSignatureInImageview()
-        } else
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK) {
+                if (File(imagePath).exists()) { //imagepath pointing to temp path
+                    val imageFinalPath = File(storageDir, "companylogo.png")
+                    orientationCorrectionAndSaveLowerRes(imagePath,imageFinalPath, 300)
 
-            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK) {
-
-                var imgFile = File(imagePath)
-                if (imgFile.exists()) {
-
-                    saveImage(decodeImageFromFiles(imagePath, 600, 950))
-                    imageView.setImageURI(Uri.fromFile(imgFile)) //pic is resized  TODO WILL THIS NOT THROW AN OUT OF MEMORY EXCEPTION?
-
-//                showToast(toastSuccessBackground, "Logo Saved", Toast.LENGTH_SHORT)
                 }
-
             } else if (requestCode == REQUEST_IMAGE_PICK && resultCode == AppCompatActivity.RESULT_OK && data != null) {
                 try {
                     val uri: Uri = data.getData()
@@ -233,97 +207,50 @@ class ProfileActivity : AppCompatActivity() {
                         showToast(toastSuccessBackground, "Logo Saved", Toast.LENGTH_SHORT)
                         imageView.setImageBitmap(bitmap)
                     } catch (e: IOException) {
-                        e.printStackTrace()
+                        Crashlytics.logException(e)
                         Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
+                    Crashlytics.logException(e)
                     val a = Toast.makeText(this, "Error reading file, please try a different file!", Toast.LENGTH_SHORT)
                     a.setGravity(Gravity.FILL_HORIZONTAL, 0, 0)
                     a.show()
                 }
-            } else
-
-                if (requestCode == REQUEST_USERIMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK) {
-                    Log.e("inside", "image capture   " + this.imagePath.toString())
-
-                    var imgFile = File(imagePath)
-                    if (imgFile.exists()) {
-                        Log.e("inside", "capture   " + this.imagePath.toString())
-                        Log.e("img", BitmapFactory.decodeFile(imagePath).height.toString() + "    " + BitmapFactory.decodeFile(imagePath).width.toString())
-                        saveProfileImage(decodeImageFromFiles(imagePath, 600, 950))
-
-                        // BitmapFactory.decodeFile(imagePath).getScaledHeight(1024)
-
-                        imageUser.setImageURI(Uri.fromFile(imgFile)) // TODO WILL THIS NOT THROW AN OUT OF MEMORY EXCEPTION?
-
-//                showToast(toastSuccessBackground, "Logo Saved", Toast.LENGTH_SHORT)
-                    }
-
-                } else if (requestCode == REQUEST_USERIMAGE_PICK && resultCode == AppCompatActivity.RESULT_OK && data != null) {
-                    try {
-                        val uri: Uri = data.getData()
-                        try {
-                            val bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri) //TODO OOM ERROR HERE
-                            val path = saveProfileImage(bitmap)
-                            showToast(toastSuccessBackground, "Pic Saved", Toast.LENGTH_SHORT)
-                            imageUser.setImageBitmap(bitmap)
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                            Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show()
-                        }
-                    } catch (e: Exception) {
-                        val a = Toast.makeText(this, "Error reading file, please try a different file!", Toast.LENGTH_SHORT)
-                        a.setGravity(Gravity.FILL_HORIZONTAL, 0, 0)
-                        a.show()
-                    }
-                }
+            }
     }
 
     private fun sendTakePictureIntent() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraIntent.putExtra(MediaStore.EXTRA_FINISH_ON_COMPLETION, true)
+    //    cameraIntent.putExtra(MediaStore.EXTRA_FINISH_ON_COMPLETION, true)
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            var pictureFile: File? = null
             try {
-                pictureFile = getPictureFile()
-            } catch (ex: IOException) {
+                val pictureName = "companylogo"
+                val temp = File.createTempFile(pictureName,".jpg",tempStorageDir)
+                imagePath = temp.absolutePath
+                val photoURI: Uri
+                if (temp!=null){
+                    if(Build.VERSION_CODES.N<=android.os.Build.VERSION.SDK_INT) {
+                        photoURI = FileProvider.getUriForFile(this,
+                                "com.thatapp.checklists.provider",
+                                temp);
+                    } else{
+                        photoURI = Uri.fromFile(temp)
+                    }
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            } catch (ex: Exception) {
+                Crashlytics.logException(ex)
                 Toast.makeText(this,
                         "Photo file can't be created, please try again",
                         Toast.LENGTH_SHORT).show()
                 return
             }
-
-            if (pictureFile != null) {
-                val photoURI = FileProvider.getUriForFile(this,
-                        "com.thatapp.checklists.provider",
-                        pictureFile)
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE)
-            }
         }
     }
 
-    @Throws(IOException::class)
-    private fun getPictureFile(): File {
-        val pictureFile = "companylogo.png"
-        val storageDir = filesDir.absolutePath + File.separator + "downloads"
-        val image = File(storageDir, pictureFile)
-        imagePath = image.getAbsolutePath()
-        imagePath = image.getAbsolutePath()
-        return image
-    }
 
-    @Throws(IOException::class)
-    private fun getPictureFile(type: String): File {
-        val pictureFile = "user.png"
-        val storageDir = filesDir.absolutePath + File.separator + "downloads"
-        val image = File(storageDir, pictureFile)
-        imagePath = image.getAbsolutePath()
-        return image
-    }
-
-
-    fun saveImage(myBitmap: Bitmap): String {
+    private fun saveImage(myBitmap: Bitmap): String {
         val bytes = ByteArrayOutputStream()
         myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
 
@@ -339,8 +266,8 @@ class ProfileActivity : AppCompatActivity() {
             fo.close()
 //            Log.e("TAG", "Logo Saved " + f.getAbsolutePath())
             return f.getAbsolutePath()
-        } catch (e1: IOException) {
-            e1.printStackTrace()
+        } catch (ex: IOException) {
+            Crashlytics.logException(ex)
         }
         return ""
     }
@@ -371,7 +298,6 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == REQUEST_PERMISSIONS) {
             if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
@@ -380,6 +306,62 @@ class ProfileActivity : AppCompatActivity() {
                 false
             }
         }
+    }
+
+    private fun orientationCorrectionAndSaveLowerRes(temppath: String, newpath:File, size: Int) {
+        val matrix = getExifData(temppath) // to get the rotation of the image
+
+        val options = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
+        BitmapFactory.decodeFile(temppath, options)
+        options.inSampleSize = calculateInSampleSize(options,250,250)
+
+        options.inJustDecodeBounds = false
+        val bitmap = BitmapFactory.decodeFile(imagePath,options)
+
+        try{
+            val out = FileOutputStream(newpath)
+            bitmap.compress(Bitmap.CompressFormat.PNG,100,out)
+            if (File(imagePath).exists()) File(imagePath).delete()
+            imagePath = newpath.absolutePath
+        } catch (e:IOException){
+            Crashlytics.logException(e)
+            showToast(toastFailureBackground, "Error saving file", Toast.LENGTH_SHORT)
+        }
+
+        val properBitmap:Bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.width,bitmap.height,matrix,true)
+        Glide.with(this).load(properBitmap).into(imageView)
+
+        try{
+            val out = FileOutputStream(newpath)
+            properBitmap.compress(Bitmap.CompressFormat.PNG,100,out)
+//            if (File(imagePath).exists()) File(imagePath).delete()
+//            imagePath = newpath.absolutePath
+        } catch (e:IOException){
+            Crashlytics.logException(e)
+            showToast(toastFailureBackground, "Error saving file", Toast.LENGTH_SHORT)
+        }
+    }
+
+    fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        // Raw height and width of image
+        val (height: Int, width: Int) = options.run { outHeight to outWidth }
+        var inSampleSize = 1
+
+        if (height > reqHeight || width > reqWidth) {
+
+            val halfHeight: Int = height / 2
+            val halfWidth: Int = width / 2
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+
+        return inSampleSize
     }
 
     private fun getExifData(filePath: String): Matrix { //TODO image rotation based on orientation
@@ -404,133 +386,9 @@ class ProfileActivity : AppCompatActivity() {
                 //Log.d("EXIF", "Exif: $orientation")
             }
         } catch (e: Exception) {
+            Crashlytics.logException(e)
             showToast(toastFailureBackground, "Error rotating file", Toast.LENGTH_SHORT)
         }
         return matrix
-    }
-
-
-    fun saveProfileImage(myBitmap: Bitmap): String {
-        val bytes = ByteArrayOutputStream()
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-
-        val pictureFile = "user.png"
-        val storageDir = filesDir.absolutePath + File.separator + "downloads"
-        // have the object build the directory structure, if needed.
-
-        try {
-            val f = File(storageDir, pictureFile)
-            f.createNewFile()
-            val fo = FileOutputStream(f)
-            fo.write(bytes.toByteArray())
-            fo.close()
-//            Log.e("TAG", "Logo Saved " + f.getAbsolutePath())
-            return f.getAbsolutePath()
-        } catch (e1: IOException) {
-            e1.printStackTrace()
-        }
-        return ""
-    }
-
-    private fun menuImagePop(ivImage: ImageView) {
-
-        val popup = PopupMenu(this, ivImage)
-        //Inflating the Popup using xml file
-        popup.getMenuInflater().inflate(R.menu.takechoosephoto, popup.getMenu())
-        popup.setOnMenuItemClickListener { item ->
-            // Setonclick Listener to the menu items
-            when (item.itemId) {
-                R.id.takePhoto -> { // Do below if this is clicked
-                    if (checkPermissions()) {
-                        sendProfileTakePictureIntent()
-                    } else {
-                        showAlert(this)
-                    }
-                }
-                R.id.choosePhoto -> {
-                    if (checkPermissions()) {
-                        sendProfileIntentChoosePicture()
-                    } else {
-                        showAlert(this)
-                    }
-                }
-            }
-            true
-        }
-        popup.show() // Show the popup menu
-    }
-
-    private fun sendProfileIntentChoosePicture() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.setType("image/*")
-        if (intent.resolveActivity(this.packageManager) != null) {
-            startActivityForResult(intent, REQUEST_USERIMAGE_PICK)
-        } else {
-            Toast.makeText(this, "Error performing this operation!", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun sendProfileTakePictureIntent() {
-        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraIntent.putExtra(MediaStore.EXTRA_FINISH_ON_COMPLETION, true)
-
-        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            var pictureFile: File? = null
-            try {
-                pictureFile = getPictureFile("user")
-            } catch (ex: IOException) {
-                Toast.makeText(this,
-                        "Photo file can't be created, please try again",
-                        Toast.LENGTH_SHORT).show()
-                return
-            }
-
-            if (pictureFile != null) {
-                val photoURI = FileProvider.getUriForFile(this,
-                        "com.thatapp.checklists.provider",
-                        pictureFile)
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                startActivityForResult(cameraIntent, REQUEST_USERIMAGE_CAPTURE)
-            }
-        }
-    }
-
-    private fun compressImage(photo: Bitmap) {
-        // TODO Auto-generated method stub
-        val imageWidth = photo.getWidth()
-        val imageHeight = photo.getHeight()
-
-        var newHeight = 0
-        var newWidth = 0
-        Toast.makeText(this@ProfileActivity, "oldwidth=" + imageWidth + ",oldHeight=" + imageHeight, Toast.LENGTH_LONG).show()
-        if (imageHeight > 1500 || imageWidth > 1500) {
-            if (imageHeight > imageWidth) {
-                Log.e("height is more", "true")
-                newHeight = 1200
-                newWidth = (newHeight * imageWidth / imageHeight)
-            }
-            if (imageWidth > imageHeight) {
-                Log.e("width is more", "true")
-                newWidth = 1200
-                newHeight = (newWidth * imageHeight / imageWidth)
-            }
-        }
-        Toast.makeText(this@ProfileActivity, "newwidth=" + newWidth + ",newHeight=" + newHeight, Toast.LENGTH_LONG).show()
-
-    }
-
-
-    fun decodeImageFromFiles(path: String, width: Int, height: Int): Bitmap {
-        val scaleOptions = BitmapFactory.Options()
-        scaleOptions.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(path, scaleOptions)
-        var scale = 1
-        while ((scaleOptions.outWidth / scale / 2 >= width && scaleOptions.outHeight / scale / 2 >= height)) {
-            scale *= 2
-        }
-        // decode with the sample size
-        val outOptions = BitmapFactory.Options()
-        outOptions.inSampleSize = scale
-        return BitmapFactory.decodeFile(path, outOptions)
     }
 }

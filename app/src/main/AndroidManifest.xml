@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ModelClasses.SignatureRecording"></activity>
+        <activity android:name=".ViewClasses.SignatureRecording"/>
         <activity
             android:name=".ViewClasses.ProfileActivity"
             android:parentActivityName=".ViewClasses.MainActivity"
@@ -66,7 +66,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="com.thatapp.checklists.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -78,6 +78,10 @@
             android:name=".ModelClasses.DriveSyncService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="29e5fdfdf31e92b58abebd92a4738d4c1127a62e" />
     </application>
 
 </manifest>

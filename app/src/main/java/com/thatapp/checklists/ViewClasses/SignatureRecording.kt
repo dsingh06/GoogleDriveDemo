@@ -1,32 +1,21 @@
-package com.thatapp.checklists.ModelClasses
+package com.thatapp.checklists.ViewClasses
 
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 
 import com.thatapp.checklists.R
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.graphics.*
-import android.os.AsyncTask
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.view.*
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_signature_recording.*
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.lang.ref.WeakReference
 import android.graphics.Bitmap
 import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastFailureBackground
 import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastSuccessBackground
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_profile.*
 import java.io.IOException
-import android.R.attr.bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.util.Log
+import com.crashlytics.android.Crashlytics
+import com.thatapp.checklists.ModelClasses.CustomImageview
+import com.thatapp.checklists.ModelClasses.PrefManager
 
 
 class SignatureRecording : AppCompatActivity() {
@@ -84,13 +73,14 @@ class SignatureRecording : AppCompatActivity() {
     private fun saveFile(bmp: Bitmap, destination: File) {
         try {
             FileOutputStream(destination).use({ out ->
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, out)
+                bmp.compress(Bitmap.CompressFormat.PNG,100, out)
             })
             val t = Toast.makeText(this, "Signature saved", Toast.LENGTH_LONG)
             val v = t.view
             v.getBackground().setColorFilter(toastSuccessBackground, PorterDuff.Mode.SRC_IN)
             t.show()
         } catch (e: IOException) {
+            Crashlytics.logException(e)
             //e.printStackTrace()
             val t = Toast.makeText(this, "Error saving file", Toast.LENGTH_LONG)
             val v = t.view
@@ -103,7 +93,7 @@ class SignatureRecording : AppCompatActivity() {
     private fun getDestinationFile(): File {
         val f = File(getFilesDir().getAbsolutePath() + File.separator + "downloads")
         if (!f.exists()) f.mkdirs()
-        return (File(getFilesDir().getAbsolutePath() + File.separator + "downloads", "signature.png"))
+        return (File(f.absolutePath, "signature.png"))
     }
 
 

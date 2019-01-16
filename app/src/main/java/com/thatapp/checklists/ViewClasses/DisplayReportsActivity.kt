@@ -75,7 +75,7 @@ class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.Recy
         val storageDir = getFilesDir()
         val files:Array<File>? = File(storageDir.getAbsolutePath() + File.separator + "generated"+File.separator + prefManager.dirName).listFiles(fileNameFilter)
         if (files!=null) {
-            Log.e("Files", "Size: " + files.size)
+//            Log.e("Files", "Size: " + files.size)
             for (i in files) {
 //            Log.e("Files", "FileName:" + files[i].name)
                 downloaded.add(i)

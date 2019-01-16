@@ -22,6 +22,8 @@ import java.io.File
 import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
 import android.widget.EditText
+import com.crashlytics.android.Crashlytics
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.thatapp.checklists.ModelClasses.*
 import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastSuccessBackground
 import java.text.SimpleDateFormat
@@ -64,7 +66,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
         val siteDatePickerDialog = DatePickerDialog(this, R.style.MyDatePickerDialogTheme, DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
             val newDate = Calendar.getInstance();
             newDate.set(year, monthOfYear, dayOfMonth);
-            tvdateTime.setText(SimpleDateFormat("dd/MM/yyyy    HH:mm", Locale.US).format(newDate.getTime()));
+            tvdateTime.setText(SimpleDateFormat("dd/MM/yyyy    HH:mm:ss", Locale.US).format(newDate.getTime()));
 
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH))
         tvdateTime.setOnFocusChangeListener(object : View.OnFocusChangeListener {
@@ -165,7 +167,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 //loadAdapter()
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Crashlytics.logException(e)
         }
         return
     }
@@ -192,6 +194,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
             try {
                 pdfCreationObject.startPDFCreation()
             } catch (e: Exception) {
+                Crashlytics.logException(e)
             }
             DriveUploader(p0[0])
             return p0[0]

@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable
 import android.provider.DocumentsContract
 import android.support.v4.content.ContextCompat
 import android.widget.Toast
+import com.crashlytics.android.Crashlytics
 import com.itextpdf.text.*
 import com.itextpdf.text.Paragraph
 import com.itextpdf.text.pdf.*
@@ -48,6 +49,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
             writer = PdfWriter.getInstance(document, FileOutputStream(des))
             writer.setPageEvent(HeaderFooterPageEvent())
         } catch (ex: Exception) {
+            Crashlytics.logException(ex)
 			Toast.makeText(context,"Error creating file at Step-1",Toast.LENGTH_SHORT).show()
             return
         }
@@ -72,7 +74,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         table.addCell(topCell)
 
         try {
-            val logo = storageDir.getAbsolutePath() + File.separator + "downloads" + File.separator + "companylogo.png"
+            val logo = storageDir.getAbsolutePath() + File.separator + "CompanyPhoto" + File.separator + "companylogo.png"
 			val options = BitmapFactory.Options().apply {
 				inJustDecodeBounds = true
 			}
@@ -94,6 +96,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
             topCell.paddingBottom = 5f
             table.addCell(topCell).setBorder(PdfPCell.NO_BORDER)
         } catch (ex: Exception) {
+			Crashlytics.logException(ex)
 			topCell = PdfPCell(Phrase(" "))
 			topCell.horizontalAlignment = Element.ALIGN_RIGHT
 			topCell.verticalAlignment = Element.ALIGN_BOTTOM
@@ -207,6 +210,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
 
                 } catch (ex: Exception) {
+					Crashlytics.logException(ex)
 					Toast.makeText(context,"Error creating file at Step-3",Toast.LENGTH_SHORT).show()
                     return
                 }
@@ -261,6 +265,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
             cell1.setPadding(5f)
             table1.addCell(cell1)
         } catch (ex: Exception) {
+			Crashlytics.logException(ex)
 			cell1 = PdfPCell(Phrase(""))
             cell1.colspan = 1
             cell1.rowspan = 1
@@ -320,7 +325,8 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         try {
             document.add(table)
             document.close()
-        } catch (e: Exception) {
+        } catch (ex: Exception) {
+			Crashlytics.logException(ex)
 			Toast.makeText(context,"Error creating file at Step-5",Toast.LENGTH_SHORT).show()
             return
         }
@@ -447,8 +453,8 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
                     cell.border = Rectangle.NO_BORDER
                     table.addCell(cell)
                     table.writeSelectedRows(0, -1, document.right(115f), document.bottom(3f), writer.directContent)
-                } catch (e: DocumentException) {
-
+                } catch (ex: DocumentException) {
+					Crashlytics.logException(ex)
                 }
 
                 if (iconImage == null) {

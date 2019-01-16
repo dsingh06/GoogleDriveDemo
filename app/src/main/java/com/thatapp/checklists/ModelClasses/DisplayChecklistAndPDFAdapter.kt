@@ -9,6 +9,7 @@ import android.support.v4.content.FileProvider
 import android.util.Log
 import android.view.*
 import android.widget.*
+import com.crashlytics.android.Crashlytics
 import com.thatapp.checklists.ModelClasses.DriveUploader.Companion.setOfList_DriveFiles
 import com.thatapp.checklists.ModelClasses.DriveUploader.Companion.setOfList_LocalFiles
 import com.thatapp.checklists.R
@@ -54,7 +55,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
 
         if (downloaded[position].name.contains(".pdf")) {
             val name: String = downloaded[position].name.substringBefore(":")
-            Log.e(TAG, name)
+//            Log.e(TAG, name)
             holder.fileName.text = name
 
             val timeCreated = downloaded[position].name
@@ -63,7 +64,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                     .split("_")
 
             holder.updateDateTime.text = "Created: ".plus(timeCreated[1]).plus("   ").plus(timeCreated[0])
-            Log.e(TAG, timeCreated[0] + " " + timeCreated[1])
+//            Log.e(TAG, timeCreated[0] + " " + timeCreated[1])
             holder.ivShare.setVisibility(View.VISIBLE)
 
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -78,10 +79,12 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                         holder.ivStatus.setImageDrawable(context.getDrawable(R.drawable.cloud_s))
                     }
                 } catch (ex: Exception) {
+                    Crashlytics.logException(ex)
                 }
             } else {
 				holder.ivStatus.setImageDrawable(context.getDrawable(R.drawable.cloud_confusion))
 			}
+
             holder.parentView.setOnClickListener {
                 file_name = downloaded[position].name
                 val requestFile = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName + File.separator, downloaded[position].name)
@@ -92,9 +95,8 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                             "com.thatapp.checklists.provider",
                             requestFile)
 
-                } catch (e: Exception) {
-                    Log.e("File Selector",
-                            "The selected file can't be shared: $requestFile")
+                } catch (ex: Exception) {
+                    Crashlytics.logException(ex)
                     null
                 }
                 try {
@@ -102,14 +104,20 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                     intent.putExtra("fileName", downloaded[position].name)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                     context.startActivity(intent)
-                } catch (e: Exception) {
-                    Log.e("inn view", e.toString())
+                } catch (ex: Exception) {
+                    Crashlytics.logException(ex)
                 }
             }
         } else {
-            holder.fileName.text = downloaded[position].name.substringBefore(".")
-            holder.updateDateTime.text = "Updated: ".plus(convertLongToTime(downloaded[position].lastModified()))
-        }
+			holder.fileName.text = downloaded[position].name.substringBefore(".")
+			holder.updateDateTime.text = "Updated: ".plus(convertLongToTime(downloaded[position].lastModified()))
+			holder.parentView.setOnClickListener {
+				val intent = Intent(context, DisplayQuestionsActivity::class.java)
+				intent.putExtra("fileName", downloaded[position].name)
+//                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+				(context as DisplayCheckListsActivity).startActivityForResult(intent, 13)
+			}
+		}
 
         holder.ivShare.setOnClickListener {
             prefManager = PrefManager(context)
@@ -130,9 +138,8 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                         "com.thatapp.checklists.provider",
                         requestFile)
 
-            } catch (e: Exception) {
-                Log.e("File Selector",
-                        "The selected file can't be shared: $requestFile")
+            } catch (ex: Exception) {
+                Crashlytics.logException(ex)
                 null
             }
             try {
@@ -140,20 +147,8 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                 intent.putExtra(Intent.EXTRA_STREAM, fileUri)
                 context.startActivity(Intent.createChooser(intent, "Share file via..."))
 
-            } catch (e: Exception) {
-                Log.e("inn err", e.toString())
-            }
-        }
-
-
-
-        if (type.equals("xls")) {
-
-            holder.parentView.setOnClickListener {
-                val intent = Intent(context, DisplayQuestionsActivity::class.java)
-                intent.putExtra("fileName", downloaded[position].name)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                (context as DisplayCheckListsActivity).startActivityForResult(intent, 13)
+            } catch (ex: Exception) {
+                Crashlytics.logException(ex)
             }
         }
     }
@@ -192,10 +187,10 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
         lateinit var dir1: File
         if (dir.equals("checklist")) {
             dir1 = File(context.filesDir.absolutePath + File.separator + "downloads")// + File.separator + prefManager.dirName)
-            Log.e("type", "checklist")
+//            Log.e("type", "checklist")
         } else if (dir.equals("report")) {
             dir1 = File(context.filesDir.absolutePath + File.separator + "generated" + File.separator + prefManager.dirName)
-            Log.e("type", "report")
+//            Log.e("type", "report")
         }
         var tempFile = File(context.filesDir.absolutePath + File.separator + "trash" + File.separator + prefManager.dirName + File.separator + fileName)
 
@@ -205,13 +200,13 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             try {
                 File(dir1.absolutePath + File.separator + fileName).copyTo(tempFile, true)   //creating a copy
                 File(dir1.absolutePath + File.separator + fileName).delete()   //deleting the original file
-            } catch (e: Exception) {
-                Log.e("err copy ", e.toString())
+            } catch (ex: Exception) {
+                Crashlytics.logException(ex)
             }
             downloaded.removeAt(position)
             notifyItemRemoved(position)
             notifyDataSetChanged()
-            Log.e("File ", "Deleted ")
+//            Log.e("File ", "Deleted ")
         } else {
 //            Log.e("children", "not found")
         }
@@ -247,8 +242,8 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
             try {
                 File(dirTemp.absolutePath + File.separator + item.name).copyTo(tempFile, true)  //copy file from trash to desired directory
                 File(dirTemp.absolutePath + File.separator + item.name).delete() //deleting the file from trash
-            } catch (e: FileAlreadyExistsException) {
-                Log.e("err temp deleted ", e.toString())
+            } catch (ex: FileAlreadyExistsException) {
+                Crashlytics.logException(ex)
             }
 
             downloaded.add(position, item)
@@ -264,8 +259,8 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                     listOfFiles[i].delete()
                 }
             }
-        } catch (e: Exception) {
-
+        } catch (ex: Exception) {
+            Crashlytics.logException(ex)
         }
     }
 }
