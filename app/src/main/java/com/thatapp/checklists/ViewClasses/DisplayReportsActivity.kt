@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import com.thatapp.checklists.ModelClasses.DisplayChecklistAndPDFAdapter
 import com.thatapp.checklists.R
 import java.io.File
@@ -15,19 +14,25 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.graphics.Color
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
+import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
 import android.widget.Toast
 import com.thatapp.checklists.ModelClasses.PrefManager
 import com.thatapp.checklists.ModelClasses.RecyclerItemTouchHelper
+import kotlinx.android.synthetic.main.activity_generated_reports.*
 
 
-class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
-    var downloaded: ArrayList<File> = ArrayList<File>()
+
+class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
+
+	var downloaded: ArrayList<File> = ArrayList<File>()
     private val TAG = "Downloaded:-"
     lateinit var mAdapter: DisplayChecklistAndPDFAdapter
     lateinit var coordinatorLayout: CoordinatorLayout
     lateinit var prefManager:PrefManager
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_downloaded_checklists)
@@ -35,13 +40,12 @@ class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.Recy
         prefManager = PrefManager(this)
         val toolbar: Toolbar = findViewById(R.id.my_toolbar)
         coordinatorLayout = findViewById(R.id.coordinatorLayout)
-        toolbar.setTitle("Generated Reports")
+        toolbar.setTitle("PDF Reports")
         toolbar.setNavigationIcon(R.drawable.ic_back)
         setSupportActionBar(toolbar)
 
         loadAllGeneratedFiles()
         setAdapter()
-
     }
 
     private fun setAdapter() {
@@ -52,7 +56,6 @@ class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.Recy
         rv_list.adapter = mAdapter
         val itemTouchHelperCallback = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rv_list)
-
     }
 
     private fun loadAllGeneratedFiles() {

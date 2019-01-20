@@ -15,6 +15,7 @@ import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
@@ -25,13 +26,14 @@ import android.view.Gravity
 import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.crashlytics.android.Crashlytics
 import com.thatapp.checklists.ModelClasses.PrefManager
 import com.thatapp.checklists.R
 import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastFailureBackground
 import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastSuccessBackground
 import kotlinx.android.synthetic.main.activity_profile.*
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -51,7 +53,12 @@ class ProfileActivity : AppCompatActivity() {
     lateinit var tempStorageDir:File
     lateinit var storageDir:File
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+	val optionsGlide = RequestOptions()
+			.diskCacheStrategy(DiskCacheStrategy.NONE)
+			.skipMemoryCache(true)
+
+
+override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         setSupportActionBar(findViewById(R.id.my_toolbar))
@@ -73,7 +80,7 @@ class ProfileActivity : AppCompatActivity() {
         etcompanyname.setText(prefManager.companyName)
         etjobtitle.setText(prefManager.jobTitle)
 
-        setLogoInImageview() // good to go - todo check size is small
+        setLogoInImageview() // good to go
 
         setSignatureInImageview() // good  to go
 
@@ -110,18 +117,18 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun setLogoInImageview() {
-        val logo = File(getFilesDir().getAbsolutePath() + File.separator + "CompanyPhoto" + File.separator + "companylogo.png")
+        val logo = File(getFilesDir().getAbsolutePath() + File.separator + "CompanyPhoto" + File.separator + "companylogo.jpg")
         if (logo.exists()) {
-            Glide.with(this).load(logo).into(imageView)
+            Glide.with(this).load(logo).apply(optionsGlide).into(imageView)
         }
     }
 
     private fun setSignatureInImageview() {
         val sign = File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + "signature.png")
         if (sign.exists()) {
-            val bitmap = BitmapFactory.decodeFile(sign.absolutePath)
-            signature.setImageBitmap(bitmap)
-//            Glide.with(this).load(sign).into(signature)
+//            val bitmap = BitmapFactory.decodeFile(sign.absolutePath)
+//            signature.setImageBitmap(bitmap)
+            Glide.with(this).load(sign).apply(optionsGlide).into(signature)
         }
     }
 
@@ -176,6 +183,7 @@ class ProfileActivity : AppCompatActivity() {
                 .setIcon(R.drawable.checklist)
                 .show()
     }
+
     private fun sendIntentChoosePicture() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.setType("image/*")
@@ -186,29 +194,57 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+	private fun sendTakePictureIntent() {
+		val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+		//    cameraIntent.putExtra(MediaStore.EXTRA_FINISH_ON_COMPLETION, true)
+		if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+			try {
+				val pictureName = "companylogo"
+				val temp = File.createTempFile(pictureName,".jpg",tempStorageDir)
+				imagePath = temp.absolutePath	// Now pointing to the temporary directory
+				val photoURI: Uri
+				if (temp!=null){
+					if(Build.VERSION_CODES.N<=android.os.Build.VERSION.SDK_INT) {
+						photoURI = FileProvider.getUriForFile(this,
+								"com.thatapp.checklists.provider",
+								temp);
+					} else{
+						photoURI = Uri.fromFile(temp)
+					}
+					cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+					startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+				}
+			} catch (ex: Exception) {
+				Crashlytics.logException(ex)
+				Toast.makeText(this,
+						"Photo file couldn't be created, please try again",
+						Toast.LENGTH_SHORT).show()
+				return
+			}
+		}
+	}
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+		val imageFinalPath = File(storageDir, "companylogo.jpg")
+		val IMAGE_SIZE = 450
 
         if (requestCode == SIGNATURE_CODE) {
             setSignatureInImageview()
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK) {
-                if (File(imagePath).exists()) { //imagepath pointing to temp path
-                    val imageFinalPath = File(storageDir, "companylogo.png")
-                    orientationCorrectionAndSaveLowerRes(imagePath,imageFinalPath, 300)
-
+                if (File(imagePath).exists()) { //imagepath pointing to temp image path
+                    orientationCorrectionAndSaveLowerRes(imagePath,imageFinalPath, IMAGE_SIZE)
                 }
             } else if (requestCode == REQUEST_IMAGE_PICK && resultCode == AppCompatActivity.RESULT_OK && data != null) {
                 try {
-                    val uri: Uri = data.getData()
-                    try {
-                        val bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri)
-                        val path = saveImage(bitmap)
-                        showToast(toastSuccessBackground, "Logo Saved", Toast.LENGTH_SHORT)
-                        imageView.setImageBitmap(bitmap)
-                    } catch (e: IOException) {
-                        Crashlytics.logException(e)
-                        Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show()
+                    val uri: Uri? = data.getData()
+                    if (uri!=null){
+                        val destination:File? = downloadFileFromFilePicker(uri)
+						if (destination!=null){
+							orientationCorrectionAndSaveLowerRes(destination.absolutePath,imageFinalPath,IMAGE_SIZE)
+						}
                     }
                 } catch (e: Exception) {
                     Crashlytics.logException(e)
@@ -219,94 +255,6 @@ class ProfileActivity : AppCompatActivity() {
             }
     }
 
-    private fun sendTakePictureIntent() {
-        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-    //    cameraIntent.putExtra(MediaStore.EXTRA_FINISH_ON_COMPLETION, true)
-        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            try {
-                val pictureName = "companylogo"
-                val temp = File.createTempFile(pictureName,".jpg",tempStorageDir)
-                imagePath = temp.absolutePath
-                val photoURI: Uri
-                if (temp!=null){
-                    if(Build.VERSION_CODES.N<=android.os.Build.VERSION.SDK_INT) {
-                        photoURI = FileProvider.getUriForFile(this,
-                                "com.thatapp.checklists.provider",
-                                temp);
-                    } else{
-                        photoURI = Uri.fromFile(temp)
-                    }
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-                }
-            } catch (ex: Exception) {
-                Crashlytics.logException(ex)
-                Toast.makeText(this,
-                        "Photo file can't be created, please try again",
-                        Toast.LENGTH_SHORT).show()
-                return
-            }
-        }
-    }
-
-
-    private fun saveImage(myBitmap: Bitmap): String {
-        val bytes = ByteArrayOutputStream()
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-
-        val pictureFile = "companylogo.png"
-        val storageDir = filesDir.absolutePath + File.separator + "downloads"
-        // have the object build the directory structure, if needed.
-
-        try {
-            val f = File(storageDir, pictureFile)
-            f.createNewFile()
-            val fo = FileOutputStream(f)
-            fo.write(bytes.toByteArray())
-            fo.close()
-//            Log.e("TAG", "Logo Saved " + f.getAbsolutePath())
-            return f.getAbsolutePath()
-        } catch (ex: IOException) {
-            Crashlytics.logException(ex)
-        }
-        return ""
-    }
-
-    private fun checkPermissions(): Boolean {
-        val currentAPIVersion = Build.VERSION.SDK_INT
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            if ((ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) + ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    val alertBuilder = AlertDialog.Builder(this);
-                    alertBuilder.setCancelable(true);
-                    alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("Camera and storage permissions are necessary to take pictures and save them !!");
-                    alertBuilder.setPositiveButton(android.R.string.yes, { _, _ ->
-                        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSIONS);
-                    })
-                    val alert = alertBuilder.create();
-                    alert.show();
-                } else {
-                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSIONS)
-                }
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return true;
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == REQUEST_PERMISSIONS) {
-            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                true
-            } else {
-                false
-            }
-        }
-    }
 
     private fun orientationCorrectionAndSaveLowerRes(temppath: String, newpath:File, size: Int) {
         val matrix = getExifData(temppath) // to get the rotation of the image
@@ -315,15 +263,15 @@ class ProfileActivity : AppCompatActivity() {
             inJustDecodeBounds = true
         }
         BitmapFactory.decodeFile(temppath, options)
-        options.inSampleSize = calculateInSampleSize(options,250,250)
+        options.inSampleSize = calculateInSampleSize(options,size,size)
 
         options.inJustDecodeBounds = false
-        val bitmap = BitmapFactory.decodeFile(imagePath,options)
+        val bitmap = BitmapFactory.decodeFile(temppath,options)
 
         try{
             val out = FileOutputStream(newpath)
-            bitmap.compress(Bitmap.CompressFormat.PNG,100,out)
-            if (File(imagePath).exists()) File(imagePath).delete()
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,out)
+            if (File(temppath).exists()) File(temppath).delete()
             imagePath = newpath.absolutePath
         } catch (e:IOException){
             Crashlytics.logException(e)
@@ -331,20 +279,18 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         val properBitmap:Bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.width,bitmap.height,matrix,true)
-        Glide.with(this).load(properBitmap).into(imageView)
+		Glide.with(this).load(properBitmap).apply(optionsGlide).into(imageView)
 
         try{
             val out = FileOutputStream(newpath)
-            properBitmap.compress(Bitmap.CompressFormat.PNG,100,out)
-//            if (File(imagePath).exists()) File(imagePath).delete()
-//            imagePath = newpath.absolutePath
+            properBitmap.compress(Bitmap.CompressFormat.JPEG,90,out)
         } catch (e:IOException){
             Crashlytics.logException(e)
             showToast(toastFailureBackground, "Error saving file", Toast.LENGTH_SHORT)
         }
     }
 
-    fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
         // Raw height and width of image
         val (height: Int, width: Int) = options.run { outHeight to outWidth }
         var inSampleSize = 1
@@ -364,7 +310,7 @@ class ProfileActivity : AppCompatActivity() {
         return inSampleSize
     }
 
-    private fun getExifData(filePath: String): Matrix { //TODO image rotation based on orientation
+    private fun getExifData(filePath: String): Matrix {
         //      check the rotation of the image and display it properly
         val exif: ExifInterface
         val matrix = Matrix()
@@ -391,4 +337,73 @@ class ProfileActivity : AppCompatActivity() {
         }
         return matrix
     }
+
+	private fun downloadFileFromFilePicker(uri: Uri):File? {
+		// Retrieve the metadata as a File object.
+		var des:File?=null
+		try {
+			contentResolver.query(uri, null, null, null, null)!!.use { cursor ->
+				if (cursor.moveToFirst()) {
+					val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+					val fileName = cursor.getString(nameIndex)
+					val inputStream = applicationContext?.contentResolver?.openInputStream(uri) //FileNotFound Exception could be thrown
+					val storageDir = filesDir
+					val filep = java.io.File(storageDir?.getAbsolutePath() + java.io.File.separator + "TempFolder")
+					if (!filep.exists()) filep.mkdirs()
+					des = java.io.File(filep.getAbsolutePath() + java.io.File.separator + fileName)
+
+					val outputStream = FileOutputStream(des)
+					val buffer = ByteArray(1024)
+					var length = inputStream!!.read(buffer)
+					while (length > 0) {
+						outputStream.write(buffer, 0, length)
+						length = inputStream.read(buffer)
+					}
+					outputStream.close()
+					inputStream.close()
+				}
+			}
+		} catch (e: Exception){
+			Crashlytics.logException(e)
+			return null
+		}
+		return des
+	}
+
+	private fun checkPermissions(): Boolean {
+		val currentAPIVersion = Build.VERSION.SDK_INT
+		if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+			if ((ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) + ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) != PackageManager.PERMISSION_GRANTED) {
+				if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+					val alertBuilder = AlertDialog.Builder(this);
+					alertBuilder.setCancelable(true);
+					alertBuilder.setTitle("Permission necessary");
+					alertBuilder.setMessage("Camera and storage permissions are necessary to take pictures and save them !!");
+					alertBuilder.setPositiveButton(android.R.string.yes, { _, _ ->
+						ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSIONS);
+					})
+					val alert = alertBuilder.create();
+					alert.show();
+				} else {
+					ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSIONS)
+				}
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+		if (requestCode == REQUEST_PERMISSIONS) {
+			if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+				true
+			} else {
+				false
+			}
+		}
+	}
+
 }

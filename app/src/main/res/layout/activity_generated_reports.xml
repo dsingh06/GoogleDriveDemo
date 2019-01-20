@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,29 +8,18 @@
     android:id="@+id/coordinatorLayout"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/my_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimaryDark"
-            android:elevation="4dp"
-            app:titleTextColor="#fff"
-            android:padding="0dp" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimaryDark"
+        android:elevation="4dp"
+        app:titleTextColor="#fff"
+        android:padding="0dp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_generated"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-
-        </android.support.v7.widget.RecyclerView>
-
-    </LinearLayout>
+            android:layout_height="match_parent" />
 
 </android.support.design.widget.CoordinatorLayout>

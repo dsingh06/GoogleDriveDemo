@@ -3,9 +3,11 @@ package com.thatapp.checklists.ViewClasses
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.*
 import android.support.annotation.RequiresApi
+import android.support.v4.content.ContextCompat.getSystemService
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -116,7 +118,7 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 //							snack.show()
         btnSubmit.isEnabled = false
         btnSubmit.isClickable = false
-        btnSubmit.setBackgroundColor(toastSuccessBackground)
+        btnSubmit.getBackground().setColorFilter(Color.parseColor("#ff5500"), PorterDuff.Mode.SRC_IN)
         btnSubmit.text = "Creating PDf......please wait"
 
     }
@@ -130,41 +132,42 @@ class DisplayQuestionsActivity : AppCompatActivity() {
 
             // Create a workbook using the File System
             val myWorkBook = WorkbookFactory.create(file)
+			var cont = true
+
+			var questionsItem: QuestionItem
+			var heading = 0
+			var question = 0
 
             // Get the first sheet from workbook
             val mySheet = myWorkBook.getSheetAt(0)
             val rowIter = mySheet.rowIterator()
-            if (rowIter.hasNext()) rowIter.next()
-            var questionsItem: QuestionItem
-            var heading = 0
-            var question = 0
-            while (rowIter.hasNext()) {
-                val row: Row = rowIter.next()
-                val cellIterator: Iterator<Cell> = row.cellIterator()
-                while (cellIterator.hasNext()) {
-                    val cell: Cell = cellIterator.next()
+			var row: Row = rowIter.next() // This has the first header value but we don't need it
+			var cellIterator: Iterator<Cell>
+			var cell: Cell
 
-                    if (row.rowNum >= 0) { //To filter column headings
-                        if (cell.columnIndex == 0) {// To match column index
-                            heading += 1
-                            question = 0
-                            questionsItem = QuestionItem(heading.toString(), cell.toString(), "")
-                            questions.add(questionsItem)
-                        } else {
-                            question += 1
-                            questionsItem = QuestionItem("" + heading + "." + question, "", cell.toString())
-                            questions.add(questionsItem)
-                        }
-                    }
-                }
-            }
+			do {
+                row = rowIter.next() // This has the next value now - We need values including this one!
+				cellIterator = row.cellIterator() //Get iterator for the cells in the above row
+				cell = cellIterator.next() // Get value of first cell in the row - COLUMN 0
+				if (!cell.toString().isEmpty()) {
+					heading += 1
+					question = 0
+					questionsItem = QuestionItem(heading.toString(), cell.toString(), "")
+					questions.add(questionsItem)
+				}
+				cell = cellIterator.next() // Get value of first cell in the row - COLUMN 1
+				if (!cell.toString().isEmpty()) {
+					question += 1
+					questionsItem = QuestionItem("" + heading + "." + question, "", cell.toString())
+					questions.add(questionsItem)
+				}
+			} while (rowIter.hasNext() && row.rowNum<=199)
 
             if (questions.size > 1) {
                 val rv_list: RecyclerView = findViewById(R.id.rc)
                 rv_list.layoutManager = LinearLayoutManager(this)
                 // Access the RecyclerView Adapter and load the data into it
                 rv_list.adapter = DisplayQuestionsAdapter(questions, this)
-//loadAdapter()
             }
         } catch (e: Exception) {
             Crashlytics.logException(e)

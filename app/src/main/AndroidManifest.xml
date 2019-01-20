@@ -3,14 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.thatapp.checklists">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -20,7 +25,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ViewClasses.SignatureRecording"/>
+        <activity android:name=".ViewClasses.InstructionsActivity"></activity>
+        <activity android:name=".ViewClasses.SignatureRecording" />
         <activity
             android:name=".ViewClasses.ProfileActivity"
             android:parentActivityName=".ViewClasses.MainActivity"
@@ -45,24 +51,20 @@
         <activity
             android:name=".ViewClasses.DisplayQuestionsActivity"
             android:parentActivityName=".ViewClasses.DisplayCheckListsActivity"
-            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
-            />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ViewClasses.DisplayCheckListsActivity"
             android:parentActivityName=".ViewClasses.MainActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ViewClasses.DisplayReportsActivity"
             android:parentActivityName=".ViewClasses.DisplayCheckListsActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ViewClasses.ViewPdfActivity"
             android:parentActivityName=".ViewClasses.DisplayReportsActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

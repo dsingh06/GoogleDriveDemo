@@ -89,6 +89,10 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 			requestSignIn()
 		}
 
+		instructions.setOnClickListener {
+			startActivity(Intent(this,InstructionsActivity::class.java))
+		}
+
 		login.setOnClickListener {
 			requestSignIn()
 		} // Login button
