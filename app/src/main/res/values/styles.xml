@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
+        <item name="actionMenuTextColor">@color/WHITE</item>
     </style>
 
     <style name="MyDatePickerDialogTheme" parent="Theme.AppCompat.DayNight.Dialog">

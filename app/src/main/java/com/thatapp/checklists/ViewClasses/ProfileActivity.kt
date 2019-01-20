@@ -23,6 +23,8 @@ import android.support.v7.app.ActionBar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.PopupMenu
 import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.Glide
@@ -71,9 +73,9 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 
         actionBarObject = supportActionBar!!
-        actionBarObject.setDisplayHomeAsUpEnabled(true)
-        actionBarObject.title = "My Profile"
-        actionBarObject.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
+//        actionBarObject.setDisplayHomeAsUpEnabled(true)
+        actionBarObject.title = "Profile"
+//        actionBarObject.setHomeAsUpIndicator(R.drawable.ic_arrow_back) // because menu is required and save is implemented
 
         prefManager = PrefManager(this)
         etyourname.setText(prefManager.userName)
@@ -88,33 +90,46 @@ override fun onCreate(savedInstanceState: Bundle?) {
             startActivityForResult(Intent(this, SignatureRecording::class.java), SIGNATURE_CODE)
         }
 
-        btnSave.setOnClickListener {
-            val name = etyourname.text.toString()
-            val companyName = etcompanyname.text.toString()
-            val jobTitle = etjobtitle.text.toString()
-
-            if (name.isBlank()) {
-                showToast(toastFailureBackground, "Please Enter Your Name", Toast.LENGTH_SHORT)
-
-            } else if (jobTitle.isBlank()) {
-                showToast(toastFailureBackground, "Please Enter Your Job Title", Toast.LENGTH_SHORT)
-
-            } else if (companyName.isBlank()) {
-                showToast(toastFailureBackground, "Please Enter Your Company Name", Toast.LENGTH_SHORT)
-
-            } else {
-                prefManager.userName = name
-                prefManager.jobTitle = jobTitle
-                prefManager.companyName = companyName
-                showToast(toastSuccessBackground, "Profile Saved!", Toast.LENGTH_SHORT)
-                finish()
-            }
-        }
-
         logoLayout.setOnClickListener { menuPop(companyImageView) }
 
         checkPermissions()
     }
+
+
+	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+		menuInflater.inflate(R.menu.save,menu)
+		return true
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		when (item.itemId){
+			R.id.saveMenuItem -> {
+				val name = etyourname.text.toString()
+				val companyName = etcompanyname.text.toString()
+				val jobTitle = etjobtitle.text.toString()
+
+				if (name.isBlank()) {
+					showToast(toastFailureBackground, "Please Enter Your Name", Toast.LENGTH_SHORT)
+
+				} else if (jobTitle.isBlank()) {
+					showToast(toastFailureBackground, "Please Enter Your Job Title", Toast.LENGTH_SHORT)
+
+				} else if (companyName.isBlank()) {
+					showToast(toastFailureBackground, "Please Enter Your Company Name", Toast.LENGTH_SHORT)
+
+				} else {
+					prefManager.userName = name
+					prefManager.jobTitle = jobTitle
+					prefManager.companyName = companyName
+					showToast(toastSuccessBackground, "Profile Saved!", Toast.LENGTH_SHORT)
+					finish()
+				}
+			}
+
+		}
+		return super.onOptionsItemSelected(item)
+	}
+
 
     private fun setLogoInImageview() {
         val logo = File(getFilesDir().getAbsolutePath() + File.separator + "CompanyPhoto" + File.separator + "companylogo.jpg")
@@ -126,8 +141,6 @@ override fun onCreate(savedInstanceState: Bundle?) {
     private fun setSignatureInImageview() {
         val sign = File(getFilesDir().getAbsolutePath() + File.separator + "downloads" + File.separator + "signature.png")
         if (sign.exists()) {
-//            val bitmap = BitmapFactory.decodeFile(sign.absolutePath)
-//            signature.setImageBitmap(bitmap)
             Glide.with(this).load(sign).apply(optionsGlide).into(signature)
         }
     }

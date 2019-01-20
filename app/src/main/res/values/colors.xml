@@ -8,4 +8,5 @@
     <color name="colorDivideBar">#BDBDBD</color>
     <color name="itemTextColor">#000</color>
     <color name="colorActive">#445</color>
+    <color name="WHITE">#FFFFFF</color>
 </resources>

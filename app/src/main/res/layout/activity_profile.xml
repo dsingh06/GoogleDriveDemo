@@ -252,16 +252,6 @@
 
             </android.support.constraint.ConstraintLayout>
 
-
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btnSave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/text_size"
-                android:background="@drawable/blue_rounded"
-                android:text="SAVE"
-                android:textColor="#fff" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

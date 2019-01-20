@@ -224,8 +224,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 		return (activeNetwork != null && activeNetwork.isConnectedOrConnecting)
 	}
 
-	private fun setJobScheduler() {// todo pause if not needed?
-// Log.e(TAG,"1 Job Scheduling Setup")
+	private fun setJobScheduler() {// todo pause if not needed? Also will it run two jobs is activity is started again?
 		val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
 		jobScheduler.schedule(JobInfo.Builder(UPLOAD_JOB_SCHEDULER_ID,
 				ComponentName(this, DriveSyncService::class.java))

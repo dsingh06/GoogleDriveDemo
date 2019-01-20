@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Uri
+import android.os.Build
 import android.support.v4.content.FileProvider
 import android.util.Log
 import android.view.*
@@ -132,16 +133,15 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                 intent.type = "application/vnd.ms-excel"
                 requestFile = File(context.filesDir.absolutePath + File.separator + "downloads" , downloaded[position].name)
             }
-            val fileUri: Uri? = try {
-                FileProvider.getUriForFile(
-                        context,
+
+            val fileUri: Uri = if(Build.VERSION_CODES.N<=android.os.Build.VERSION.SDK_INT){
+                FileProvider.getUriForFile(context,
                         "com.thatapp.checklists.provider",
                         requestFile)
-
-            } catch (ex: Exception) {
-                Crashlytics.logException(ex)
-                null
+            } else{
+                Uri.fromFile(requestFile)
             }
+
             try {
                 intent.action = Intent.ACTION_SEND
                 intent.putExtra(Intent.EXTRA_STREAM, fileUri)
