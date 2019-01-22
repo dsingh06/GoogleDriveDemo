@@ -1,4 +1,4 @@
-package com.thatapp.checklists.ModelClasses
+package com.thatapp.checklist.ModelClasses
 
 import android.content.Context
 import java.io.FileOutputStream
@@ -12,14 +12,12 @@ import android.graphics.BitmapFactory
 import java.io.ByteArrayOutputStream
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.provider.DocumentsContract
 import android.support.v4.content.ContextCompat
 import android.widget.Toast
 import com.crashlytics.android.Crashlytics
 import com.itextpdf.text.*
 import com.itextpdf.text.Paragraph
 import com.itextpdf.text.pdf.*
-import com.thatapp.checklists.R
 
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter
@@ -171,7 +169,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
                 var d: Drawable? = null
 
                 try {
-                    d = ContextCompat.getDrawable(context, com.thatapp.checklists.R.drawable.ic_yes)
+                    d = ContextCompat.getDrawable(context, com.thatapp.checklist.R.drawable.ic_yes)
                     val bitDw = d as BitmapDrawable
                     val bmp = bitDw.bitmap
                     val stream = ByteArrayOutputStream()
@@ -458,7 +456,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
                 }
 
                 if (iconImage == null) {
-                    val i = BitmapFactory.decodeResource(context.resources, com.thatapp.checklists.R.drawable.cloudcheck)
+                    val i = BitmapFactory.decodeResource(context.resources, com.thatapp.checklist.R.drawable.cloudcheck)
                     val stream = ByteArrayOutputStream()
                     i.compress(Bitmap.CompressFormat.JPEG, 100, stream)
                     iconImage = Image.getInstance(stream.toByteArray())

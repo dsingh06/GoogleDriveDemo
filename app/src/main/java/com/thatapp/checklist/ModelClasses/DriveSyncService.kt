@@ -1,4 +1,4 @@
-package com.thatapp.checklists.ModelClasses
+package com.thatapp.checklist.ModelClasses
 
 import android.app.Service
 import android.app.job.JobInfo
@@ -12,10 +12,6 @@ import android.os.AsyncTask
 import android.os.Build
 import android.support.annotation.RequiresApi
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.api.client.extensions.android.http.AndroidHttp
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
-import com.google.api.services.drive.Drive
-import com.google.api.services.drive.DriveScopes
 
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

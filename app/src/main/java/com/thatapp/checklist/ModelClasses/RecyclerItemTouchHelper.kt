@@ -1,4 +1,4 @@
-package com.thatapp.checklists.ModelClasses
+package com.thatapp.checklist.ModelClasses
 
 import android.graphics.Canvas
 import android.support.v7.widget.RecyclerView

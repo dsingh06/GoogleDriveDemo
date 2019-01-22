@@ -1,8 +1,8 @@
-package com.thatapp.checklists.ViewClasses
+package com.thatapp.checklist.ViewClasses
 
 import android.support.v7.app.AppCompatActivity
 
-import com.thatapp.checklists.R
+import com.thatapp.checklist.R
 import android.graphics.*
 import android.os.Bundle
 import android.widget.*
@@ -10,12 +10,12 @@ import kotlinx.android.synthetic.main.activity_signature_recording.*
 import java.io.File
 import java.io.FileOutputStream
 import android.graphics.Bitmap
-import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastFailureBackground
-import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastSuccessBackground
+import com.thatapp.checklist.ViewClasses.MainActivity.Companion.toastFailureBackground
+import com.thatapp.checklist.ViewClasses.MainActivity.Companion.toastSuccessBackground
 import java.io.IOException
 import com.crashlytics.android.Crashlytics
-import com.thatapp.checklists.ModelClasses.CustomImageview
-import com.thatapp.checklists.ModelClasses.PrefManager
+import com.thatapp.checklist.ModelClasses.CustomImageview
+import com.thatapp.checklist.ModelClasses.PrefManager
 
 
 class SignatureRecording : AppCompatActivity() {

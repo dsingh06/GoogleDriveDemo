@@ -1,13 +1,10 @@
-package com.thatapp.checklists.ModelClasses
+package com.thatapp.checklist.ModelClasses
 
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.ImageView
-import kotlinx.android.synthetic.main.activity_profile.view.*
-import java.io.File
-import kotlin.math.absoluteValue
 
 
 class CustomImageview @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ImageView(context, attrs, defStyleAttr){

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.thatapp.checklists">
+    package="com.thatapp.checklist">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -25,12 +25,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ViewClasses.InstructionsActivity"></activity>
-        <activity android:name=".ViewClasses.SignatureRecording" />
+        <activity android:name="com.thatapp.checklist.ViewClasses.InstructionsActivity"></activity>
+        <activity android:name="com.thatapp.checklist.ViewClasses.SignatureRecording" />
         <activity
-            android:name=".ViewClasses.ProfileActivity"
-            android:parentActivityName=".ViewClasses.MainActivity"
-            android:windowSoftInputMode="stateHidden" />
+            android:name="com.thatapp.checklist.ViewClasses.ProfileActivity"
+            android:parentActivityName="com.thatapp.checklist.ViewClasses.MainActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -40,7 +41,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".ViewClasses.MainActivity"
+            android:name="com.thatapp.checklist.ViewClasses.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,26 +50,26 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ViewClasses.DisplayQuestionsActivity"
-            android:parentActivityName=".ViewClasses.DisplayCheckListsActivity"
+            android:name="com.thatapp.checklist.ViewClasses.DisplayQuestionsActivity"
+            android:parentActivityName="com.thatapp.checklist.ViewClasses.DisplayCheckListsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ViewClasses.DisplayCheckListsActivity"
-            android:parentActivityName=".ViewClasses.MainActivity"
+            android:name="com.thatapp.checklist.ViewClasses.DisplayCheckListsActivity"
+            android:parentActivityName="com.thatapp.checklist.ViewClasses.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ViewClasses.DisplayReportsActivity"
-            android:parentActivityName=".ViewClasses.DisplayCheckListsActivity"
+            android:name="com.thatapp.checklist.ViewClasses.DisplayReportsActivity"
+            android:parentActivityName="com.thatapp.checklist.ViewClasses.DisplayCheckListsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ViewClasses.ViewPdfActivity"
-            android:parentActivityName=".ViewClasses.DisplayReportsActivity"
+            android:name="com.thatapp.checklist.ViewClasses.ViewPdfActivity"
+            android:parentActivityName="com.thatapp.checklist.ViewClasses.DisplayReportsActivity"
             android:screenOrientation="portrait" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.thatapp.checklists.provider"
+            android:authorities="com.thatapp.checklist.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -77,7 +78,7 @@
         </provider>
 
         <service
-            android:name=".ModelClasses.DriveSyncService"
+            android:name="com.thatapp.checklist.ModelClasses.DriveSyncService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 

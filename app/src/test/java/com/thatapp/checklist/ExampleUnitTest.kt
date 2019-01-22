@@ -1,4 +1,4 @@
-package com.thatapp.checklists
+package com.thatapp.checklist
 
 import org.junit.Test
 

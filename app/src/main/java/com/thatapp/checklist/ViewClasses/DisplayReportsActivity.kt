@@ -1,12 +1,12 @@
-package com.thatapp.checklists.ViewClasses
+package com.thatapp.checklist.ViewClasses
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import com.thatapp.checklists.ModelClasses.DisplayChecklistAndPDFAdapter
-import com.thatapp.checklists.R
+import com.thatapp.checklist.ModelClasses.DisplayChecklistAndPDFAdapter
+import com.thatapp.checklist.R
 import java.io.File
 import java.io.FilenameFilter
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -14,16 +14,12 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.graphics.Color
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
-import android.support.v4.widget.SwipeRefreshLayout
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.thatapp.checklists.ModelClasses.PrefManager
-import com.thatapp.checklists.ModelClasses.RecyclerItemTouchHelper
-import kotlinx.android.synthetic.main.activity_generated_reports.*
-
-
+import com.thatapp.checklist.ModelClasses.PrefManager
+import com.thatapp.checklist.ModelClasses.RecyclerItemTouchHelper
 
 
 class DisplayReportsActivity : AppCompatActivity(), RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {

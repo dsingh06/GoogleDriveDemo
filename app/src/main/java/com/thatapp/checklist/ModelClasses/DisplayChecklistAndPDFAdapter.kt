@@ -1,4 +1,4 @@
-package com.thatapp.checklists.ModelClasses
+package com.thatapp.checklist.ModelClasses
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -7,16 +7,15 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.support.v4.content.FileProvider
-import android.util.Log
 import android.view.*
 import android.widget.*
 import com.crashlytics.android.Crashlytics
-import com.thatapp.checklists.ModelClasses.DriveUploader.Companion.setOfList_DriveFiles
-import com.thatapp.checklists.ModelClasses.DriveUploader.Companion.setOfList_LocalFiles
-import com.thatapp.checklists.R
-import com.thatapp.checklists.ViewClasses.DisplayCheckListsActivity
-import com.thatapp.checklists.ViewClasses.DisplayQuestionsActivity
-import com.thatapp.checklists.ViewClasses.ViewPdfActivity
+import com.thatapp.checklist.ModelClasses.DriveUploader.Companion.setOfList_DriveFiles
+import com.thatapp.checklist.ModelClasses.DriveUploader.Companion.setOfList_LocalFiles
+import com.thatapp.checklist.R
+import com.thatapp.checklist.ViewClasses.DisplayCheckListsActivity
+import com.thatapp.checklist.ViewClasses.DisplayQuestionsActivity
+import com.thatapp.checklist.ViewClasses.ViewPdfActivity
 import kotlinx.android.synthetic.main.checklist_layout.view.*
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -93,7 +92,7 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                 val fileUri: Uri? = try {
                     FileProvider.getUriForFile(
                             context,
-                            "com.thatapp.checklists.provider",
+                            "com.thatapp.checklist.provider",
                             requestFile)
 
                 } catch (ex: Exception) {
@@ -134,16 +133,18 @@ class DisplayChecklistAndPDFAdapter(var downloaded: ArrayList<File>, var context
                 requestFile = File(context.filesDir.absolutePath + File.separator + "downloads" , downloaded[position].name)
             }
 
-            val fileUri: Uri = if(Build.VERSION_CODES.N<=android.os.Build.VERSION.SDK_INT){
+            val fileUri: Uri =
+//                    if(Build.VERSION_CODES.N<=android.os.Build.VERSION.SDK_INT){
                 FileProvider.getUriForFile(context,
-                        "com.thatapp.checklists.provider",
+                        "com.thatapp.checklist.provider",
                         requestFile)
-            } else{
-                Uri.fromFile(requestFile)
-            }
+//            } else{
+ //               Uri.fromFile(requestFile)
+ //           }
 
             try {
                 intent.action = Intent.ACTION_SEND
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 intent.putExtra(Intent.EXTRA_STREAM, fileUri)
                 context.startActivity(Intent.createChooser(intent, "Share file via..."))
 

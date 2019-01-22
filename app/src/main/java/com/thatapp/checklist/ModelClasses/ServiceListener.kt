@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package com.thatapp.checklists.ModelClasses
+package com.thatapp.checklist.ModelClasses
 
 import java.io.File
 

@@ -1,4 +1,4 @@
-package com.thatapp.checklists.ViewClasses
+package com.thatapp.checklist.ViewClasses
 
 /*
  * Copyright (C) 2017 The Android Open Source Project
@@ -23,15 +23,14 @@ import android.graphics.pdf.PdfRenderer
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import com.crashlytics.android.Crashlytics
-import com.thatapp.checklists.ModelClasses.PrefManager
-import com.thatapp.checklists.R
-import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastFailureBackground
+import com.thatapp.checklist.ModelClasses.PrefManager
+import com.thatapp.checklist.R
+import com.thatapp.checklist.ViewClasses.MainActivity.Companion.toastFailureBackground
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

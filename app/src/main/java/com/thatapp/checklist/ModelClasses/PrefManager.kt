@@ -1,4 +1,4 @@
-package com.thatapp.checklists.ModelClasses
+package com.thatapp.checklist.ModelClasses
 
 import android.content.Context
 import android.content.SharedPreferences

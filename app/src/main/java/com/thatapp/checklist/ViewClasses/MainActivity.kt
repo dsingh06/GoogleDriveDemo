@@ -1,17 +1,16 @@
-package com.thatapp.checklists.ViewClasses
+package com.thatapp.checklist.ViewClasses
 
 import android.app.*
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
-import android.content.ContentResolver
 import android.content.Intent
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import com.thatapp.checklists.R
+import com.thatapp.checklist.R
 import kotlinx.android.synthetic.main.activity_main.*
 import android.net.ConnectivityManager
 import android.content.Context
@@ -22,9 +21,7 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import android.provider.OpenableColumns
-import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v4.app.NotificationCompat
-import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -32,12 +29,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.Scope
 import com.google.api.services.drive.DriveScopes
-import com.thatapp.checklists.ModelClasses.*
+import com.thatapp.checklist.ModelClasses.*
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
-import com.thatapp.checklists.BuildConfig
-import com.thatapp.checklists.ViewClasses.MainActivity.Companion.REQUEST_CODE_SIGN_IN
-import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastFailureBackground
+import com.thatapp.checklist.BuildConfig
 import io.fabric.sdk.android.Fabric;
 import java.io.*
 
@@ -75,7 +70,7 @@ class MainActivity : AppCompatActivity(), ServiceListener {
 		Fabric.with(this, crashlyticsKit);
 //		Fabric.with(this, Crashlytics());
 
-		setContentView(com.thatapp.checklists.R.layout.activity_main)
+		setContentView(com.thatapp.checklist.R.layout.activity_main)
 		prefManager = PrefManager(this)
 
 		//For future use

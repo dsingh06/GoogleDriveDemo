@@ -40,7 +40,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/clear" />
 
-    <com.thatapp.checklists.ModelClasses.CustomImageview
+    <com.thatapp.checklist.ModelClasses.CustomImageview
         android:id="@+id/imageView7"
         android:layout_width="350dp"
         android:layout_height="150dp"

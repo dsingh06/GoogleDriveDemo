@@ -1,4 +1,4 @@
-package com.thatapp.checklists.ViewClasses
+package com.thatapp.checklist.ViewClasses
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.*
 import android.support.annotation.RequiresApi
-import android.support.v4.content.ContextCompat.getSystemService
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -15,7 +14,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.Toast
-import com.thatapp.checklists.R
+import com.thatapp.checklist.R
 import kotlinx.android.synthetic.main.display_checklists.*
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
@@ -25,9 +24,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
 import android.widget.EditText
 import com.crashlytics.android.Crashlytics
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.thatapp.checklists.ModelClasses.*
-import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastSuccessBackground
+import com.thatapp.checklist.ModelClasses.*
+import com.thatapp.checklist.ViewClasses.MainActivity.Companion.toastFailureBackground
+import com.thatapp.checklist.ViewClasses.MainActivity.Companion.toastSuccessBackground
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -168,6 +167,12 @@ class DisplayQuestionsActivity : AppCompatActivity() {
                 rv_list.layoutManager = LinearLayoutManager(this)
                 // Access the RecyclerView Adapter and load the data into it
                 rv_list.adapter = DisplayQuestionsAdapter(questions, this)
+            } else {
+                val toast = Toast.makeText(this, "No questions to display!", Toast.LENGTH_LONG)
+                val view = toast.view
+                view.getBackground().setColorFilter(toastFailureBackground, PorterDuff.Mode.SRC_IN)
+                toast.show()
+                finish()
             }
         } catch (e: Exception) {
             Crashlytics.logException(e)

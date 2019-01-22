@@ -1,4 +1,4 @@
-package com.thatapp.checklists.ViewClasses
+package com.thatapp.checklist.ViewClasses
 
 import android.Manifest
 import android.content.Context
@@ -31,10 +31,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.crashlytics.android.Crashlytics
-import com.thatapp.checklists.ModelClasses.PrefManager
-import com.thatapp.checklists.R
-import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastFailureBackground
-import com.thatapp.checklists.ViewClasses.MainActivity.Companion.toastSuccessBackground
+import com.thatapp.checklist.ModelClasses.PrefManager
+import com.thatapp.checklist.R
+import com.thatapp.checklist.ViewClasses.MainActivity.Companion.toastFailureBackground
+import com.thatapp.checklist.ViewClasses.MainActivity.Companion.toastSuccessBackground
 import kotlinx.android.synthetic.main.activity_profile.*
 import java.io.File
 import java.io.FileOutputStream
@@ -219,7 +219,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 				if (temp!=null){
 					if(Build.VERSION_CODES.N<=android.os.Build.VERSION.SDK_INT) {
 						photoURI = FileProvider.getUriForFile(this,
-								"com.thatapp.checklists.provider",
+								"com.thatapp.checklist.provider",
 								temp);
 					} else{
 						photoURI = Uri.fromFile(temp)

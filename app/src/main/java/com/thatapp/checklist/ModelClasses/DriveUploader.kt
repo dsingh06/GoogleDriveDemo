@@ -1,8 +1,6 @@
-package com.thatapp.checklists.ModelClasses
+package com.thatapp.checklist.ModelClasses
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -15,7 +13,7 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import com.google.api.services.drive.model.FileList
-import com.thatapp.checklists.ViewClasses.MainActivity
+import com.thatapp.checklist.ViewClasses.MainActivity
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList

@@ -1,4 +1,4 @@
-package com.thatapp.checklists.ModelClasses
+package com.thatapp.checklist.ModelClasses
 
 import android.support.v7.widget.RecyclerView
 import android.widget.TextView
@@ -8,14 +8,13 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.RelativeLayout
-import com.thatapp.checklists.R
-import com.thatapp.checklists.ViewClasses.DisplayQuestionsActivity
+import com.thatapp.checklist.R
+import com.thatapp.checklist.ViewClasses.DisplayQuestionsActivity
 import kotlinx.android.synthetic.main.question_list.view.*
 
 
