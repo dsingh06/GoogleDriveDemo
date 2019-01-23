@@ -72,7 +72,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
         table.addCell(topCell)
 
         try {
-            val logo = storageDir.getAbsolutePath() + File.separator + "CompanyPhoto" + File.separator + "companylogo.png"
+            val logo = storageDir.getAbsolutePath() + File.separator + "CompanyPhoto" + File.separator + "companylogo.jpg"
 			val options = BitmapFactory.Options().apply {
 				inJustDecodeBounds = true
 			}

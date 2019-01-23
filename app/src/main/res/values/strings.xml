@@ -11,4 +11,5 @@
     <string name="status_error">We found a problem: %1$s</string>
     <string name="not_open_file">Could not open file</string>
     <string name="show_all">Show All</string>
+    <string name="click_to_share_template">Click to share template!</string>
 </resources>
