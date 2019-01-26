@@ -73,26 +73,34 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
 
         try {
             val logo = storageDir.getAbsolutePath() + File.separator + "CompanyPhoto" + File.separator + "companylogo.jpg"
-			val options = BitmapFactory.Options().apply {
-				inJustDecodeBounds = true
-			}
-			BitmapFactory.decodeFile(logo,options) // decoded without loading in memory
+            if (File(logo).exists()) {
+                val options = BitmapFactory.Options().apply {
+                    inJustDecodeBounds = true
+                }
+                BitmapFactory.decodeFile(logo, options) // decoded without loading in memory
 
-			options.inSampleSize = calculateInSampleSize(options,130, 145)
-			options.inJustDecodeBounds = false;
-			val img:Bitmap = BitmapFactory.decodeFile(logo,options) // we have bitmap without OutOfMemory error
+                options.inSampleSize = calculateInSampleSize(options, 130, 145)
+                options.inJustDecodeBounds = false;
+                val img: Bitmap = BitmapFactory.decodeFile(logo, options) // we have bitmap without OutOfMemory error
 
-			val newImage = resize(img,130,145)
+                val newImage = resize(img, 130, 145)
 
-			val stream = ByteArrayOutputStream()
-			newImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-			val bitmapData = stream.toByteArray();
-			val image =  Image.getInstance(bitmapData)
-			topCell = PdfPCell(image)
-            topCell.horizontalAlignment = Element.ALIGN_RIGHT
-            topCell.verticalAlignment = Element.ALIGN_BOTTOM
-            topCell.paddingBottom = 5f
-            table.addCell(topCell).setBorder(PdfPCell.NO_BORDER)
+                val stream = ByteArrayOutputStream()
+                newImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                val bitmapData = stream.toByteArray();
+                val image = Image.getInstance(bitmapData)
+                topCell = PdfPCell(image)
+                topCell.horizontalAlignment = Element.ALIGN_RIGHT
+                topCell.verticalAlignment = Element.ALIGN_BOTTOM
+                topCell.paddingBottom = 5f
+                table.addCell(topCell).setBorder(PdfPCell.NO_BORDER)
+            } else{
+                topCell = PdfPCell(Phrase(" "))
+                topCell.horizontalAlignment = Element.ALIGN_RIGHT
+                topCell.verticalAlignment = Element.ALIGN_BOTTOM
+                topCell.paddingBottom = 5f
+                table.addCell(topCell).setBorder(PdfPCell.NO_BORDER)
+            }
         } catch (ex: Exception) {
 			Crashlytics.logException(ex)
 			topCell = PdfPCell(Phrase(" "))
@@ -464,7 +472,7 @@ class CreatePDF(val questions: ArrayList<QuestionItem>, val context: Context, va
                 }
                 iconImage!!.setAbsolutePosition(15f, 15f)
                 document.add(iconImage)
-                ColumnText.showTextAligned(writer.directContent, Element.ALIGN_LEFT, Phrase("CHECKLIST"), 15f + 40 + 5, 40f, 0f)
+                ColumnText.showTextAligned(writer.directContent, Element.ALIGN_LEFT, Phrase("ANY CHECKLIST"), 15f + 40 + 5, 40f, 0f)
                 ColumnText.showTextAligned(writer.directContent, Element.ALIGN_LEFT, Phrase("(on Android)"), 15f + 40 + 5, 25f, 0f)
             }
         }
